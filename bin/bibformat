@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""bibformat is a command line tool for formatting bib entries."""
+
+import argparse
+import bibpy
+import bibpy.tools
+import json
+import xml.dom.minidom
+import xml.etree.ElementTree as ET
+
+__author__ = 'Alexander Asp Bock'
+__version__ = '0.1.0'
+__license__ = 'MIT'
+
+_DESCRIPTION = """Format bib entries to look pretty and export them to another
+format."""
+
+
+def export_to_xml(entries, format_options):
+    """Export entries to xml."""
+    root = ET.Element('entries')
+
+    for entry in entries:
+        xml_entry = ET.SubElement(root, 'entry', type=entry.entry_type,
+                                  key=entry.entry_key)
+
+        export_fields_to_xml(xml_entry, entry)
+
+    reparsed = xml.dom.minidom.parseString(ET.tostring(root, encoding='utf-8'))
+
+    return reparsed.toprettyxml(indent=format_options['indent'],
+                                encoding='utf-8').strip()
+
+
+def export_fields_to_xml(xml_entry, entry):
+    """Export all the fields of an entry to xml."""
+    for field, value in entry:
+        xml_field = ET.SubElement(xml_entry, field)
+        xml_field.text = str(value)
+
+
+def entry_to_json_object(entry, format_options):
+    fields = dict([(field, value) for field, value in entry])
+
+    # order = format_options['order']
+    # sort_keys = True if order and isinstance(order, bool) else False
+
+    return {'entry': {'type':   entry.entry_type,
+                      'key':    entry.entry_key,
+                      'fields': fields}}
+    # indent=indent, sort_keys=sort_keys)
+
+
+def export_to_json(entries, format_options):
+    """Export entries to json."""
+    # Entry types and keys are not necessarily unique, so we output a list of
+    # single entries
+    json_entries = [entry_to_json_object(entry, format_options)
+                    for entry in entries]
+
+    indent = len(format_options['indent'].expandtabs())
+
+    return json.dumps(json_entries, indent=indent)
+
+
+if __name__ == "__main__":
+    version_format = bibpy.tools.version_format()
+
+    parser = argparse.ArgumentParser(prog='bibformat',
+                                     description=_DESCRIPTION)
+    parser.add_argument('-v', '--version', action='version',
+                        version='%(prog)s v' + __version__)
+    parser.add_argument('-e', '--export', choices=['xml', 'json'],
+                        help="Export bib entries to a desired format")
+    # parser.add_argument('-r', '--inherit-crossreferences', action='store_true',
+    #                     help='Inherit all crossreference fields')
+    # parser.add_argument('-x', '--inherit-xdata', action='store_true',
+    #                     help='Inherit all xdata fields')
+    parser.add_argument('-a', '--align', action='store_true',
+                        help='Align the equal signs of all fields. Ignored '
+                             'for xml and json.')
+    parser.add_argument('-i', '--indent', type=str, default=' ' * 4,
+                        help='The indentation for all fields.')
+    parser.add_argument('-s', '--surround', type=str, default='{}',
+                        help='The two opening and closing characters '
+                             'surrounding field values. Default is \'{}\'')
+    parser.add_argument('-o', '--order', action='append',
+                        help='The order in which fields are output. Fields '
+                             'not in this list are output last in an '
+                             'unspecified order. Currently ignored by xml and '
+                             'json export.')
+
+    args, rest = parser.parse_known_args()
+
+    # Iterate the files given on the command line
+    for filename in rest:
+        entries, strings, preambles, comment_entries, comments =\
+            bibpy.read_file(filename, format='relaxed')
+
+        if args.order:
+            args.order = [order for orders in args.order
+                          for order in map(str.strip, orders.split(','))]
+        else:
+            args.order = True
+
+        format_options = dict([(f, getattr(args, f))
+                               for f in ['align', 'indent', 'order']])
+
+        if args.export == 'xml':
+            print export_to_xml(entries, format_options)
+        elif args.export == 'json':
+            print export_to_json(entries, format_options)
+        else:
+            print bibpy.write_string(entries, **format_options)

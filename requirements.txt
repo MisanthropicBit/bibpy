@@ -1,0 +1,4 @@
+cram
+pyparsing
+pytest
+pytest-quickcheck
