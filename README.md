@@ -1,5 +1,8 @@
 # bibpy v0.1.0
 
+![Build status](https://travis-ci.org/MisanthropicBit/colorise.svg?branch=rgb_256_exts)
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)(https://raw.githubusercontent.com/MisanthropicBit/colorise/rgb_256_exts/LICENSE)
+
 Python library for parsing bib(la)tex files and manipulating entries.
 
 * [Automatic conversion](/examples/field_conversion.py) of entry fields to and from appropriate Python types
