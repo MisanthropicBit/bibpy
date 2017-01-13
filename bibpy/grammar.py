@@ -49,8 +49,8 @@ STRING_EXPR =\
 
 # Used for string expansion
 STRING_EXPR_EXPANSION =\
-     (pp.delimitedList(QUOTED_VALUE |
-                       VARIABLE, delim='#'))('string expression')
+    (pp.delimitedList(QUOTED_VALUE |
+                      VARIABLE, delim='#'))('string expression')
 
 
 def base_grammar(valid_fields, valid_entries):

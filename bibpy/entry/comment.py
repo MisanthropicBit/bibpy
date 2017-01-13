@@ -33,10 +33,16 @@ class Comment(base.BaseEntry):
 
     @property
     def entry_key(self):
+        """Return the key of this entry."""
         return None
 
     @property
     def fields(self):
+        """Return a list of this entry's active bib(la)tex fields.
+
+        Active fields are fields that are not None or empty strings.
+
+        """
         return []
 
     @property
@@ -45,6 +51,7 @@ class Comment(base.BaseEntry):
         return self._value
 
     def aliases(self, format):
+        """Return any aliases of this entry."""
         return []
 
     def valid(self, format):

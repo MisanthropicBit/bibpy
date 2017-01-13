@@ -70,7 +70,7 @@ class Entry(base.BaseEntry):
 
     @property
     def entry_key(self):
-        """Get the key of this entry."""
+        """Return the key of this entry."""
         return self._entry_key
 
     @property
