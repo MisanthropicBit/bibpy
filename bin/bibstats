@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""bibstats is a tool for gathering and displaying statistics about bib files.
+
+The default mode displays the count for each entry type in one or more files.
+The bibgrep tool can be used to filter out certain entries before passing them
+to bibstats, e.g. the following commands pick all entries where 'Adam' appears
+as an author, then displays the statistics for those entries:
+
+    $ bibgrep --fields="author~Adam" | bibstats
+
+"""
+
+import argparse
+import bibpy
+import collections
+import sys
+
+__author__ = 'Alexander Asp Bock'
+__version__ = '0.1.0'
+__license__ = 'MIT'
+
+# TODO: Just use bibgrep piped with bibstats
+# bibstats --fields=author
+# bibstats --fields="author=Panko"
+# bibstats --fields="author~Panko"
+# bibstats --fields="author~Panko,year=2010"
+# bibstats --entries="article,conference"
+
+
+def header(titles, spacing=20, underline='-'):
+    """"""
+    header = " ".join([("{0:<" + str(spacing) + "}").format(title, spacing)
+                       for title in titles])
+
+    return header + "\n" + underline * len(header)
+
+
+if __name__ == "__main__":
+    # entries, comments =\
+    #     bibpy.read_file('tests/example_files/all_entry_types.bib', 'relaxed')
+
+    parser = argparse.ArgumentParser(prog='bibstats')
+    parser.add_argument('-v', '--version', action='version',
+                        version='%(prog)s v' + __version__)
+    parser.add_argument('-c', '--count', action='store_true',
+                        help="Print only a total count of all entries")
+    parser.add_argument('-e', '--entries', type=str,
+                        help="Print stats for the matching entry type")
+    parser.add_argument('-f', '--fields', type=str,
+                        help="Print stats for a given list of fields")
+    parser.add_argument('--color', type=str, default='no',
+                        help="Use colors to highlight results")
+    parser.add_argument('-s', '--sort', action='store_true',
+                        help="Sort results ascendingly")
+    parser.add_argument('--porcelain', action='store_true',
+                        help="Output results so they are easier to parse by "
+                             "other programs")
+    parser.add_argument('-p', '--percentages', action='store_true',
+                        help="Show percentages")
+    parser.add_argument('-t', '--top', type=int, default=None,
+                        help="Display only the top N occurrences. Displays the"
+                        " bottom N occurrences if sorting descendingly.")
+    parser.add_argument('--total', action='store_true',
+                        help="Display only the total number of entries found")
+
+    args, rest = parser.parse_known_args()
+    all_entries = []
+
+    for file in rest:
+        entries, _, _, _, _ = bibpy.read_file(file, 'relaxed')
+        all_entries += entries
+
+    if not rest:
+        # Assume stdin if no files given
+        entries, _, _, _, _ = bibpy.read_file(sys.stdin, 'relaxed')
+
+    types = collections.Counter([entry.entry_type for entry in all_entries])
+    total = sum(types.values())
+
+    if not args.total:
+        titles = ['Entry', 'Count']
+        print header(titles)
+
+        for t, count in types.most_common(args.top):
+            print "{0:<20}\033[0m {1} ({2:.2f}%)"\
+                .format(t, count, count / float(total) * 100.)
+
+    print "\nTotal entries: {0}".format(total)

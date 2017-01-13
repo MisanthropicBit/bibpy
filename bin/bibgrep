@@ -1,0 +1,263 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""bibgrep: Grep for bib(la)tex files.
+
+The tool has been designed to have the same parameters as the ordinary grep
+when this is sensible. To get all articles where the author contains 'Johnson'
+and the article is from 2010 or beyond:
+
+>>> bibgrep --entries="article" --field="author~Johnson" --field="year>=2010"
+
+The entry and field arguments take strings in a special mini-language format.
+For entries, the (informal) format is:
+
+"[!][~]<entry_type>"
+
+where <entry_type> is 'article', 'inproceedings' etc. The exclamation mark
+denotes negation, and the tilde denotes approximate matches where the text must
+contain the <entry_type>. For example, '~ceed' would match 'proceedings',
+'inproceedings' and 'mvproceedings' entries. The format for fields is slightly
+more involved:
+
+"[!]<field_name>(=|~)<field_value>"
+"[!]<field_name>(<|>|<=|>=|=)<field_numeric_value>"
+
+All punctuation have the same meaning as for entries. The second format applies
+only to fields with numeric values, e.g.:
+
+>>> bibgrep --field="year>=2001" --field="10<volume<=50"
+
+which selects all entries from 2001 and forward as well as fields with a volume
+number in the range ]0;50].
+
+"""
+
+import argparse
+import bibpy
+import bibpy.tools
+import operator
+import re
+import sys
+
+__author__ = 'Alexander Asp Bock'
+__version__ = '0.1.0'
+__license__ = 'MIT'
+
+# TODO: How to combine predicates with '&&' and '||'?
+
+_DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
+entry types and fields."""
+
+
+def always_true(value):
+    """A function that always returns True."""
+    return True
+
+
+def approx_field_predicate(field, value, args):
+    """Return a function that does an approximate match of a string."""
+    flags = re.I if args.ignore_case else 0
+
+    def _approx_match(entry):
+        return re.search(value, getattr(entry, field, ''), flags)
+
+    return _approx_match
+
+
+def exact_field_predicate(field, value, args):
+    """Return a function that does an approximate match of a string."""
+    func = str.lower if args.ignore_case else str
+
+    def _exact_match(entry):
+        return func(getattr(entry, field, '')) == func(value)
+
+    return _exact_match
+
+
+def negate(f):
+    """Return a new function that negates the boolean result of f."""
+    def _negate(entry):
+        return not f(entry)
+
+    return _negate
+
+
+def operator_from_string(op_name):
+    """Return an operator function from its string equivalent."""
+    if op_name == '<':
+        return operator.lt
+    elif op_name == '>':
+        return operator.gt
+    elif op_name == '<=':
+        return operator.le
+    elif op_name == '>=':
+        return operator.ge
+    else:
+        raise ValueError("Error: Invalid operator '" + op_name + "'")
+
+
+def comparison_predicate(field, op_name, value):
+    """Return a predicate function that compares a field to a value."""
+    operator = operator_from_string(op_name)
+
+    def _comparison_predicate(entry):
+        attr = getattr(entry, field)
+
+        return attr and operator(int(attr), int(value))
+
+    return _comparison_predicate
+
+
+def interval_predicate(field, lower, upper):
+    """Return a predicate function that checks if a field is in an interval."""
+    ilower = int(lower)
+    iupper = int(upper)
+
+    if ilower > iupper:
+        raise ValueError("Error: Lower bound must be <= upper bound")
+
+    def _interval_predicate(entry):
+        attr = getattr(entry, field)
+
+        return attr and ilower <= int(attr) <= iupper
+
+    return _interval_predicate
+
+
+def range_predicate(lower, op_name1, field, op_name2, upper):
+    """Return a predicate function that checks if a field is in a range.
+
+    Example: '1 <= series < 10'
+
+    """
+    ilower = int(lower)
+    iupper = int(upper)
+
+    if ilower > iupper:
+        raise ValueError("Error: Lower bound must be <= upper bound")
+
+    operator1 = operator_from_string(op_name1)
+    operator2 = operator_from_string(op_name2)
+
+    def _range_predicate(entry):
+        attr = getattr(entry, field)
+
+        return attr and operator1(ilower, operator2(int(attr), iupper))
+
+    return _range_predicate
+
+
+def construct_entry_predicates(entry_types):
+    """Return a predicate list that tests if entries are of the given types."""
+    def _entry_predicates(entry):
+        return entry.entry_type in entry_types
+
+    return _entry_predicates
+
+
+def construct_key_predicate(key):
+    pass
+
+
+def construct_field_predicate(name, tokens, args):
+    """Construct and return a function that reflects the parsed query."""
+    if name == 'entry':
+        f = None
+
+        if not set(tokens[0]).issubset(set('!~')):
+            raise ValueError("Error: Invalid field operator(s) '" + tokens[0] +
+                             "'")
+
+        if '~' in tokens[0]:
+            f = approx_field_predicate('entry_type', tokens[1], args)
+        else:
+            f = exact_field_predicate('entry_type', tokens[1], args)
+
+        if '!' in tokens[0]:
+            f = negate(f)
+
+        return f
+    elif name == 'field':
+        if tokens[1] == '=':
+            return exact_field_predicate(tokens[0], tokens[2], args)
+        elif tokens[1] == '~':
+            return approx_field_predicate(tokens[0], tokens[2], args)
+        else:
+            raise ValueError("Error: Invalid field operator '" + tokens[1] +
+                             "'")
+    elif name == 'comparison':
+        return comparison_predicate(*tokens)
+    elif name == 'interval':
+        return interval_predicate(tokens[0], tokens[2], tokens[3])
+    elif name == 'range':
+        return range_predicate(*tokens)
+
+
+def construct_field_predicates(fields, pred_combiner, args):
+    """Return a predicate list that test if entries contain certain fields."""
+    # Parse and compose all predicates on fields given on the command line
+    predicates = []
+
+    for field in fields:
+        name, tokens = bibpy.tools.parse_query(field)
+        predicates.append(construct_field_predicate(name, tokens, args))
+
+    return bibpy.tools.compose_predicates(predicates, pred_combiner)
+
+
+if __name__ == "__main__":
+    version_format = bibpy.tools.version_format()
+
+    parser = argparse.ArgumentParser(prog='bibgrep', description=_DESCRIPTION)
+    parser.add_argument('-v', '--version', action='version',
+                        version=version_format.format(__version__))
+    parser.add_argument('-e', '--entries', action='append',
+                        help='Print the entries for the matching entry type')
+    parser.add_argument('-k', '--key', help='Print the entries with the '
+                                            'exact or similar key')
+    parser.add_argument('-f', '--field', type=str, action='append',
+                        dest='fields',
+                        help='Print the entries that satisfy the list of field'
+                             ' constraints')
+    parser.add_argument('-c', '--count', action='store_true',
+                        help='Only a count of selected lines is written to '
+                             'standard output')
+    parser.add_argument('-i', '--ignore-case', action="store_true",
+                        help='Perform case insensitive matching. By default, '
+                             'bibgrep is case sensitive')
+
+    args, rest = parser.parse_known_args()
+    entry_predicate = always_true
+    field_predicate = always_true
+
+    try:
+        if args.entries:
+            entry_types = [e for es in args.entries
+                           for e in map(str.strip, es.split(','))]
+            entry_predicate = construct_field_predicates(entry_types, any, args)
+
+        if args.fields:
+            field_predicate = construct_field_predicates(args.fields, all, args)
+    except (ValueError, bibpy.error.ParseException) as e:
+        sys.exit(str(e))
+
+    filtered_entries = []
+
+    # Iterate the files given on the command line
+    for filename in rest:
+        # TODO: Use scanFile if it ever gets into pyparsing to lazily read and
+        # filter the bib source(s)
+        entries, strings, preambles, comment_entries, comments =\
+            bibpy.read_file(filename, format='relaxed')
+
+        for entry in entries:
+            if entry_predicate(entry) and field_predicate(entry):
+                filtered_entries.append(entry)
+
+    if args.count:
+        print "Found {0} entries".format(len(filtered_entries))
+
+    if filtered_entries and not args.count:
+        # Write all filtered entries to sys.stdout
+        print bibpy.write_string(filtered_entries)

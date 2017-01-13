@@ -1,0 +1,17 @@
+*.pyc
+*.tasks
+.Python
+MANIFEST
+bib.py
+coverage.sh
+testbibpy.py
+.cache/
+.coverage
+.tox/
+__pycache__/
+backup/
+build/
+crossref_tests/
+docs/
+htmlcov/
+grammar.txt
