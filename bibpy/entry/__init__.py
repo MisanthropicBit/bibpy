@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Load all entry types into the bibpy.entry package level."""
+
 from bibpy.entry.base import BaseEntry
 from bibpy.entry.comment import Comment
 from bibpy.entry.entry import Entry
