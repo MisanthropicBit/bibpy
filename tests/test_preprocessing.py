@@ -77,6 +77,7 @@ def test_preprocess():
         'origpublisher': 'Arthur Cunnings and Michelle Toulouse',
         'part': '24',
         'publisher': 'Arthur Cunnings and Michelle Toulouse',
+        'related': 'key1, key2, key3',
         'school': 'Arthur Cunnings and Michelle Toulouse',
         'series': '23',
         'shortauthor': 'Arthur Cunnings and Michelle Toulouse',
@@ -84,6 +85,7 @@ def test_preprocess():
         'translator': 'Arthur Cunnings and Michelle Toulouse',
         'organization': 'Arthur Cunnings and Michelle Toulouse',
         'urldate': '2016-10-19/2016-10-27',
+        'xdata': ',    key1, key2, key3,   ',
         'volume': '83',
         'year': '2016'
     }
