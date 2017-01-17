@@ -137,7 +137,6 @@ def _read_common(parsed_tokens, format, strict=False, postprocess=False,
     if strict:
         # Check entry requirements for non-relaxed reference formats
         for entry in entries.entries:
-            # TODO: Collect all requirement errors in the same error?
             required, optional = bibpy.requirements.check(entry, format)
 
             if required or optional:
