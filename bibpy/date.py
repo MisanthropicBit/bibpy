@@ -52,8 +52,11 @@ class DateRange(object):
         return self._open
 
     def __eq__(self, other):
-        return self.start == other.start and self.end == other.end and\
-            self.open == other.open
+        if isinstance(other, self.__class__):
+            return self.start == other.start and self.end == other.end and\
+                self.open == other.open
+
+        return False
 
     def __str__(self):
         if self.start is None and self.end is None:
