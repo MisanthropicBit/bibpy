@@ -27,12 +27,15 @@ def postprocess_braces(value, **options):  # pragma: no cover
 
 def postprocess_namelist(names, **options):
     """Convert a string of authors to a list."""
+    if not names:
+        return []
+
     split_on = re.compile('(?<!{)' + options.get('name_delimiter', 'and') +
                           '(?!})')
 
     # Split names on the chosen delimiter which is NOT surrounded by curly
     # braces
-    names = [] if not names else [n.strip() for n in split_on.split(names)]
+    names = list(filter(None, [n.strip() for n in split_on.split(names)]))
 
     # Remove any leftover curly braces after splitting
     return [re.sub('\{(.+)\}', '\\1', name) for name in names]
@@ -46,7 +49,8 @@ def postprocess_keywords(keywords, **options):
     delimiter = options.get('keyword_delimiter')
 
     if delimiter:
-        return map(str.strip, keywords.split(delimiter))
+        return list(filter(None, [keyword.strip()
+                                  for keyword in keywords.split(delimiter)]))
 
 
 def postprocess_int(value, **options):
@@ -94,7 +98,7 @@ def postprocess_keylist(keylist, **options):
     if not keylist:
         return []
 
-    return map(str.strip, keylist.split(','))
+    return list(filter(None, [key.strip() for key in keylist.split(',')]))
 
 
 # A dictionary of fields as keys and the functions that postprocess them as
