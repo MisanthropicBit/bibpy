@@ -32,7 +32,6 @@ def test_bibtex_requirements():
     assert bibpy.requirements.check(entry, 'relaxed') == (set(), [])
 
 
-@pytest.mark.skip
 def test_biblatex_requirements():
     entries, _, _, _, _ =\
         bibpy.read_file('tests/data/biblatex_missing_requirements.bib',
