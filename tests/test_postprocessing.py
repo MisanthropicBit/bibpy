@@ -20,6 +20,9 @@ def test_postprocess_namelist():
         ['Department of Communications and Data',
          'Department of Computer Science']
 
+    assert bibpy.postprocess.postprocess_namelist('') == []
+    assert bibpy.postprocess.postprocess_namelist([]) == []
+
 
 def test_postprocess_keywords():
     assert list(bibpy.postprocess.postprocess_keywords('')) == []
