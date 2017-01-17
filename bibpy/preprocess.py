@@ -42,6 +42,14 @@ def preprocess_int(i, **options):
     return str(i)
 
 
+def preprocess_keylist(keylist, **options):
+    """Convert a list of keys to a comma-separated string."""
+    if isinstance(keylist, list):
+        return ", ".join([str(key) for key in keylist])
+
+    return keylist
+
+
 # A dictionary of fields as keys and the functions that preprocess them as
 # values, e.g. 'year' should be converted to an integer etc.
 preprocess_functions = {'address':       preprocess_namelist,
@@ -72,12 +80,14 @@ preprocess_functions = {'address':       preprocess_namelist,
                         'origpublisher': preprocess_namelist,
                         'part':          preprocess_int,
                         'publisher':     preprocess_namelist,
+                        'related':       preprocess_keylist,
                         'school':        preprocess_namelist,
                         'series':        preprocess_int,
                         'shortauthor':   preprocess_namelist,
                         'shorteditor':   preprocess_namelist,
                         'translator':    preprocess_namelist,
                         'urldate':       preprocess_date,
+                        'xdata':         preprocess_keylist,
                         'volume':        preprocess_int,
                         'year':          preprocess_int}
 
