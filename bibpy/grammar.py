@@ -43,7 +43,7 @@ QUOTED_VALUE = pp.QuotedString('"', escChar='\\',
 # A string expression is either a single double-quoted string or a combination
 # of strings and variables
 STRING_EXPR =\
-    (QUOTED_VALUE |
+    (QUOTED_VALUE + ~pp.FollowedBy('#') |
      pp.originalTextFor(pp.delimitedList(QUOTED_VALUE | VARIABLE,
                                          delim='#')))('string expression')
 
