@@ -40,6 +40,7 @@ class Entry(base.BaseEntry):
             return entry_start + "}"
 
         i = max(map(len, self.fields)) if align else 1
+        fields = []
 
         if order:
             if type(order) is bool:
@@ -54,7 +55,9 @@ class Entry(base.BaseEntry):
                 raise ValueError("order must be either a bool or a list, not "
                                  "'{0}'".format(type(order)))
         else:
-            fields = bibpy.preprocess.preprocess(self, self.fields)
+            for field, value in bibpy.preprocess.preprocess(self, self.fields):
+                setattr(self, field, value)
+                fields.append((field, value))
 
         fields = (",\n".join(["{0}{1}{2} = {{{3}}}"
                               .format(indent, field,
