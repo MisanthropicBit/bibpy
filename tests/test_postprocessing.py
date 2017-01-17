@@ -147,10 +147,10 @@ def test_no_postprocess():
                                  'nopostprocess': "OK!"})
 
     postprocessed = bibpy.postprocess.postprocess(entry, True)
-    assert next(postprocessed) == ('random_field', 23)
-    assert next(postprocessed) == ('nopostprocess', "OK!")
+    assert set(postprocessed) == set([('random_field', 23),
+                                      ('nopostprocess', 'OK!')])
 
     postprocessed = bibpy.postprocess.postprocess(entry, ['random_field',
                                                           'nopostprocess'])
-    assert next(postprocessed) == ('random_field', 23)
-    assert next(postprocessed) == ('nopostprocess', "OK!")
+    assert set(postprocessed) == set([('random_field', 23),
+                                      ('nopostprocess', 'OK!')])
