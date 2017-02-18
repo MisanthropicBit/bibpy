@@ -26,7 +26,7 @@ class Entry(base.BaseEntry):
                 setattr(self, field, value)
 
     # TODO: How can we test this across versions?
-    def format(self, align=True, indent='    ', order=[]):  # pragma: no cover
+    def format(self, align=True, indent='    ', order=[], surround='{}'):  # pragma: no cover
         """Format and return the entry as a string.
 
         'align' aligns the equal signs of all fields.
@@ -59,9 +59,10 @@ class Entry(base.BaseEntry):
                 setattr(self, field, value)
                 fields.append((field, value))
 
-        fields = (",\n".join(["{0}{1}{2} = {{{3}}}"
+        fields = (",\n".join(["{0}{1}{2} = {3}{4}{5}"
                               .format(indent, field,
-                                      ' ' * (i - len(field)), value)
+                                      ' ' * (i - len(field)),
+                                      surround[0], value, surround[1])
                              for field, value in fields]))
 
         return entry_start + fields + "\n}"
