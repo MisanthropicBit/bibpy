@@ -117,28 +117,12 @@ def bibtex_grammar():
     return base_grammar(valid_fields, valid_entries)
 
 
-# TODO: Test if biblatex (biber) can read @preamble etc. (it can read @string)
 def biblatex_grammar():
     """Return a grammar for biblatex."""
-    value = (BRACED_EXPR)('value')
-
-    # Fields
-    valid_fields = pp.oneOf(bibpy.fields.biblatex, caseless=True)
-    field = pp.Group(valid_fields + EQUAL_SIGN + value)('field')
-    fields = pp.Group(pp.delimitedList(field, delim=','))('fields')
-
-    # Entries
+    valid_fields = pp.oneOf(bibpy.fields.biblatex,  caseless=True)
     valid_entries = pp.oneOf(bibpy.entries.biblatex, caseless=True)
-    entry = pp.Group(ENTRY_START + valid_entries +
-                     OPEN_BRACE + KEY + COMMA +
-                     fields + CLOSED_BRACE)('entries')\
-        .setResultsName('entries', listAllMatches=True)
 
-    # Comments (any not inside an entry)
-    comments = (pp.CharsNotIn('@'))('comment')\
-        .setResultsName('comments', listAllMatches=True)
-
-    return pp.ZeroOrMore(entry | comments)
+    return base_grammar(valid_fields, valid_entries)
 
 
 def mixed_grammar():
