@@ -71,25 +71,21 @@ author      = {James Conway and Archer Sterling}
 }"""
 
 
-@pytest.mark.skip
 def test_ordering(test_entries, monkeypatch):
-    # Set PYTHONHASHSEED to zero for Python 3+ to ensure predictable ordering
-    # of Python's dictionary
-    monkeypatch.setenv('PYTHONHASHSEED', 0)
-
     for fail in ('string', 0.453245, object()):
         with pytest.raises(ValueError):
             test_entries[0].format(order=fail)
 
     # Print a predefined order
-    assert test_entries[0].format(align=True, indent='    ',
-                                  order=['author', 'title', 'year']) ==\
+    order = ['author', 'title', 'year', 'institution', 'month']
+
+    assert test_entries[0].format(align=True, indent='    ', order=order) ==\
         """@article{test,
     author      = {James Conway and Archer Sterling},
     title       = {1337 Hacker},
     year        = {2010},
-    month       = {4},
-    institution = {Office of Information Management {and} Communications}
+    institution = {Office of Information Management {and} Communications},
+    month       = {4}
 }"""
 
     # Print fields as sorted
