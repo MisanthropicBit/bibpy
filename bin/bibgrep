@@ -148,12 +148,35 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
     return _range_predicate
 
 
-def construct_entry_predicates(entry_types):
+def construct_entry_predicate(tokens, args):
     """Return a predicate list that tests if entries are of the given types."""
-    def _entry_predicates(entry):
-        return entry.entry_type in entry_types
+    f = None
 
-    return _entry_predicates
+    if not set(tokens[0]).issubset(set('!~')):
+        raise ValueError("Error: Invalid field operator(s) '" + tokens[0] +
+                         "'")
+
+    if '~' in tokens[0]:
+        f = approx_field_predicate('entry_type', tokens[1], args)
+    else:
+        f = exact_field_predicate('entry_type', tokens[1], args)
+
+    if '!' in tokens[0]:
+        f = negate(f)
+
+    return f
+
+
+def construct_entry_predicates(fields, pred_combiner, args):
+    """Return a predicate list that test if entries contain certain fields."""
+    # Parse and compose all predicates on fields given on the command line
+    predicates = []
+
+    for field in fields:
+        _, tokens = bibpy.tools.parse_query(field)
+        predicates.append(construct_entry_predicate(tokens, args))
+
+    return bibpy.tools.compose_predicates(predicates, pred_combiner)
 
 
 def construct_key_predicate(key):
@@ -162,23 +185,7 @@ def construct_key_predicate(key):
 
 def construct_field_predicate(name, tokens, args):
     """Construct and return a function that reflects the parsed query."""
-    if name == 'entry':
-        f = None
-
-        if not set(tokens[0]).issubset(set('!~')):
-            raise ValueError("Error: Invalid field operator(s) '" + tokens[0] +
-                             "'")
-
-        if '~' in tokens[0]:
-            f = approx_field_predicate('entry_type', tokens[1], args)
-        else:
-            f = exact_field_predicate('entry_type', tokens[1], args)
-
-        if '!' in tokens[0]:
-            f = negate(f)
-
-        return f
-    elif name == 'field':
+    if name == 'field':
         if tokens[1] == '=':
             return exact_field_predicate(tokens[0], tokens[2], args)
         elif tokens[1] == '~':
@@ -237,7 +244,7 @@ if __name__ == "__main__":
         if args.entries:
             entry_types = [e for es in args.entries
                            for e in map(str.strip, es.split(','))]
-            entry_predicate = construct_field_predicates(entry_types, any,
+            entry_predicate = construct_entry_predicates(entry_types, any,
                                                          args)
 
         if args.fields:
