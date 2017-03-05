@@ -9,6 +9,7 @@ import bibpy.requirements
 from bibpy.entry import base
 
 
+# TODO: Fix writing string expressions
 class Entry(base.BaseEntry):
     """Represents an entry in a bib(la)tex file."""
 
