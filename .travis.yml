@@ -29,7 +29,7 @@ script:
     - virtualenv --version
     - coverage --version
     - coverage run --source=bibpy -m py.test --verbose
-    #- cram --verbose tests/bin/bib*.py
+    - cram --verbose tests/bin/test_bib*.t
 
 after_success:
     - coveralls
