@@ -246,7 +246,7 @@ if __name__ == "__main__":
 
     # Iterate the files given on the command line
     for filename in rest:
-        # TODO: Use scanFile if it ever gets into pyparsing to lazily read and
+        # NOTE: Use scanFile if it ever gets into pyparsing to lazily read and
         # filter the bib source(s)
         entries, strings, preambles, comment_entries, comments =\
             bibpy.read_file(filename, format='relaxed')
