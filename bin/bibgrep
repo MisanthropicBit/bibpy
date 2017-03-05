@@ -235,10 +235,12 @@ if __name__ == "__main__":
         if args.entries:
             entry_types = [e for es in args.entries
                            for e in map(str.strip, es.split(','))]
-            entry_predicate = construct_field_predicates(entry_types, any, args)
+            entry_predicate = construct_field_predicates(entry_types, any,
+                                                         args)
 
         if args.fields:
-            field_predicate = construct_field_predicates(args.fields, all, args)
+            field_predicate = construct_field_predicates(args.fields, all,
+                                                         args)
     except (ValueError, bibpy.error.ParseException) as e:
         sys.exit(str(e))
 
