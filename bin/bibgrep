@@ -303,7 +303,7 @@ if __name__ == "__main__":
 
     if args.count:
         print "Found {0} entries".format(len(filtered_entries))
-
-    if filtered_entries and not args.count:
-        # Write all filtered entries to sys.stdout
-        print bibpy.write_string(filtered_entries)
+    else:
+        if filtered_entries:
+            # Write all filtered entries to sys.stdout
+            print bibpy.write_string(filtered_entries)
