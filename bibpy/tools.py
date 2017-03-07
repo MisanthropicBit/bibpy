@@ -14,6 +14,13 @@ def version_format():
     return '%(prog)s v{0}'
 
 
+def key_grammar():
+    """Return the grammar for parsing key queries."""
+    return (pp.Combine(pp.Optional(pp.Literal('!')) +
+                       pp.Optional(pp.Literal('~'))) +
+            pp.Regex('.+?,'))('key')
+
+
 def entry_grammar():
     """Return the grammar for parsing name queries."""
     return (pp.Combine(pp.Optional(pp.Literal('!')) +
@@ -55,12 +62,14 @@ def numeric_grammar():
     return interval | range_ | comparison
 
 
+_KEY_GRAMMAR = key_grammar()
 _ENTRY_GRAMMAR = entry_grammar()
 _FIELD_GRAMMAR = field_grammar()
 _NUMERIC_GRAMMAR = numeric_grammar()
 
 # The order matters here
-_FULL_GRAMMAR = _NUMERIC_GRAMMAR | _FIELD_GRAMMAR | _ENTRY_GRAMMAR
+_FULL_GRAMMAR = _NUMERIC_GRAMMAR | _FIELD_GRAMMAR | _ENTRY_GRAMMAR |\
+    _KEY_GRAMMAR
 
 
 def parse_query(query):
