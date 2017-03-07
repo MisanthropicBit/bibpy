@@ -50,11 +50,6 @@ _DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
 entry types and fields."""
 
 
-def always_true(value):
-    """A function that always returns True."""
-    return True
-
-
 def always_false(value):
     """A function that always returns False."""
     return False
