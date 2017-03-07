@@ -18,7 +18,7 @@ def key_grammar():
     """Return the grammar for parsing key queries."""
     return (pp.Combine(pp.Optional(pp.Literal('!')) +
                        pp.Optional(pp.Literal('~'))) +
-            pp.Regex('.+?,'))('key')
+            pp.Regex('.+'))('key')
 
 
 def entry_grammar():
