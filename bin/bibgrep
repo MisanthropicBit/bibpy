@@ -55,6 +55,11 @@ def always_true(value):
     return True
 
 
+def always_false(value):
+    """A function that always returns False."""
+    return False
+
+
 def approx_field_predicate(field, value, args):
     """Return a function that does an approximate match of a string."""
     flags = re.I if args.ignore_case else 0
@@ -248,11 +253,12 @@ if __name__ == "__main__":
                         version=version_format.format(__version__))
     parser.add_argument('-e', '--entries', action='append',
                         help='Print the entries for the matching entry type')
-    parser.add_argument('-k', '--key', help='Print the entries with the '
-                                            'exact or similar key. For '
-                                            'example, --key="article1 | '
-                                            'article2" prints the entries with'
-                                            ' keys that match either')
+    parser.add_argument('-k', '--key', action='append',
+                        help='Print the entries with the '
+                             'exact or similar key. For '
+                             'example, --key="article1 | '
+                             'article2" prints the entries with'
+                             ' keys that match either')
     parser.add_argument('-f', '--field', type=str, action='append',
                         dest='fields',
                         help='Print the entries that satisfy the list of field'
@@ -265,15 +271,15 @@ if __name__ == "__main__":
                              'bibgrep is case sensitive')
 
     args, rest = parser.parse_known_args()
-    key_predicate = always_true
-    entry_predicate = always_true
-    field_predicate = always_true
+    key_predicate = always_false
+    entry_predicate = always_false
+    field_predicate = always_false
 
     # TODO: Combine multiple predicates on the command line with OR (||) as
     # with egrep
     try:
         if args.key:
-            key_predicate = construct_key_predicates(args.key, all, args)
+            key_predicate = construct_key_predicates(args.key, any, args)
 
         if args.entries:
             entry_types = [e for es in args.entries
