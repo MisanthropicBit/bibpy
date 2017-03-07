@@ -249,7 +249,10 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--entries', action='append',
                         help='Print the entries for the matching entry type')
     parser.add_argument('-k', '--key', help='Print the entries with the '
-                                            'exact or similar key')
+                                            'exact or similar key. For '
+                                            'example, --key="article1 | '
+                                            'article2" prints the entries with'
+                                            ' keys that match either')
     parser.add_argument('-f', '--field', type=str, action='append',
                         dest='fields',
                         help='Print the entries that satisfy the list of field'
