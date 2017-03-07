@@ -50,6 +50,11 @@ _DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
 entry types and fields."""
 
 
+def always_true(value):
+    """A function that always returns True."""
+    return True
+
+
 def always_false(value):
     """A function that always returns False."""
     return False
@@ -266,6 +271,12 @@ if __name__ == "__main__":
                                                    any, args)
     except (ValueError, bibpy.error.ParseException) as e:
         sys.exit(str(e))
+
+    if not args.keys and not args.entries and not args.fields:
+        # If no constraints are defined, all entries pass
+        key_predicate = always_true
+        entry_predicate = always_true
+        field_predicate = always_true
 
     filtered_entries = []
 
