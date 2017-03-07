@@ -1,0 +1,14 @@
+Normal bracing
+@holder{key,
+    editor = {value}
+}
+
+Nested braces should not be removed
+@holder{key,
+    editor = {{THIS IS ALL UPPERCASE}}
+}
+
+This should give "Communications and Data"
+@holder{key,
+    editor = {Communications {and} Data}
+}

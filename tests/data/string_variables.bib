@@ -1,0 +1,28 @@
+@string{month = "March"}
+@string{ var = "less" }
+@string( last_name = "Cook" )
+@string( var1 = "should")
+@string{var2 = "multiple" }
+
+@conference{key,
+    title = {month # " Report"}
+}
+
+@article{key,
+    author = {LOOOL},
+    title  = {"Merci" # var # " Animals"}
+}
+
+@book{key,
+    author = {"Andre " # last_name},
+    title  = {b}
+}
+
+@techreport{key,
+    institution = {"This " # var1 # " expand " # var2 # " variables"}
+}
+
+@article{no_expand,
+    author = {Regular Author},
+    title  = {Regular Title}
+}
