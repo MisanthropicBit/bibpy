@@ -148,6 +148,37 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
     return _range_predicate
 
 
+def construct_key_predicate(tokens, args):
+    """Return a predicate list that tests if entries are of the given types."""
+    f = None
+
+    if not set(tokens[0]).issubset(set('!~')):
+        raise ValueError("Error: Invalid field operator(s) '" + tokens[0] +
+                         "'")
+
+    if '~' in tokens[0]:
+        f = approx_field_predicate('entry_key', tokens[1], args)
+    else:
+        f = exact_field_predicate('entry_key', tokens[1], args)
+
+    if '!' in tokens[0]:
+        f = negate(f)
+
+    return f
+
+
+def construct_key_predicates(keys, pred_combiner, args):
+    """Return a predicate list that test if entries contain certain fields."""
+    # Parse and compose all predicates on fields given on the command line
+    predicates = []
+
+    for key in keys:
+        _, tokens = bibpy.tools.parse_query(key)
+        predicates.append(construct_key_predicate(tokens, args))
+
+    return bibpy.tools.compose_predicates(predicates, pred_combiner)
+
+
 def construct_entry_predicate(tokens, args):
     """Return a predicate list that tests if entries are of the given types."""
     f = None
@@ -177,10 +208,6 @@ def construct_entry_predicates(fields, pred_combiner, args):
         predicates.append(construct_entry_predicate(tokens, args))
 
     return bibpy.tools.compose_predicates(predicates, pred_combiner)
-
-
-def construct_key_predicate(key):
-    pass
 
 
 def construct_field_predicate(name, tokens, args):
@@ -235,12 +262,16 @@ if __name__ == "__main__":
                              'bibgrep is case sensitive')
 
     args, rest = parser.parse_known_args()
+    key_predicate = always_true
     entry_predicate = always_true
     field_predicate = always_true
 
     # TODO: Combine multiple predicates on the command line with OR (||) as
     # with egrep
     try:
+        if args.key:
+            key_predicate = construct_key_predicates(args.key, all, args)
+
         if args.entries:
             entry_types = [e for es in args.entries
                            for e in map(str.strip, es.split(','))]
@@ -263,7 +294,8 @@ if __name__ == "__main__":
             bibpy.read_file(filename, format='relaxed')
 
         for entry in entries:
-            if entry_predicate(entry) and field_predicate(entry):
+            if key_predicate(entry) or entry_predicate(entry) or\
+                    field_predicate(entry):
                 filtered_entries.append(entry)
 
     if args.count:
