@@ -246,8 +246,6 @@ if __name__ == "__main__":
     entry_predicate = always_false
     field_predicate = always_false
 
-    # TODO: Combine multiple predicates on the command line with OR (||) as
-    # with egrep
     try:
         if args.keys:
             key_predicate = construct_predicates(args.keys,
@@ -265,7 +263,7 @@ if __name__ == "__main__":
         if args.fields:
             field_predicate = construct_predicates(args.fields,
                                                    construct_field_predicate,
-                                                   all, args)
+                                                   any, args)
     except (ValueError, bibpy.error.ParseException) as e:
         sys.exit(str(e))
 
