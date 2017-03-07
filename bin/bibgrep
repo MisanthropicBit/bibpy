@@ -148,7 +148,7 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
     return _range_predicate
 
 
-def construct_key_predicate(tokens, args):
+def construct_key_predicate(name, tokens, args):
     """Return a predicate list that tests if entries are of the given types."""
     f = None
 
@@ -167,19 +167,7 @@ def construct_key_predicate(tokens, args):
     return f
 
 
-def construct_key_predicates(keys, pred_combiner, args):
-    """Return a predicate list that test if entries contain certain fields."""
-    # Parse and compose all predicates on fields given on the command line
-    predicates = []
-
-    for key in keys:
-        _, tokens = bibpy.tools.parse_query(key)
-        predicates.append(construct_key_predicate(tokens, args))
-
-    return bibpy.tools.compose_predicates(predicates, pred_combiner)
-
-
-def construct_entry_predicate(tokens, args):
+def construct_entry_predicate(name, tokens, args):
     """Return a predicate list that tests if entries are of the given types."""
     f = None
 
@@ -196,18 +184,6 @@ def construct_entry_predicate(tokens, args):
         f = negate(f)
 
     return f
-
-
-def construct_entry_predicates(fields, pred_combiner, args):
-    """Return a predicate list that test if entries contain certain fields."""
-    # Parse and compose all predicates on fields given on the command line
-    predicates = []
-
-    for field in fields:
-        _, tokens = bibpy.tools.parse_query(field)
-        predicates.append(construct_entry_predicate(tokens, args))
-
-    return bibpy.tools.compose_predicates(predicates, pred_combiner)
 
 
 def construct_field_predicate(name, tokens, args):
@@ -228,14 +204,14 @@ def construct_field_predicate(name, tokens, args):
         return range_predicate(*tokens)
 
 
-def construct_field_predicates(fields, pred_combiner, args):
-    """Return a predicate list that test if entries contain certain fields."""
-    # Parse and compose all predicates on fields given on the command line
+def construct_predicates(values, f, pred_combiner, args):
+    """Return a list of predicates on entries ."""
+    # Parse and compose all predicates on values given on the command line
     predicates = []
 
-    for field in fields:
-        name, tokens = bibpy.tools.parse_query(field)
-        predicates.append(construct_field_predicate(name, tokens, args))
+    for value in values:
+        name, tokens = bibpy.tools.parse_query(value)
+        predicates.append(f(name, tokens, args))
 
     return bibpy.tools.compose_predicates(predicates, pred_combiner)
 
@@ -274,17 +250,22 @@ if __name__ == "__main__":
     # with egrep
     try:
         if args.key:
-            key_predicate = construct_key_predicates(args.key, any, args)
+            key_predicate = construct_predicates(args.key,
+                                                 construct_key_predicate, any,
+                                                 args)
 
         if args.entries:
             entry_types = [e for es in args.entries
                            for e in map(str.strip, es.split(','))]
-            entry_predicate = construct_entry_predicates(entry_types, any,
-                                                         args)
+            entry_predicate = construct_predicates(entry_types,
+                                                   construct_entry_predicate,
+                                                   any,
+                                                   args)
 
         if args.fields:
-            field_predicate = construct_field_predicates(args.fields, all,
-                                                         args)
+            field_predicate = construct_predicates(args.fields,
+                                                   construct_field_predicate,
+                                                   all, args)
     except (ValueError, bibpy.error.ParseException) as e:
         sys.exit(str(e))
 
