@@ -5,7 +5,7 @@ import bibpy.grammar
 import pyparsing as pp
 
 
-# TODO: Implement when pyparsing allows us to scan strings
+# NOTE: Implement when pyparsing allows us to scan strings
 def scan_string(string, format):  # pragma: no cover
     """Generate entries from a string for a given reference format."""
     grammar = bibpy.grammar.grammar_from_format(format)
