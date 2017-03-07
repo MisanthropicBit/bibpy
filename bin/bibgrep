@@ -224,7 +224,7 @@ if __name__ == "__main__":
                         version=version_format.format(__version__))
     parser.add_argument('-e', '--entries', action='append',
                         help='Print the entries for the matching entry type')
-    parser.add_argument('-k', '--key', action='append',
+    parser.add_argument('-k', '--key', action='append', dest='keys',
                         help='Print the entries with the '
                              'exact or similar key. For '
                              'example, --key="article1 | '
@@ -249,8 +249,8 @@ if __name__ == "__main__":
     # TODO: Combine multiple predicates on the command line with OR (||) as
     # with egrep
     try:
-        if args.key:
-            key_predicate = construct_predicates(args.key,
+        if args.keys:
+            key_predicate = construct_predicates(args.keys,
                                                  construct_key_predicate, any,
                                                  args)
 
