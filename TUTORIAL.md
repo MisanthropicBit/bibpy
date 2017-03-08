@@ -256,8 +256,8 @@ different entry types and sorts the results ascendingly.
 
 ### `bibgrep`
 
-`bibgrep` is by far the most powerful tool because it can be combined
-effectively with the other two.
+`bibgrep` can be used to much like the `grep` command but selects entries based
+on user criteria. It can be combined effectively with the other two.
 
 ```bash
 $ bibgrep --entries="article" --field="author~hughes" --ignore-case
