@@ -153,8 +153,8 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
     return _range_predicate
 
 
-def construct_key_predicate(name, tokens, args):
-    """Return a predicate list that tests if entries are of the given types."""
+def construct_key_entry_predicate(name, key, tokens, args):
+    """Return a key/entry predicate to test if they are of given types."""
     f = None
 
     if not set(tokens[0]).issubset(set('!~')):
@@ -162,28 +162,9 @@ def construct_key_predicate(name, tokens, args):
                          "'")
 
     if '~' in tokens[0]:
-        f = approx_field_predicate('entry_key', tokens[1], args)
+        f = approx_field_predicate(key, tokens[1], args)
     else:
-        f = exact_field_predicate('entry_key', tokens[1], args)
-
-    if '!' in tokens[0]:
-        f = negate(f)
-
-    return f
-
-
-def construct_entry_predicate(name, tokens, args):
-    """Return a predicate list that tests if entries are of the given types."""
-    f = None
-
-    if not set(tokens[0]).issubset(set('!~')):
-        raise ValueError("Error: Invalid field operator(s) '" + tokens[0] +
-                         "'")
-
-    if '~' in tokens[0]:
-        f = approx_field_predicate('entry_type', tokens[1], args)
-    else:
-        f = exact_field_predicate('entry_type', tokens[1], args)
+        f = exact_field_predicate(key, tokens[1], args)
 
     if '!' in tokens[0]:
         f = negate(f)
@@ -209,14 +190,14 @@ def construct_field_predicate(name, tokens, args):
         return range_predicate(*tokens)
 
 
-def construct_predicates(values, f, pred_combiner, args):
+def construct_predicates(values, f, key, pred_combiner, args):
     """Return a list of predicates on entries ."""
     # Parse and compose all predicates on values given on the command line
     predicates = []
 
     for value in values:
         name, tokens = bibpy.tools.parse_query(value)
-        predicates.append(f(name, tokens, args))
+        predicates.append(f(name, key, tokens, args))
 
     return bibpy.tools.compose_predicates(predicates, pred_combiner)
 
@@ -254,16 +235,18 @@ if __name__ == "__main__":
     try:
         if args.keys:
             key_predicate = construct_predicates(args.keys,
-                                                 construct_key_predicate, any,
+                                                 construct_key_entry_predicate,
+                                                 'entry_key',
+                                                 any,
                                                  args)
 
         if args.entries:
             entry_types = [e for es in args.entries
                            for e in map(str.strip, es.split(','))]
-            entry_predicate = construct_predicates(entry_types,
-                                                   construct_entry_predicate,
-                                                   any,
-                                                   args)
+            entry_predicate =\
+                construct_predicates(entry_types,
+                                     construct_key_entry_predicate,
+                                     'entry_type', any, args)
 
         if args.fields:
             field_predicate = construct_predicates(args.fields,
