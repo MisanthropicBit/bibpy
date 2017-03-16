@@ -188,6 +188,8 @@ def construct_field_predicate(name, key, tokens, args):
         return interval_predicate(tokens[0], tokens[2], tokens[3])
     elif name == 'range':
         return range_predicate(*tokens)
+    else:
+        raise ValueError("Invalid field query syntax")
 
 
 def construct_predicates(values, f, key, pred_combiner, args):
