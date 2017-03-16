@@ -19,15 +19,17 @@ You can also refer to the [examples](/examples).
 You can read reference data from a string or from a file. `bibpy` supports four
 different reference formats:
 
-* **bibtex:** Treat data as bibtex. Raise parsing error on non-conformity.
-* **biblatex:** Treat data as biblatex. Raise parsing error on non-conformity.
-* **mixed:** Treat data as a mixture of bibtex and biblatex. Raise parsing errors on non-conformity.
+* **bibtex:** Treat data as bibtex. Raise error on non-conformity.
+* **biblatex:** Treat data as biblatex. Raise error on non-conformity.
+* **mixed:** Treat data as a mixture of bibtex and biblatex. Raise errors on non-conformity.
 * **relaxed:** Relax parsing rules. All types of entries and fields are allowed.
 
 For example if you read a file containing an `@online` entry as bibtex, `bibpy`
 would raise an error since this entry type only exists in biblatex. Therefore,
 the `relaxed` format is typically recommended when parsing third party bib
-files. Below is an example of reading data from a string and a file.
+files. For the remainder of this tutorial and elsewhere, we collectively refer
+to any kind of file with bibliography entries as 'bib'. Below is an example of
+reading data from a string and a file.
 
 ```python
 >>> import bibpy
@@ -58,9 +60,9 @@ defer until a later section.
 <a name="basic_usage"></a>
 ## Manipulating reference data
 
-`bibpy` has been designed to be pythonic so most manipulation of reference data
-should come naturally. For the remaining of this section, we assume that we have
-loaded the following data into the variable `entries`:
+`bibpy` has been designed for ease of use so most manipulation of reference data
+should come relatively easy. For this section, we assume that we have loaded the
+following data into the variable `entries`:
 
 ```
 @article{key1,
@@ -130,22 +132,22 @@ True
 ['author', 'title', 'year', 'month', 'institution', 'message']
 >>> entry.values()
 ['James Conway and Archer Sterling', '1337 Hacker', '2010', '4', 'Office of Information Management {and} Communications']
->>> entry.clear()  # Clear all fields (set to None)
 >>> del entry['institution']
 >>> entry.fields
 ['author', 'title', 'year', 'month', 'message']
+>>> entry.clear()  # Clear all fields (set to None)
 ```
 
-Active fields...
+Entry fields that were not present when parsing return `None`.
 
 <a name="processing"></a>
 ## Post- and Preprocessing Fields
 
-You may have noticed in the previous section that values are returned as strings
-by default (unicode strings by default). You can supply `postprocessing=True` to
-the `read_*` methods to convert a subset of the standard bibtex/biblatex fields'
-values to meaningful python types. Accessing the fields of the entries from the
-previous section would now return the following instead.
+You may have noticed in the previous section that values are returned as (utf-8)
+strings by default. You can supply `postprocessing=True` to the `read_*` methods
+to convert a subset of the standard bibtex/biblatex fields' values to meaningful
+python types. Accessing the fields of the entries from the previous section
+would now return the following instead.
 
 ```python
 >>> entries = bibpy.read_file('references.bib', 'biblatex', postprocessing=True)[0]
@@ -161,10 +163,10 @@ previous section would now return the following instead.
 ['Office of Information Management and Communications']
 ```
 
-For name lists, 'and' is the default delimiter. Notice that `bibpy` does not
-split on delimiters enclosed in braces, but removes them afterwards. When
-writing entries, its postprocessed fields are automatically converted back to
-their pre-postprocessed counterparts.
+For name lists, 'and' is the default delimiter. `bibpy` does not split on
+delimiters enclosed in braces, but removes them afterwards (see the
+'institution' field). When writing entries, its postprocessed fields are
+automatically converted back to their pre-postprocessed counterparts.
 
 <a name="strings"></a>
 ## String Variable Expansion
@@ -211,7 +213,8 @@ Let's try and load the entry interactively.
 As you can see, we can also undo the string variable expansion using
 `bibpy.unexpand_strings`. Both functions report duplicate variable names by
 default which would make unexpansion impossible for entries that use the
-duplicates.
+duplicates. The unexpansion might also unexpand unrelated text that happens to
+be the same as that of a variable. There is currently no way to avoid this.
 
 <a name="inheritance"></a>
 ## Crossreferences and xdata Inheritance
@@ -246,34 +249,35 @@ details. Below is an example of querying a bib source.
 $ bibstats --count source.bib
 Found 4 entries
 $ bibstats --top=3 source.bib  # Display the top 3 occurring entries
-???
-$ bibstats --total --percetanges --sort
-???
-```
+Entry                Count
+-----------------------------------------
+article              881 (60.38%)
+inproceedings        256 (17.55%)
+techreport           113 (7.75%)
 
-The final command prints the total number of entries, the percentages of
-different entry types and sorts the results ascendingly.
+Total entries: 1459
+```
 
 ### `bibgrep`
 
 `bibgrep` can be used to much like the `grep` command but selects entries based
-on user criteria. It can be combined effectively with the other two.
+on user criteria.
 
 ```bash
 $ bibgrep --entries="article" --field="author~hughes" --ignore-case
 ```
 
-The command selects all `@article` entries that have "hughes" (case-insensitive)
-somewhere in their `author` field. Next, we illustrate how we can combine
+The command selects entries that are either `@article` entries or have "hughes"
+(case-insensitive) somewhere in their `author` field. We can also combine
 `bibgrep` with the other tools.
 
 ```bash
-$ bibgrep --entries="conference" | bibformat --indent=4 --export=json > conferences.xml
+$ bibgrep --entries="conference" | bibformat --indent=4 --export=json > conferences.json
 $ bibgrep --field="year=1900-2000" --field="volume>=10" | bibstats --top=5
 ```
 
 The first command selects all `@conference` entries and exports them to json
 with an indentation of 4 spaces. The second command selects all entries that
-have a year field in the inclusive range [1900; 2000] **and** a volume field of
+have a year field in the inclusive range [1900; 2000] **or** a volume field of
 10 or more, then prints out the statistics for the top 5 occurring entries that
 satisfy those predicates. (Show how to && and || predicates).
