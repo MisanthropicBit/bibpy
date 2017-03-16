@@ -69,8 +69,8 @@ _NUMERIC_GRAMMAR = numeric_grammar()
 
 # TODO: Fix entry and key grammar ordering issue
 # The order matters here
-_FULL_GRAMMAR = _NUMERIC_GRAMMAR | _FIELD_GRAMMAR | _ENTRY_GRAMMAR |\
-    _KEY_GRAMMAR
+_FULL_GRAMMAR = _NUMERIC_GRAMMAR | _FIELD_GRAMMAR |\
+    _ENTRY_GRAMMAR | _KEY_GRAMMAR
 
 
 def parse_query(query):
