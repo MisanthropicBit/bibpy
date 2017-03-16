@@ -172,7 +172,7 @@ def construct_key_entry_predicate(name, key, tokens, args):
     return f
 
 
-def construct_field_predicate(name, tokens, args):
+def construct_field_predicate(name, key, tokens, args):
     """Construct and return a function that reflects the parsed query."""
     if name == 'field':
         if tokens[1] == '=':
@@ -251,6 +251,7 @@ if __name__ == "__main__":
         if args.fields:
             field_predicate = construct_predicates(args.fields,
                                                    construct_field_predicate,
+                                                   'field',
                                                    any, args)
     except (ValueError, bibpy.error.ParseException) as e:
         sys.exit(str(e))
