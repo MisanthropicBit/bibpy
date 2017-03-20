@@ -279,8 +279,8 @@ if __name__ == "__main__":
                 filtered_entries.append(entry)
 
     if args.count:
-        print "Found {0} entries".format(len(filtered_entries))
+        print("Found {0} entries".format(len(filtered_entries)))
     else:
         if filtered_entries:
             # Write all filtered entries to sys.stdout
-            print bibpy.write_string(filtered_entries)
+            print(bibpy.write_string(filtered_entries))
