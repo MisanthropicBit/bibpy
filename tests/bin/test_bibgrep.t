@@ -70,11 +70,10 @@ Test entry type filtering
 Test key filtering
 
     $ $TESTDIR/../../bin/bibgrep --key="Conway2000" $TESTDIR/../data/small1.bib
-
-    @Book{Conway2000,
-        author    = {Damian Conway},
+    @book{Conway2000,
         title     = {Object {O}riented {P}erl: {A} comprehensive guide to concepts and programming techniques},
-        publisher = {Manning Publications Co.},
+        address   = {Connecticut, USA},
         year      = {2000},
-        address   = {Connecticut, USA}
+        author    = {Damian Conway},
+        publisher = {Manning Publications Co.}
     }
