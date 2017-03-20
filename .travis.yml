@@ -30,7 +30,7 @@ script:
     - coverage --version
     - cram --version
     - coverage run --source=bibpy -m py.test --verbose
-    - cram --verbose tests/bin/test_bib*.t
+    #- cram --verbose tests/bin/test_bib*.t
 
 after_success:
     - coveralls
