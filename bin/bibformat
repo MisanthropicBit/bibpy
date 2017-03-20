@@ -109,8 +109,8 @@ if __name__ == "__main__":
                                for f in ['align', 'indent', 'order']])
 
         if args.export == 'xml':
-            print export_to_xml(entries, format_options)
+            print(export_to_xml(entries, format_options))
         elif args.export == 'json':
-            print export_to_json(entries, format_options)
+            print(export_to_json(entries, format_options))
         else:
-            print bibpy.write_string(entries, **format_options)
+            print(bibpy.write_string(entries, **format_options))
