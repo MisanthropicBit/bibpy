@@ -37,10 +37,12 @@ reading data from a string and a file.
 >>> entries = bibpy.read_file('references.bib', 'relaxed')[0]
 ```
 
-Both functions return a [`collections.namedtuple`]() of five elements (notice
-the index at the end of the functions): The entries (`@conference` etc.),
-strings (`@string`), preambles (`@preamble`), comment entries (`@comment`) and
-finally all comments in the source (which exist outside of entries).
+Both functions return a
+[`collections.namedtuple`](https://docs.python.org/2/library/collections.html#collections.namedtuple)
+of five elements (notice the index at the end of the functions): The entries
+(`@conference` etc.), strings (`@string`), preambles (`@preamble`), comment
+entries (`@comment`) and finally all comments in the source (which exist outside
+of entries).
 
 Writing bib entries is straight-forward and you do not have to supply a
 reference format as the entries are simply written with the data they contain.
