@@ -2,6 +2,7 @@
 
 ![Build status](https://travis-ci.org/MisanthropicBit/colorise.svg?branch=rgb_256_exts)
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
+[![PyPI version](https://badge.fury.io/py/bibpy.svg)](https://badge.fury.io/py/bibpy)
 
 Python library for parsing bib(la)tex files and manipulating entries.
 
