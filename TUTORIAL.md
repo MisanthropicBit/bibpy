@@ -262,8 +262,7 @@ Total entries: 1459
 
 ### `bibgrep`
 
-`bibgrep` can be used to much like the `grep` command but selects entries based
-on user criteria.
+`bibgrep` is similar to the `grep` command but filters entries instead of lines.
 
 ```bash
 $ bibgrep --entries="article" --field="author~hughes" --ignore-case
