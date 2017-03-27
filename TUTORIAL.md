@@ -146,13 +146,13 @@ Entry fields that were not present when parsing return `None`.
 ## Post- and Preprocessing Fields
 
 You may have noticed in the previous section that values are returned as (utf-8)
-strings by default. You can supply `postprocessing=True` to the `read_*` methods
+strings by default. You can supply `postprocess=True` to the `read_*` methods
 to convert a subset of the standard bibtex/biblatex fields' values to meaningful
 python types. Accessing the fields of the entries from the previous section
 would now return the following instead.
 
 ```python
->>> entries = bibpy.read_file('references.bib', 'biblatex', postprocessing=True)[0]
+>>> entries = bibpy.read_file('references.bib', 'biblatex', postprocess=True)[0]
 >>> entries[0].author
 ['James Conway', 'Archer Sterling']
 >>> entries[0].year
