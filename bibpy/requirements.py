@@ -180,7 +180,7 @@ def check(entry, format):
 
     requirements = formats[format]
     fields = frozenset(entry.fields)
-    required, either = requirements[entry.entry_type]
+    required, either = requirements.get(entry.entry_type, (frozenset(), []))
 
     # We return sets to enable easy comparison between requirements since
     # set([1, 2]) == set([2, 1]), but [1, 2] != [2, 1]
