@@ -1,4 +1,7 @@
+coverage
+coveralls
 cram
+pep257
 pyparsing
 pytest
 pytest-quickcheck
