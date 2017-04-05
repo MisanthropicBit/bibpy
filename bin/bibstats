@@ -47,8 +47,6 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--top', type=int, default=None,
                         help="Display only the top N occurrences. Displays the"
                         " bottom N occurrences if sorting descendingly.")
-    parser.add_argument('--total', action='store_true',
-                        help="Display only the total number of entries found")
 
     args, rest = parser.parse_known_args()
     all_entries = []
@@ -74,4 +72,4 @@ if __name__ == "__main__":
             print("{0:<20}\033[0m {1} ({2:.2f}%)"
                   .format(t, count, count / float(total) * 100.))
 
-    print("\nTotal entries: {0}".format(total))
+        print("\nTotal entries: {0}".format(total))
