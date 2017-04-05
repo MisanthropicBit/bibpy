@@ -21,13 +21,6 @@ __author__ = 'Alexander Asp Bock'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-# TODO: Just use bibgrep piped with bibstats
-# bibstats --fields=author
-# bibstats --fields="author=Panko"
-# bibstats --fields="author~Panko"
-# bibstats --fields="author~Panko,year=2010"
-# bibstats --entries="article,conference"
-
 
 def header(titles, spacing=20, underline='-'):
     """"""
@@ -46,14 +39,6 @@ if __name__ == "__main__":
                         version='%(prog)s v' + __version__)
     parser.add_argument('-c', '--count', action='store_true',
                         help="Print only a total count of all entries")
-    parser.add_argument('-e', '--entries', type=str,
-                        help="Print stats for the matching entry type")
-    parser.add_argument('-f', '--fields', type=str,
-                        help="Print stats for a given list of fields")
-    parser.add_argument('--color', type=str, default='no',
-                        help="Use colors to highlight results")
-    parser.add_argument('-s', '--sort', action='store_true',
-                        help="Sort results ascendingly")
     parser.add_argument('--porcelain', action='store_true',
                         help="Output results so they are easier to parse by "
                              "other programs")
