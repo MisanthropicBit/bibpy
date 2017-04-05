@@ -64,7 +64,9 @@ if __name__ == "__main__":
     types = collections.Counter([entry.entry_type for entry in all_entries])
     total = sum(types.values())
 
-    if not args.total:
+    if args.count:
+        print(total)
+    else:
         titles = ['Entry', 'Count']
         print(header(titles))
 
