@@ -5,7 +5,8 @@ import bibpy.error
 import bibpy.fields
 import pyparsing as pp
 
-# TODO: Speed up parsing! Parse graphs in 0.98s instead of 2.4Xs
+# TODO: Speed up parsing! Parse graphs.bib in less than a second instead of
+# 2.4Xs
 
 ##################################################################
 # Shared grammar definitions
