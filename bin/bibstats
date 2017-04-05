@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     if not rest:
         # Assume stdin if no files given
-        entries, _, _, _, _ = bibpy.read_file(sys.stdin, 'relaxed')
+        entries = bibpy.read_file(sys.stdin, 'relaxed').entries
 
     types = collections.Counter([entry.entry_type for entry in all_entries])
     total = sum(types.values())
