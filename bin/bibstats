@@ -65,11 +65,15 @@ if __name__ == "__main__":
     if args.count:
         print(total)
     else:
-        titles = ['Entry', 'Count']
-        print(header(titles))
+        if args.porcelain:
+            for t, count in types.most_common(args.top):
+                print("{0:<20}\033[0m {1}".format(t, count))
+        else:
+            titles = ['Entry', 'Count']
+            print(header(titles))
 
-        for t, count in types.most_common(args.top):
-            print("{0:<20}\033[0m {1} ({2:.2f}%)"
-                  .format(t, count, count / float(total) * 100.))
+            for t, count in types.most_common(args.top):
+                print("{0:<20}\033[0m {1} ({2:.2f}%)"
+                      .format(t, count, count / float(total) * 100.))
 
-        print("\nTotal entries: {0}".format(total))
+            print("\nTotal entries: {0}".format(total))
