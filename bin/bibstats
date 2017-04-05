@@ -73,7 +73,10 @@ if __name__ == "__main__":
             print(header(titles))
 
             for t, count in types.most_common(args.top):
-                print("{0:<20}\033[0m {1} ({2:.2f}%)"
-                      .format(t, count, count / float(total) * 100.))
+                if args.percentages:
+                    print("{0:<20}\033[0m {1} ({2:.2f}%)"
+                          .format(t, count, count / float(total) * 100.))
+                else:
+                    print("{0:<20}\033[0m {1}".format(t, count))
 
             print("\nTotal entries: {0}".format(total))
