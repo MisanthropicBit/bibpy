@@ -23,7 +23,7 @@ install:
 
 before_script:
     - if [ "$TRAVIS_PYTHON_VERSION" != "2.6" ]; then travis_retry flake8 --ignore=F401 .; fi
-    - pep257 --ignore=D102,D103,D211,D400 .
+    #- pep257 --ignore=D102,D103,D211,D400 .
 
 script:
     - virtualenv --version
