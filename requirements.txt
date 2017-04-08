@@ -3,5 +3,5 @@ coveralls
 cram
 pep257
 pyparsing
-pytest
+pytest>=2.9
 pytest-quickcheck
