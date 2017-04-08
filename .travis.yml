@@ -30,6 +30,7 @@ script:
     - coverage --version
     - cram --version
     - if [ "$TRAVIS_PYTHON_VERSION" != "3.2" ]; then coverage run --source=bibpy -m py.test --verbose; fi
+    - if [ "$TRAVIS_PYTHON_VERSION" == "3.2" ]; then py.test; fi
     #- cram --verbose tests/bin/test_bib*.t
 
 after_success:
