@@ -29,11 +29,11 @@ script:
     - virtualenv --version
     - coverage --version
     - cram --version
-    - coverage run --source=bibpy -m py.test --verbose
+    - if [ "$TRAVIS_PYTHON_VERSION" != "3.2" ]; then coverage run --source=bibpy -m py.test --verbose; fi
     #- cram --verbose tests/bin/test_bib*.t
 
 after_success:
-    - coveralls
+    - if [ "$TRAVIS_PYTHON_VERSION" != "3.2" ]; then coveralls; fi
 
 branches:
     only:
