@@ -191,6 +191,7 @@ def autoproperty(name, getter=True, setter=True, prefix='_'):
     return property(_getter if getter else None,
                     _setter if setter else None)
 
+
 # Programmatically set all internal field attributes for the Entry class
 for field in bibpy.fields.all:
     setattr(Entry, "_" + field, None)
