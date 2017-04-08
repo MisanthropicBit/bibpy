@@ -73,7 +73,8 @@ following data into the variable `entries`:
     year        = {2010},
     month       = {4},
     institution = {Office of Information Management {and} Communications},
-    message     = {Hello!}
+    message     = {Hello!},
+    date        = {2001-07-19/}
 }
 
 @online{key2,
@@ -106,6 +107,10 @@ operations.
 '4'
 >>> entry['invalid']
 None
+>>> entry.message
+Hello!
+>>> entry.date
+2001-07-19/
 >>> entry.invalid
 None
 >>> 'institution' in entry
@@ -163,12 +168,23 @@ would now return the following instead.
 'April'
 >>> entries[0].institution
 ['Office of Information Management and Communications']
+>>> entries[0].date
+bibpy.date.DateRange(2001-07-19/)
+>>> entries[0].start
+datetime.date(2001, 7, 19)
+>>> entries[0].end
+None
+>>> entries[0].open // True if an open-ended date range
+True
 ```
 
 For name lists, 'and' is the default delimiter. `bibpy` does not split on
 delimiters enclosed in braces, but removes them afterwards (see the
-'institution' field). When writing entries, its postprocessed fields are
-automatically converted back to their pre-postprocessed counterparts.
+'institution' field). A biblatex date is converted to a special `DateRange`
+object since they can both refer to single dates and the time period between two
+dates. In this case, it refers to an open-ended date (hence the '/' at the end)
+starting on the 19th of July, 2001. When writing entries, its postprocessed
+fields are automatically converted back to their pre-postprocessed counterparts.
 
 <a name="strings"></a>
 ## String Variable Expansion
