@@ -266,6 +266,7 @@ if __name__ == "__main__":
 
     filtered_entries = []
 
+    # TODO: Make it work for directories
     # Iterate the files given on the command line
     for filename in rest:
         # NOTE: Use scanFile if it ever gets into pyparsing to lazily read and
