@@ -296,12 +296,13 @@ if __name__ == "__main__":
                 if key_predicate(entry) or entry_predicate(entry) or\
                         field_predicate(entry):
                     filtered_entries.append(entry)
+
+            if args.count:
+                print("{0}:{1}".format(filename, len(filtered_entries)))
+                filtered_entries = []
     except bibpy.error.ParseException as ex:
         sys.exit("bibgrep: {0}".format(ex))
 
-    if args.count:
-        print("Found {0} entries".format(len(filtered_entries)))
-    else:
-        if filtered_entries:
-            # Write all filtered entries to sys.stdout
-            print(bibpy.write_string(filtered_entries))
+    if filtered_entries:
+        # Write all filtered entries to sys.stdout
+        print(bibpy.write_string(filtered_entries))
