@@ -36,8 +36,11 @@ number in the range ]0;50].
 import argparse
 import bibpy
 import bibpy.tools
+import fnmatch
+import glob
 import operator
 import re
+import os
 import sys
 
 __author__ = 'Alexander Asp Bock'
@@ -48,6 +51,20 @@ __license__ = 'MIT'
 
 _DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
 entry types and fields."""
+
+
+def iter_files(names, pattern, recursive):
+    """Yield all files matching a specific file pattern in a directory."""
+    for name in names:
+        if os.path.isdir(name):
+            if not recursive:
+                sys.exit("bibgrep: {0}: Is a directory".format(name))
+            else:
+                for root, dirs, files in os.walk(name):
+                    for filename in fnmatch.filter(files, pattern):
+                        yield os.path.join(root, filename)
+        else:
+            yield name
 
 
 def always_true(value):
