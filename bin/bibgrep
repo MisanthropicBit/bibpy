@@ -225,7 +225,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--count', action='store_true',
                         help='Only a count of selected lines is written to '
                              'standard output')
-    parser.add_argument('-i', '--ignore-case', action="store_true",
+    parser.add_argument('-i', '--ignore-case', action='store_true',
                         help='Perform case insensitive matching. By default, '
                              'bibgrep is case sensitive')
 
