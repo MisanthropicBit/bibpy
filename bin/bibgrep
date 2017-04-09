@@ -57,7 +57,8 @@ def iter_files(names, pattern, recursive):
     for name in names:
         if os.path.isdir(name):
             if not recursive:
-                sys.exit("bibgrep: {0}: Is a directory".format(name))
+                sys.exit("bibgrep: '{0}' is a directory, use [-r, --recursive]"
+                         " to recurse into directories".format(name))
             else:
                 for root, dirs, files in os.walk(name):
                     for filename in fnmatch.filter(files, pattern):
