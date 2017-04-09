@@ -37,7 +37,6 @@ import argparse
 import bibpy
 import bibpy.tools
 import fnmatch
-import glob
 import operator
 import re
 import os
