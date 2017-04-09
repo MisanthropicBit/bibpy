@@ -285,18 +285,19 @@ if __name__ == "__main__":
 
     filtered_entries = []
 
-    # TODO: Make it work for directories
-    # Iterate the files given on the command line
-    for filename in rest:
-        # NOTE: Use scanFile if it ever gets into pyparsing to lazily read and
-        # filter the bib source(s)
-        entries, strings, preambles, comment_entries, comments =\
-            bibpy.read_file(filename, format='relaxed')
+    try:
+        for filename in iter_files(rest, '*.bib', args.recursive):
+            # NOTE: Use scanFile if it ever gets into pyparsing to lazily read
+            # and filter the bib source(s)
+            entries, strings, preambles, comment_entries, comments =\
+                bibpy.read_file(filename, format='relaxed')
 
-        for entry in entries:
-            if key_predicate(entry) or entry_predicate(entry) or\
-                    field_predicate(entry):
-                filtered_entries.append(entry)
+            for entry in entries:
+                if key_predicate(entry) or entry_predicate(entry) or\
+                        field_predicate(entry):
+                    filtered_entries.append(entry)
+    except bibpy.error.ParseException as ex:
+        sys.exit("bibgrep: {0}".format(ex))
 
     if args.count:
         print("Found {0} entries".format(len(filtered_entries)))
