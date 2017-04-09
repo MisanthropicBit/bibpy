@@ -228,7 +228,7 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--ignore-case', action='store_true',
                         help='Perform case insensitive matching. By default, '
                              'bibgrep is case sensitive')
-    parser.add_argument('-r', '--recurse', action='store_true',
+    parser.add_argument('-r', '--recursive', action='store_true',
                         help='Recursively search subdirectories listed')
 
     args, rest = parser.parse_known_args()
