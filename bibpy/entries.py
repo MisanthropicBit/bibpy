@@ -101,6 +101,19 @@ def aliases(entry_type, format):
     return biblatex_entry_type_aliases.get(entry_type, [])
 
 
-# Light-weight container object for parsed entries
-Entries = collections.namedtuple('Entries', ['entries', 'strings', 'preambles',
-                                             'comment_entries', 'comments'])
+# Private named tuple used as a base class for the real Entries class
+_Entries = collections.namedtuple('Entries',
+                                  ['entries', 'strings', 'preambles',
+                                   'comment_entries', 'comments'])
+
+
+class Entries(_Entries):
+    """Light-weight container object for parsed entries."""
+
+    __slots__ = ()
+
+    @property
+    def all(self):
+        """Return all entries (excluding comments) as a list."""
+        return self.entries + self.strings + self.preambles +\
+            self.comment_entries
