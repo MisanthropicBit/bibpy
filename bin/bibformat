@@ -96,8 +96,7 @@ if __name__ == "__main__":
 
     # Iterate the files given on the command line
     for filename in rest:
-        entries, strings, preambles, comment_entries, comments =\
-            bibpy.read_file(filename, format='relaxed')
+        results = bibpy.read_file(filename, format='relaxed')
 
         if args.order:
             args.order = [order for orders in args.order
@@ -109,8 +108,8 @@ if __name__ == "__main__":
                                for f in ['align', 'indent', 'order']])
 
         if args.export == 'xml':
-            print(export_to_xml(entries, format_options))
+            print(export_to_xml(results.all, format_options))
         elif args.export == 'json':
-            print(export_to_json(entries, format_options))
+            print(export_to_json(results.all, format_options))
         else:
-            print(bibpy.write_string(entries, **format_options))
+            print(bibpy.write_string(results.all, **format_options))
