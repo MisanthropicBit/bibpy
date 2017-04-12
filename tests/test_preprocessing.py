@@ -44,6 +44,13 @@ def test_preproces_int(i):
     assert bibpy.preprocess.preprocess_int(i) == str(i)
 
 
+def test_keylist():
+    keylist = ['key1', 'key2', 'key3']
+
+    assert bibpy.preprocess.preprocess_keylist(keylist) == 'key1, key2, key3'
+    assert bibpy.preprocess.preprocess_keylist("abc") == "abc"
+
+
 # @pytest.mark.skip
 def test_preprocess():
     entry = bibpy.read_file('tests/data/preprocess.bib', 'relaxed')[0][0]
