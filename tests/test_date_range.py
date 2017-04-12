@@ -74,3 +74,5 @@ def test_properties():
 
     assert date1 == date2
     assert date1 != date3
+    assert date1 != "abc"
+    assert not date1 == map
