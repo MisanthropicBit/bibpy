@@ -19,7 +19,7 @@ format."""
 
 
 def export_to_xml(entries, format_options):
-    """Export entries to xml."""
+    """Export a list of entries to xml."""
     root = ET.Element('entries')
 
     for entry in entries:
