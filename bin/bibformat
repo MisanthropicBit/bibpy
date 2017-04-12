@@ -23,10 +23,21 @@ def export_to_xml(entries, format_options):
     root = ET.Element('entries')
 
     for entry in entries:
-        xml_entry = ET.SubElement(root, 'entry', type=entry.entry_type,
-                                  key=entry.entry_key)
+        if entry.entry_type in ('comment', 'preamble', 'string'):
+            xml_entry = ET.SubElement(root, entry.entry_type)
 
-        export_fields_to_xml(xml_entry, entry)
+            if entry.entry_type == 'string':
+                xml_field = ET.SubElement(xml_entry, 'variable',
+                                          name=entry.variable)
+                xml_field.text = entry.value
+            else:
+                xml_entry.text = entry.value
+        else:
+            xml_entry = ET.SubElement(root, 'entry',
+                                      type=entry.entry_type,
+                                      key=entry.entry_key)
+
+            export_fields_to_xml(xml_entry, entry)
 
     reparsed = xml.dom.minidom.parseString(ET.tostring(root, encoding='utf-8'))
 
