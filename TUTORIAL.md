@@ -238,7 +238,68 @@ be the same as that of a variable. There is currently no way to avoid this.
 ## Crossreferences and xdata Inheritance
 
 There are three primary ways to do inheritance through fields: `crossref`,
-`xdata` and `xref`. The latter is not supported as ....
+`xdata` and `xref`. The latter is not supported as no data is actually directly
+inherited, it is just a non-inheriting reference to another entry. Imagine we
+have the following two fields in a file.
+
+```bibtex
+@inbook{key1,
+    crossref = {key2},
+    title    = {Title},
+    author   = {Author},
+    pages    = {5--25}
+}
+
+@book{key2,
+    subtitle  = {Booksubtitle},
+    title     = {Booktitle},
+    author    = {Author2},
+    date      = {1995},
+    publisher = {Publisher},
+    location  = {Location}
+}
+```
+
+Reading in the file with `bibpy` and then using `bibpy.inherit_crossrefs`, the
+`inbook` entry can inherit the appropriate fields from the `book` entry (done
+in-place).
+
+```python
+>>> results = bibpy.read_file('crossreferences.bib', 'relaxed')
+>>> bibpy.inherit_crossrefs(results.entries)
+```
+
+Printing out the entries again shows that the `title` and `subtitle` fields from
+the `book` entry have been inherited (the ordering of the fields may vary).
+
+```bibtex
+@inbook{key1,
+    crossref     = {key2},
+    title        = {Title},
+    booktitle    = {Booktitle},
+    booksubtitle = {Booksubtitle},
+    author       = {Author},
+    pages        = {5--25}
+}
+
+@book{key2,
+    subtitle  = {Booksubtitle},
+    title     = {Booktitle},
+    author    = {Author2},
+    date      = {1995},
+    publisher = {Publisher},
+    location  = {Location}
+}
+```
+
+You can uninherit the fields again with `bibpy.uninherit_crossrefs`. You can
+also inherit and uninherit `xdata` fields. The difference is that while
+`crossref` fields follow specific rules about which fields are inherited and
+what their names become, `xdata` simply pulls in the fields from the ancestor
+and can optionally be made to overwrite existing fields with the same names. If
+the `postprocess` option is `True` when reading (see [this
+section](#processing)), `xdata` fields are converted from a comma-separated
+string to a list of keys.
 
 <a name="tools"></a>
 ## `bibpy` Tools
