@@ -6,9 +6,7 @@ import pytest
 
 @pytest.fixture
 def test_entries():
-    entries, _, _, _, _ = bibpy.read_file('tests/data/simple_1.bib',
-                                          'biblatex')
-    return entries
+    return bibpy.read_file('tests/data/simple_1.bib', 'biblatex').entries
 
 
 @pytest.mark.skip
