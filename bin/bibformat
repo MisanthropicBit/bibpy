@@ -58,9 +58,16 @@ def entry_to_json_object(entry, format_options):
     # order = format_options['order']
     # sort_keys = True if order and isinstance(order, bool) else False
 
-    return {'entry': {'type':   entry.entry_type,
-                      'key':    entry.entry_key,
-                      'fields': fields}}
+    if entry.entry_type in ('comment', 'preamble', 'string'):
+        if entry.entry_type == 'string':
+            return {entry.entry_type: {entry.variable: entry.value}}
+        else:
+            return {entry.entry_type: entry.value}
+    else:
+        return {'entry': {'type':   entry.entry_type,
+                          'key':    entry.entry_key,
+                          'fields': fields}}
+
     # indent=indent, sort_keys=sort_keys)
 
 
