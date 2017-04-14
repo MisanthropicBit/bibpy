@@ -358,4 +358,14 @@ The first command selects all `@conference` entries and exports them to json
 with an indentation of 4 spaces. The second command selects all entries that
 have a year field in the inclusive range [1900; 2000] **or** a volume field of
 10 or more, then prints out the statistics for the top 5 occurring entries that
-satisfy those predicates. (Show how to && and || predicates).
+satisfy those predicates.
+
+Selecting entries that satisfy all constraints can be done by piping multiple
+invocations of `bibgrep`.
+
+```bash
+$ bibgrep --entry="book" | bibgrep --field="month=1-3"
+```
+
+This selects all `book` entries that were published in the first quarter of any
+year.
