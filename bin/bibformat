@@ -104,7 +104,7 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--surround', type=str, default='{}',
                         help='The two opening and closing characters '
                              'surrounding field values. Default is \'{}\'')
-    parser.add_argument('-o', '--order', action='append',
+    parser.add_argument('-o', '--order', type=str, default=False,
                         help='The order in which fields are output. Fields '
                              'not in this list are output last in an '
                              'unspecified order. Currently ignored by xml and '
@@ -117,10 +117,12 @@ if __name__ == "__main__":
         results = bibpy.read_file(filename, format='relaxed')
 
         if args.order:
-            args.order = [order for orders in args.order
-                          for order in map(str.strip, orders.split(','))]
-        else:
-            args.order = True
+            if args.order.lower() == 'true':
+                args.order = True
+            else:
+                # TODO: Use o.strip() instead
+                args.order = [order
+                              for order in map(str.strip, args.order.split(','))]
 
         format_options = dict([(f, getattr(args, f))
                                for f in ['align', 'indent', 'order']])
