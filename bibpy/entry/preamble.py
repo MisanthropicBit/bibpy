@@ -13,7 +13,7 @@ class Preamble(base.BaseEntry):
         """Create a preamble with a single value."""
         self._value = value.strip()
 
-    def format(self, indent='    ', singleline=True, braces=True):
+    def format(self, indent='    ', singleline=True, braces=True, **kwargs):
         """Format an return the preamble as a string.
 
         If 'singleline' is True, put the entry on a single line

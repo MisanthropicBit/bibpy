@@ -13,7 +13,7 @@ class String(base.BaseEntry):
         self._variable = variable.strip()
         self._value = value.strip()
 
-    def format(self, indent='    ', singleline=True, braces=True):
+    def format(self, indent='    ', singleline=True, braces=True, **kwargs):
         """Format an return the string entry as a string.
 
         If 'singleline' is True, put the entry on a single line
