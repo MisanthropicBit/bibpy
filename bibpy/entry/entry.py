@@ -27,7 +27,8 @@ class Entry(base.BaseEntry):
                 setattr(self, field, value)
 
     # TODO: How can we test this across versions?
-    def format(self, align=True, indent='    ', order=[], surround='{}'):  # pragma: no cover
+    def format(self, align=True, indent='    ', order=[], surround='{}',
+               **kwargs):  # pragma: no cover
         """Format and return the entry as a string.
 
         'align' aligns the equal signs of all fields.

@@ -12,7 +12,7 @@ class Comment(base.BaseEntry):
         """Create a comment entry with a single value."""
         self._value = value
 
-    def format(self, indent='    ', singleline=True, braces=True):
+    def format(self, indent='    ', singleline=True, braces=True, **kwargs):
         """Format an return the comment entry as a string.
 
         If 'singleline' is True, put the entry on a single line
