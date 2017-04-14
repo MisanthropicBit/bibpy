@@ -342,7 +342,7 @@ Total entries: 1459
 `bibgrep` is similar to the `grep` command but filters entries instead of lines.
 
 ```bash
-$ bibgrep --entries="article" --field="author~hughes" --ignore-case
+$ bibgrep --entry="article" --field="author~hughes" --ignore-case
 ```
 
 The command selects entries that are either `@article` entries or have "hughes"
@@ -350,7 +350,7 @@ The command selects entries that are either `@article` entries or have "hughes"
 `bibgrep` with the other tools.
 
 ```bash
-$ bibgrep --entries="conference" | bibformat --indent=4 --export=json > conferences.json
+$ bibgrep --entry="conference" | bibformat --indent=4 --export=json > conferences.json
 $ bibgrep --field="year=1900-2000" --field="volume>=10" | bibstats --top=5
 ```
 
