@@ -1,6 +1,7 @@
 """Test the functions in the tools file."""
 
 import bibpy.tools
+import pytest
 
 
 def test_version_format():
@@ -31,7 +32,16 @@ def test_parse_query():
     assert bibpy.tools.parse_query('~Author') == ('entry', ['~', 'Author'])
     assert bibpy.tools.parse_query('!Author') == ('entry', ['!', 'Author'])
 
+    invalid_queries = [
+        '!author .',         # Extra characters at the end
+        'volume/1900-2000',  # '=' replaces by forward slash
+        'author<>10',        # Invalid comparison operator
+        'institution~'       # No value following '~'
+    ]
 
+    for query in invalid_queries:
+        with pytest.raises(bibpy.error.ParseException):
+            bibpy.tools.parse_query(query)
 
 
 def test_predicate_composition():
