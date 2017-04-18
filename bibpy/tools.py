@@ -14,6 +14,16 @@ def version_format():
     return '%(prog)s v{0}'
 
 
+def always_true(value):
+    """A function that always returns True."""
+    return True
+
+
+def always_false(value):
+    """A function that always returns False."""
+    return False
+
+
 def key_grammar():
     """Return the grammar for parsing key queries."""
     return (pp.Combine(pp.Optional(pp.Literal('!')) +

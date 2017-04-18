@@ -32,23 +32,16 @@ def test_parse_query():
     assert bibpy.tools.parse_query('!Author') == ('entry', ['!', 'Author'])
 
 
-def always_true(value):
-    """A function that always returns True."""
-    return True
-
-
-def always_false(value):
-    """A function that always returns False."""
-    return False
 
 
 def test_predicate_composition():
-    pred1 = bibpy.tools.compose_predicates([always_false, always_true,
-                                            always_false], any)
-    pred2 = bibpy.tools.compose_predicates([always_false, always_false,
-                                            always_false], any)
-    pred3 = bibpy.tools.compose_predicates([always_false, always_true], all)
-    pred4 = bibpy.tools.compose_predicates([always_true, always_true], all)
+    at = bibpy.tools.always_true
+    af = bibpy.tools.always_false
+
+    pred1 = bibpy.tools.compose_predicates([af, at, af], any)
+    pred2 = bibpy.tools.compose_predicates([af, af, af], any)
+    pred3 = bibpy.tools.compose_predicates([af, at], all)
+    pred4 = bibpy.tools.compose_predicates([at, at], all)
 
     assert pred1(1)
     assert not pred2(1)
