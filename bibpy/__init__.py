@@ -11,7 +11,7 @@ import os
 import re
 import sys
 
-__version__ = '0.1.0'
+__version__ = '0.1.0-alpha'
 __license__ = 'MIT'
 __author__ = 'Alexander Asp Bock'
 __all__ = ('read_string',
