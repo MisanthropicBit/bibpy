@@ -31,7 +31,7 @@ def entry_grammar():
 def field_grammar():
     """Return."""
     return (pp.Optional(pp.Literal('!')) + pp.Word(pp.alphas) +
-            (pp.Literal('=') | pp.Literal('~')) + pp.Regex('.*'))('field')
+            (pp.Literal('=') | pp.Literal('~')) + pp.Regex('.+'))('field')
 
 
 def numeric_grammar():
