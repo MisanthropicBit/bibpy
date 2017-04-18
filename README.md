@@ -1,4 +1,4 @@
-# bibpy v0.1.0
+# bibpy v0.1.0-alpha
 
 ![Build status](https://travis-ci.org/MisanthropicBit/bibpy.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/MisanthropicBit/bibpy/badge.svg?branch=master)](https://coveralls.io/github/MisanthropicBit/bibpy?branch=master)
