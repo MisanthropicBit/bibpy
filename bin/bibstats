@@ -25,7 +25,7 @@ __license__ = 'MIT'
 
 def header(titles, spacing=20, underline='-'):
     """Return a title header as a string."""
-    header = " ".join([("{0:<" + str(spacing) + "}").format(title, spacing)
+    header = ' '.join([('{0:<' + str(spacing) + '}').format(title, spacing)
                        for title in titles])
 
     return header + "\n" + underline * len(header)
@@ -35,27 +35,26 @@ def print_stats(stats, print_percentages):
     """Print statistics in a column-aligned format."""
     for t, count in stats:
         if print_percentages:
-            print("{0:<20} {1} ({2:.2f}%)"
+            print('{0:<20} {1} ({2:.2f}%)'
                   .format(t, count, count / float(total) * 100.))
         else:
-            print("{0:<20} {1}".format(t, count))
+            print('{0:<20} {1}'.format(t, count))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='bibstats')
 
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s v' + __version__)
     parser.add_argument('-c', '--count', action='store_true',
-                        help="Print only a total count of all entries")
+                        help='Print only a total count of all entries')
     parser.add_argument('--porcelain', action='store_true',
-                        help="Output results so they are easier to parse by "
-                             "other programs")
+                        help='Output results so they are easier to parse by '
+                             'other programs')
     parser.add_argument('-p', '--percentages', action='store_true',
                         help="Show percentages")
     parser.add_argument('-t', '--top', type=int, default=None,
-                        help="Display only the top N occurrences. Displays the"
-                        " bottom N occurrences if sorting descendingly.")
+                        help='Display only the top N occurrences.')
 
     args, rest = parser.parse_known_args()
     all_entries = []
@@ -80,4 +79,4 @@ if __name__ == "__main__":
             titles = ['Entry', 'Count']
             print(header(titles))
             print_stats(types.most_common(args.top), args.percentages)
-            print("\nTotal entries: {0}".format(total))
+            print('\nTotal entries: {0}'.format(total))
