@@ -67,16 +67,6 @@ def iter_files(names, pattern, recursive):
             yield name
 
 
-def always_true(value):
-    """A function that always returns True."""
-    return True
-
-
-def always_false(value):
-    """A function that always returns False."""
-    return False
-
-
 def approx_field_predicate(field, value, args):
     """Return a function that does an approximate match of a string."""
     flags = re.I if args.ignore_case else 0
@@ -279,9 +269,9 @@ if __name__ == "__main__":
 
     if not args.keys and not args.entry and not args.fields:
         # If no constraints are defined, all entries pass
-        key_predicate = always_true
-        entry_predicate = always_true
-        field_predicate = always_true
+        key_predicate = bibpy.tools.always_true
+        entry_predicate = bibpy.tools.always_true
+        field_predicate = bibpy.tools.always_true
 
     filtered_entries = []
 
