@@ -5,8 +5,9 @@
 
 The default mode displays the count for each entry type in one or more files.
 The bibgrep tool can be used to filter out certain entries before passing them
-to bibstats, e.g. the following commands pick all entries where 'Adam' appears
-as an author, then displays the statistics for those entries:
+to bibstats, e.g. the following commands pick all entries where 'Adam'
+(case-sensitive) appears as an author, then displays the statistics for those
+entries:
 
     $ bibgrep --fields="author~Adam" | bibstats
 
