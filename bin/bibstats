@@ -60,7 +60,7 @@ if __name__ == "__main__":
     all_entries = []
 
     for file in rest:
-        entries, _, _, _, _ = bibpy.read_file(file, 'relaxed')
+        entries = bibpy.read_file(file, 'relaxed').entries
         all_entries += entries
 
     if not rest:
