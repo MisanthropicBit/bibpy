@@ -41,10 +41,8 @@ def print_stats(stats, print_percentages):
 
 
 if __name__ == "__main__":
-    # entries, comments =\
-    #     bibpy.read_file('tests/example_files/all_entry_types.bib', 'relaxed')
-
     parser = argparse.ArgumentParser(prog='bibstats')
+
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s v' + __version__)
     parser.add_argument('-c', '--count', action='store_true',
