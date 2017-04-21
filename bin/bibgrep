@@ -239,9 +239,9 @@ if __name__ == "__main__":
                         help='Recursively search subdirectories listed')
 
     args, rest = parser.parse_known_args()
-    key_predicate = always_false
-    entry_predicate = always_false
-    field_predicate = always_false
+    key_predicate = bibpy.tools.always_false
+    entry_predicate = bibpy.tools.always_false
+    field_predicate = bibpy.tools.always_false
 
     try:
         if args.keys:
