@@ -5,7 +5,8 @@
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 [![PyPI version](https://badge.fury.io/py/bibpy.svg)](https://badge.fury.io/py/bibpy)
 
-Python library for parsing bib(la)tex files and manipulating entries.
+Python library for parsing bib(la)tex files and manipulating entries. Tested on
+Python 2.6, 2.7, 3.3, 3.4, 3.5 and PyPy.
 
 * [Automatic conversion](/examples/field_conversion.py) of entry fields to and from appropriate Python types
 * [Requirements-checking for entry fields](/examples/requirements_check.py)
