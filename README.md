@@ -19,6 +19,8 @@ more complete [tutorial](TUTORIAL.md).
 
 # Installation
 
+_`bibpy` is currently in alpha and will go up on PyPI after beta_.
+
 Use pip:
 
 ```bash
