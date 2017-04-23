@@ -364,7 +364,7 @@ Selecting entries that satisfy all constraints can be done by piping multiple
 invocations of `bibgrep`.
 
 ```bash
-$ bibgrep --entry="book" | bibgrep --field="month=1-3"
+$ bibgrep --entry="book" references.bib | bibgrep --field="month=1-3"
 ```
 
 This selects all `book` entries that were published in the first quarter of any
