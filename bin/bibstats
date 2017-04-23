@@ -59,13 +59,13 @@ if __name__ == '__main__':
     args, rest = parser.parse_known_args()
     all_entries = []
 
-    for file in rest:
-        entries = bibpy.read_file(file, 'relaxed').entries
-        all_entries += entries
-
     if not rest:
         # Assume stdin if no files given
-        entries = bibpy.read_file(sys.stdin, 'relaxed').entries
+        all_entries = bibpy.read_file(sys.stdin, 'relaxed').entries
+    else:
+        for file in rest:
+            entries = bibpy.read_file(file, 'relaxed').entries
+            all_entries += entries
 
     types = collections.Counter([entry.entry_type for entry in all_entries])
     total = sum(types.values())
