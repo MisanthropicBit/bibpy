@@ -211,6 +211,14 @@ def construct_predicates(values, f, key, pred_combiner, args):
     return bibpy.tools.compose_predicates(predicates, pred_combiner)
 
 
+def filter_entries(entries, entry_predicate, key_predicate, field_predicate):
+    """Filter entries based on predicates on entry type, key and fields."""
+    for entry in entries:
+        if key_predicate(entry) or entry_predicate(entry) or\
+                field_predicate(entry):
+            yield entry
+
+
 if __name__ == "__main__":
     version_format = bibpy.tools.version_format()
 
