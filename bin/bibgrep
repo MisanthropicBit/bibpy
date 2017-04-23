@@ -239,6 +239,13 @@ if __name__ == "__main__":
                         help='Recursively search subdirectories listed')
 
     args, rest = parser.parse_known_args()
+
+    if rest:
+        rest = iter_files(rest, '*.bib', args.recursive)
+    else:
+        # If no files were given, read from sys.stdin
+        rest = sys.stdin
+
     key_predicate = bibpy.tools.always_false
     entry_predicate = bibpy.tools.always_false
     field_predicate = bibpy.tools.always_false
@@ -276,7 +283,7 @@ if __name__ == "__main__":
     filtered_entries = []
 
     try:
-        for filename in iter_files(rest, '*.bib', args.recursive):
+        for filename in rest:
             # NOTE: Use scanFile if it ever gets into pyparsing to lazily read
             # and filter the bib source(s)
             entries, strings, preambles, comment_entries, comments =\
