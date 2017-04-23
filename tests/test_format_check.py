@@ -113,6 +113,13 @@ A collection of bibtex entries
 
 
 def test_bibtex():
+    assert bibpy.is_format(open('tests/data/valid_bibtex.bib').read(),
+                           'bibtex')
+    assert not bibpy.is_format(open('tests/data/invalid_bibtex1.bib').read(),
+                               'bibtex')
+    assert not bibpy.is_format(open('tests/data/invalid_bibtex2.bib').read(),
+                               'bibtex')
+
     assert bibpy.is_format_file('tests/data/valid_bibtex.bib', 'bibtex')
     assert not bibpy.is_format_file('tests/data/invalid_bibtex1.bib', 'bibtex')
     assert not bibpy.is_format_file('tests/data/invalid_bibtex2.bib', 'bibtex')
@@ -121,6 +128,9 @@ def test_bibtex():
 
 
 def test_biblatex():
+    assert not bibpy.is_format(open('tests/data/invalid_bibtex2.bib').read(),
+                               'biblatex')
+
     # assert bibpy.is_format_file('tests/data/valid_biblatex.bib', 'biblatex')
     assert not bibpy.is_format_file('tests/data/invalid_bibtex2.bib',
                                     'biblatex')
