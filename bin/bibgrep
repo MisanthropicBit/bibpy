@@ -286,8 +286,8 @@ if __name__ == "__main__":
 
     try:
         if not rest:
-            entries = bibpy.read_string(sys.stdin.read(),
-                                        format='relaxed').entries
+            entries = bibpy.read_file(sys.stdin,
+                                      format='relaxed').entries
 
             filtered_entries = filter_entries(entries, entry_predicate,
                                               key_predicate, field_predicate)
