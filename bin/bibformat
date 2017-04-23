@@ -7,6 +7,7 @@ import argparse
 import bibpy
 import bibpy.tools
 import json
+import sys
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
 
@@ -111,6 +112,9 @@ if __name__ == "__main__":
                              'json export.')
 
     args, rest = parser.parse_known_args()
+
+    if not rest:
+        rest = [sys.stdin]
 
     # Iterate the files given on the command line
     for filename in rest:
