@@ -248,12 +248,6 @@ if __name__ == "__main__":
 
     args, rest = parser.parse_known_args()
 
-    if rest:
-        rest = iter_files(rest, '*.bib', args.recursive)
-    else:
-        # If no files were given, read from sys.stdin
-        rest = sys.stdin
-
     key_predicate = bibpy.tools.always_false
     entry_predicate = bibpy.tools.always_false
     field_predicate = bibpy.tools.always_false
@@ -291,20 +285,29 @@ if __name__ == "__main__":
     filtered_entries = []
 
     try:
-        for filename in rest:
-            # NOTE: Use scanFile if it ever gets into pyparsing to lazily read
-            # and filter the bib source(s)
-            entries, strings, preambles, comment_entries, comments =\
-                bibpy.read_file(filename, format='relaxed')
+        if not rest:
+            entries = bibpy.read_string(sys.stdin.read(),
+                                        format='relaxed').entries
 
-            for entry in entries:
-                if key_predicate(entry) or entry_predicate(entry) or\
-                        field_predicate(entry):
-                    filtered_entries.append(entry)
+            filtered_entries = filter_entries(entries, entry_predicate,
+                                              key_predicate, field_predicate)
 
             if args.count:
-                print("{0}:{1}".format(filename, len(filtered_entries)))
+                print(len(list(filtered_entries)))
                 filtered_entries = []
+        else:
+            for filename in iter_files(rest, '*.bib', args.recursive):
+                # NOTE: Use scanFile if it ever gets into pyparsing to lazily
+                # read and filter the bib source(s)
+                entries = bibpy.read_file(filename, format='relaxed').entries
+
+                filtered_entries += list(filter_entries(entries,
+                                                        entry_predicate,
+                                                        key_predicate,
+                                                        field_predicate))
+                if args.count:
+                    print("{0}:{1}".format(filename, len(filtered_entries)))
+                    filtered_entries = []
     except bibpy.error.ParseException as ex:
         sys.exit("bibgrep: {0}".format(ex))
     except KeyboardInterrupt:
