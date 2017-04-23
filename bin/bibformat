@@ -125,8 +125,8 @@ if __name__ == "__main__":
                 args.order = True
             else:
                 # TODO: Use o.strip() instead
-                args.order = [order
-                              for order in map(str.strip, args.order.split(','))]
+                args.order = [order for order in
+                              [e.strip() for e in args.order.split(',')]]
 
         format_options = dict([(f, getattr(args, f))
                                for f in ['align', 'indent', 'order']])
