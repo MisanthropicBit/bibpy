@@ -53,6 +53,9 @@ if __name__ == '__main__':
                              'other programs')
     parser.add_argument('-p', '--percentages', action='store_true',
                         help="Show percentages")
+    parser.add_argument('-s', '--sort-entries', action='store_true',
+                        help="Sort alphabetically on entry types instead "
+                             "of number of occurrences")
     parser.add_argument('-t', '--top', type=int, default=None,
                         help='Display only the top N occurrences.')
 
@@ -69,14 +72,20 @@ if __name__ == '__main__':
 
     types = collections.Counter([entry.entry_type for entry in all_entries])
     total = sum(types.values())
+    stats = types.most_common(args.top)
+
+    if args.sort_entries:
+        stats.sort(key=lambda x: x[0])
 
     if args.count:
         print(total)
     else:
         if args.porcelain:
-            print_stats(types.most_common(args.top), args.percentages)
+            print_stats(stats, args.percentages)
         else:
             titles = ['Entry', 'Count']
             print(header(titles))
-            print_stats(types.most_common(args.top), args.percentages)
+
+            print_stats(stats, args.percentages)
+
             print('\nTotal entries: {0}'.format(total))
