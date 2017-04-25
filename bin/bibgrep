@@ -72,7 +72,12 @@ def approx_field_predicate(field, value, args):
     flags = re.I if args.ignore_case else 0
 
     def _approx_match(entry):
-        return re.search(value, getattr(entry, field, ''), flags)
+        field_value = getattr(entry, field, '')
+
+        if field_value is None:
+            return False
+        else:
+            return re.search(value, field_value, flags)
 
     return _approx_match
 
