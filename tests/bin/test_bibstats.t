@@ -9,41 +9,41 @@ Test version number
 
 Test output
 
-    $ $TESTDIR/../../bin/bibstats $TESTDIR/../data/graphs.bib
+    $ $TESTDIR/../../bin/bibstats --sort-entries $TESTDIR/../data/graphs.bib
     Entry                Count               
     -----------------------------------------
     article              881
+    book                 56
+    booklet              1
+    inbook               3
+    incollection         7
     inproceedings        256
+    manual               1
+    mastersthesis        4
+    misc                 21
+    phdthesis            30
     techreport           113
     unpublished          86
-    book                 56
-    phdthesis            30
-    misc                 21
-    incollection         7
-    mastersthesis        4
-    inbook               3
-    manual               1
-    booklet              1
     
     Total entries: 1459
 
 Test output with percentages
 
-    $ $TESTDIR/../../bin/bibstats --percentages $TESTDIR/../data/graphs.bib
+    $ $TESTDIR/../../bin/bibstats --percentages --sort-entries $TESTDIR/../data/graphs.bib
     Entry                Count               
     -----------------------------------------
     article              881 (60.38%)
+    book                 56 (3.84%)
+    booklet              1 (0.07%)
+    inbook               3 (0.21%)
+    incollection         7 (0.48%)
     inproceedings        256 (17.55%)
+    manual               1 (0.07%)
+    mastersthesis        4 (0.27%)
+    misc                 21 (1.44%)
+    phdthesis            30 (2.06%)
     techreport           113 (7.75%)
     unpublished          86 (5.89%)
-    book                 56 (3.84%)
-    phdthesis            30 (2.06%)
-    misc                 21 (1.44%)
-    incollection         7 (0.48%)
-    mastersthesis        4 (0.27%)
-    inbook               3 (0.21%)
-    manual               1 (0.07%)
-    booklet              1 (0.07%)
     
     Total entries: 1459
 
@@ -54,14 +54,14 @@ Test output with count
 
 Test porcelain output
 
-    $ $TESTDIR/../../bin/bibstats --porcelain $TESTDIR/../data/small1.bib
+    $ $TESTDIR/../../bin/bibstats --porcelain --sort-entries $TESTDIR/../data/small1.bib
     article              2
     book                 1
     inproceedings        1
 
 Test --top option
 
-    $ $TESTDIR/../../bin/bibstats --top=3 $TESTDIR/../data/small1.bib
+    $ $TESTDIR/../../bin/bibstats --top=3 --sort-entries $TESTDIR/../data/small1.bib
     Entry                Count               
     -----------------------------------------
     article              2
