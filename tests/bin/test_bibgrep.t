@@ -18,6 +18,18 @@ Test counting
     $ $TESTDIR/../../bin/bibgrep --entry="book,inproceedings" --count $TESTDIR/../data/small1.bib
     /Users/albo/Dropbox/projects/python/bibpy/tests/bin/../data/small1.bib:2
 
+    $ $TESTDIR/../../bin/bibgrep --field="issue=3" --count $TESTDIR/../data/small1.bib
+    /Users/albo/Dropbox/projects/python/bibpy/tests/bin/../data/small1.bib:1
+
+    $ $TESTDIR/../../bin/bibgrep --ignore-case --field="journal~logic" --count $TESTDIR/../data/small1.bib
+    /Users/albo/Dropbox/projects/python/bibpy/tests/bin/../data/small1.bib:1
+
+    $ $TESTDIR/../../bin/bibgrep --key="~Co" --count $TESTDIR/../data/small1.bib
+    /Users/albo/Dropbox/projects/python/bibpy/tests/bin/../data/small1.bib:2
+
+    $ $TESTDIR/../../bin/bibgrep --ignore-case --key="~Co" --count $TESTDIR/../data/small1.bib
+    /Users/albo/Dropbox/projects/python/bibpy/tests/bin/../data/small1.bib:2
+
 Test piping
 
     $ $TESTDIR/../../bin/bibgrep --entry="book" $TESTDIR/../data/small1.bib | $TESTDIR/../../bin/bibgrep --count
