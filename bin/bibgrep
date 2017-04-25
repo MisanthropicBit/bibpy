@@ -199,13 +199,14 @@ def construct_field_predicate(name, key, tokens, args):
         raise ValueError("Error: Invalid field query syntax")
 
 
-def construct_predicates(values, predicate_func, key, pred_combiner, args):
+def construct_predicates(values, predicate_func, key,
+                         pred_combiner, args):
     """Return a list of predicates on entries ."""
     # Parse and compose all predicates on values given on the command line
     predicates = []
 
     for value in values:
-        name, tokens = bibpy.tools.parse_query(value)
+        name, tokens = bibpy.tools.parse_query(value, key)
         predicates.append(predicate_func(name, key, tokens, args))
 
     return bibpy.tools.compose_predicates(predicates, pred_combiner)
