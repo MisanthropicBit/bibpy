@@ -77,27 +77,32 @@ _ENTRY_GRAMMAR = entry_grammar()
 _FIELD_GRAMMAR = field_grammar()
 _NUMERIC_GRAMMAR = numeric_grammar()
 
+_GRAMMARS = {
+    'entry_key':  _KEY_GRAMMAR,
+    'entry_type': _ENTRY_GRAMMAR,
+    'field':      _FIELD_GRAMMAR | _NUMERIC_GRAMMAR
+}
+
 # TODO: Fix entry and key grammar ordering issue
 # The order matters here
 _FULL_GRAMMAR = _NUMERIC_GRAMMAR | _FIELD_GRAMMAR |\
     _ENTRY_GRAMMAR | _KEY_GRAMMAR
 
 
-def parse_query(query):
+def parse_query(query, query_type):
     """Parse a query and return the operator and value.
 
     E.g. '~Author' is parsed as ('~', 'Author')
 
     """
     try:
-        result = _FULL_GRAMMAR.parseString(query, parseAll=True)
+        result = _GRAMMARS[query_type].parseString(query, parseAll=True)
+
+        return result.getName(), result.asList()
     except pp.ParseException as e:
         raise bibpy.error.ParseException("Error: One or more constraints "
                                          "failed to parse at column " +
                                          str(e.col))
-
-    # Return the name of the parsed grammar and the list of parsed tokens
-    return result.getName(), result.asList()
 
 
 def compose_predicates(predicates, pred_combiner):
