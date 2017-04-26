@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test the functions in the tools file."""
 
 import bibpy.tools
