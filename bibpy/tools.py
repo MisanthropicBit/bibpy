@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """A collection of functionality for the tools in bin/.
 
 This wraps the dependence on pyparsing in a module to make the bin tools more
