@@ -72,21 +72,11 @@ def numeric_grammar():
     return interval | range_ | comparison
 
 
-_KEY_GRAMMAR = key_grammar()
-_ENTRY_GRAMMAR = entry_grammar()
-_FIELD_GRAMMAR = field_grammar()
-_NUMERIC_GRAMMAR = numeric_grammar()
-
 _GRAMMARS = {
-    'entry_key':  _KEY_GRAMMAR,
-    'entry_type': _ENTRY_GRAMMAR,
-    'field':      _FIELD_GRAMMAR | _NUMERIC_GRAMMAR
+    'entry_key':  key_grammar(),
+    'entry_type': entry_grammar(),
+    'field':      field_grammar() | numeric_grammar()
 }
-
-# TODO: Fix entry and key grammar ordering issue
-# The order matters here
-_FULL_GRAMMAR = _NUMERIC_GRAMMAR | _FIELD_GRAMMAR |\
-    _ENTRY_GRAMMAR | _KEY_GRAMMAR
 
 
 def parse_query(query, query_type):
