@@ -346,8 +346,14 @@ $ bibgrep --entry="article" --field="author~hughes" --ignore-case
 ```
 
 The command selects entries that are either `@article` entries or have "hughes"
-(case-insensitive) somewhere in their `author` field. We can also combine
-`bibgrep` with the other tools.
+(case-insensitive) somewhere in their `author` field. The approximation operator
+'~' also works with regular expressions.
+
+```bash
+$ bibgrep --field="author~M.+tt" tests/data/small1.bib
+```
+
+We can also combine `bibgrep` with the other tools.
 
 ```bash
 $ bibgrep --entry="conference" | bibformat --indent=4 --export=json > conferences.json
