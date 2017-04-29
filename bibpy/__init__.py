@@ -38,8 +38,8 @@ def is_string(s):  # pragma: no cover
         return isinstance(s, basestring)
 
 
-def read_string(string, format, strict=False, postprocess=False,
-                name_delimiter='and', keyword_delimiter=';'):
+def read_string(string, format, postprocess=False, name_delimiter='and',
+                keyword_delimiter=';'):
     """Read a string containing references in a given format.
 
     The function returns a 5-tuple of parsed entries and comments.
@@ -77,12 +77,12 @@ def read_string(string, format, strict=False, postprocess=False,
     Note that keywords are stripped of surrounding whitespaces.
 
     """
-    return _read_common(bibpy.parse.parse(string, format), format, strict,
-                        postprocess, name_delimiter, keyword_delimiter)
+    return _read_common(bibpy.parse.parse(string, format), format, postprocess,
+                        name_delimiter, keyword_delimiter)
 
 
-def read_file(source, format, encoding='utf-8', strict=False,
-              postprocess=False, name_delimiter='and', keyword_delimiter=';'):
+def read_file(source, format, encoding='utf-8', postprocess=False,
+              name_delimiter='and', keyword_delimiter=';'):
     """Read a file containing references in a given format.
 
     The 'source' argument can either be a file handle or a filename. Files are
@@ -125,22 +125,14 @@ def read_file(source, format, encoding='utf-8', strict=False,
     fh = (io.open(source, encoding=encoding) if is_string(source) else source)
 
     with fh:
-        return _read_common(bibpy.parse.parse_file(fh, format), format, strict,
+        return _read_common(bibpy.parse.parse_file(fh, format), format,
                             postprocess, name_delimiter, keyword_delimiter)
 
 
-def _read_common(parsed_tokens, format, strict=False, postprocess=False,
+def _read_common(parsed_tokens, format, postprocess=False,
                  name_delimiter='and', keyword_delimiter=';'):
     """Internal function for processing parsed tokens."""
     entries = parsed_tokens
-
-    if strict:
-        # Check entry requirements for non-relaxed reference formats
-        for entry in entries.entries:
-            required, optional = bibpy.requirements.check(entry, format)
-
-            if required or optional:
-                raise bibpy.error.RequiredFieldError(entry, required, optional)
 
     # Postprocess a subset of fields for automatic type conversion
     if postprocess:
