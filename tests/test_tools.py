@@ -33,6 +33,8 @@ def test_entry_grammar():
         ('entry', ['~', 'conference'])
 
 
+# NOTE: We also test the numeric grammar here as it is part of the field query
+# grammar
 def test_field_grammar():
     assert bibpy.tools.parse_query('year<2000', 'field') ==\
         ('comparison', ['year', '<', '2000'])
