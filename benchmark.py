@@ -57,6 +57,9 @@ if __name__ == '__main__':
     # Filename, # of entries, file size (bytes?), time, status message
     column_format = "{0:<40} {1:<20} {2:<20} {3:<20} {4:<20}"
 
+    print(column_format.format("FILENAME", "ENTRIES", "FILE SIZE", "TIME",
+                               "ERRORS?"))
+
     for filename in iter_files(rest, '*.bib'):
         temp = os.path.basename(filename)
         file_size = os.stat(filename).st_size
