@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-p', '--plot', action='store_true',
                         help='Create a barplot of benchmarks')
-    parser.add_argument('-r', '--runs', type=int,
+    parser.add_argument('-r', '--runs', type=int, default=1,
                         help='Run benchmarks this many times and report the '
                              ' average')
     parser.add_argument('-c', '--color', action='store_true',
@@ -60,15 +60,23 @@ if __name__ == '__main__':
     for filename in iter_files(rest, '*.bib'):
         temp = os.path.basename(filename)
         file_size = os.stat(filename).st_size
+        total_time = 0
 
-        try:
-            start = time_stamp()
-            results = bibpy.read_file(filename, format='relaxed')
-            end = time_stamp()
+        for r in range(args.runs):
+            try:
+                start = time_stamp()
+                results = bibpy.read_file(filename, format='relaxed')
+                end = time_stamp()
+
+                total_time += end - start
+            except bibpy.error.ParseException:
+                error = color_string(31, "ERROR") if args.color else "ERROR"
+                print(column_format.format(filename, "-", file_size, "-",
+                                           error))
+                break
+
             ok = color_string(32, "OK") if args.color else "OK"
 
             print(column_format.format(temp, len(results.all), file_size,
-                                       end - start, ok))
-        except bibpy.error.ParseException:
-            error = color_string(31, "ERROR") if args.color else "ERROR"
-            print(column_format.format(filename, "-", file_size, "-", error))
+                                       float(total_time) / float(args.runs),
+                                       ok))
