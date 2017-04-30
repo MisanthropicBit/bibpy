@@ -5,6 +5,8 @@
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 [![PyPI version](https://badge.fury.io/py/bibpy.svg)](https://badge.fury.io/py/bibpy)
 
+_`bibpy` is currently in alpha and will go up on PyPI after beta (also see [TODO.md](TODO.md))_.
+
 Python library for parsing bib(la)tex files and manipulating entries. Tested on
 Python 2.7, 3.3, 3.4, 3.5 and PyPy.
 
@@ -18,8 +20,6 @@ Take a look at the [quickstart example](#quickstart) for basic usage, or the
 more complete [tutorial](TUTORIAL.md).
 
 # Installation
-
-_`bibpy` is currently in alpha and will go up on PyPI after beta (also see [TODO.md](TODO.md))_.
 
 Use pip:
 
