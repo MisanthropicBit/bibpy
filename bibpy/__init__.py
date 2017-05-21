@@ -151,7 +151,7 @@ def _read_common(parsed_tokens, format, postprocess=False,
 def write_string(entries, **format_options):
     """Write a list of entries as a string.
 
-    The list of formatting options are the same as those for entry.format.
+    The list of formatting options are the same as those for Entry.format.
 
     """
     return (os.linesep * 2).join(entry.format(**format_options)
@@ -161,7 +161,7 @@ def write_string(entries, **format_options):
 def write_file(source, entries, encoding='utf-8', **format_options):
     """Write a list of entries to a file given by a filename or file descriptor.
 
-    The list of formatting options are the same as those for entry.format.
+    The list of formatting options are the same as those for Entry.format.
 
     """
     if is_string(source):
