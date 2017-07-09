@@ -130,10 +130,26 @@ class Entry(base.BaseEntry):
             setattr(self, field, None)
 
     def __eq__(self, other):
-        """Two entries are equal if their fields and values match."""
-        return isinstance(other, Entry) and\
-            set(self.fields) == set(other.fields) and\
-            all(v1 == v2 for v1, v2 in zip(self.fields, other.fields))
+        """Entries are equal if their fields and values match."""
+        if not isinstance(other, Entry):
+            return False
+
+        if self.entry_type != other.entry_type or\
+                self.entry_key != other.entry_key:
+            return False
+
+        if set(self.fields) == set(other.fields):
+            for field in self.fields:
+                if getattr(self, field) != getattr(other, field):
+                    return False
+        else:
+            return False
+
+        return True
+
+    def __ne__(self, other):
+        """Entries are not equal if their fields and values do not match."""
+        return not self.__eq__(other)
 
     def __contains__(self, item):
         """Check if a field is set for this entry."""
