@@ -238,8 +238,8 @@ if __name__ == "__main__":
                         help='Print the entries with the '
                              'exact or similar key. For '
                              'example, --key="article1 | '
-                             'article2" prints the entries with'
-                             ' keys that match either')
+                             'article2" prints the entries with '
+                             'keys that match either')
     parser.add_argument('-f', '--field', type=str, action='append',
                         dest='fields',
                         help='Print the entries that satisfy the list of field'
