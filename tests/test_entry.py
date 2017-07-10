@@ -64,4 +64,4 @@ def test_properties(test_entry):
     entry2.author = 'Johnson'
     test_entry.author = 'Johnson'
 
-    assert test_entry == entry2
+    assert test_entry != entry2
