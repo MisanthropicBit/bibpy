@@ -37,6 +37,7 @@ import argparse
 import bibpy
 import bibpy.tools
 import fnmatch
+import itertools
 import operator
 import re
 import os
@@ -251,6 +252,9 @@ if __name__ == "__main__":
                              'bibgrep is case sensitive')
     parser.add_argument('-r', '--recursive', action='store_true',
                         help='Recursively search subdirectories listed')
+    parser.add_argument('-u', '--unique', action='store_true',
+                        help='Print only one entry if duplicates are '
+                             'encountered')
 
     args, rest = parser.parse_known_args()
 
@@ -295,6 +299,9 @@ if __name__ == "__main__":
             entries = bibpy.read_file(sys.stdin,
                                       format='relaxed').entries
 
+            if args.unique:
+                entries = [k for k, _ in itertools.groupby(entries)]
+
             filtered_entries = filter_entries(entries, entry_predicate,
                                               key_predicate, field_predicate)
 
@@ -306,6 +313,9 @@ if __name__ == "__main__":
                 # NOTE: Use scanFile if it ever gets into pyparsing to lazily
                 # read and filter the bib source(s)
                 entries = bibpy.read_file(filename, format='relaxed').entries
+
+                if args.unique:
+                    entries = [k for k, _ in itertools.groupby(entries)]
 
                 filtered_entries += list(filter_entries(entries,
                                                         entry_predicate,
