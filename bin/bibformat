@@ -84,7 +84,7 @@ def export_to_json(entries, format_options):
     return json.dumps(json_entries, indent=indent)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     version_format = bibpy.tools.version_format()
 
     parser = argparse.ArgumentParser(prog='bibformat',
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s v' + __version__)
     parser.add_argument('-e', '--export', choices=['xml', 'json'],
-                        help="Export bib entries to a desired format")
+                        help='Export bib entries to a desired format')
     # parser.add_argument('-r', '--inherit-crossreferences', action='store_true',
     #                     help='Inherit all crossreference fields')
     # parser.add_argument('-x', '--inherit-xdata', action='store_true',
