@@ -251,7 +251,8 @@ if __name__ == "__main__":
                              ' constraints')
     parser.add_argument('-c', '--count', action='store_true',
                         help='Only a count of selected lines is written to '
-                             'standard output')
+                             'standard output. If -n is given, prints a grand '
+                             'total')
     parser.add_argument('-i', '--ignore-case', action='store_true',
                         help='Perform case insensitive matching. By default, '
                              'bibgrep is case sensitive')
@@ -260,6 +261,13 @@ if __name__ == "__main__":
     parser.add_argument('-u', '--unique', action='store_true',
                         help='Print only one entry if duplicates are '
                              'encountered')
+    parser.add_argument('-n', '--no-filenames', action='store_true',
+                        help='Do not print filename headers before each entry '
+                             'when --count is given. Overrides '
+                             '--abbreviate-filenames')
+    parser.add_argument('-a', '--abbreviate-filenames', action='store_true',
+                        help='Display only the filename and not the full path '
+                             'when --count is given')
 
     args, rest = parser.parse_known_args()
 
@@ -298,6 +306,7 @@ if __name__ == "__main__":
         field_predicate = bibpy.tools.always_true
 
     filtered_entries = []
+    total_count = 0
 
     try:
         if not rest:
@@ -311,7 +320,8 @@ if __name__ == "__main__":
                                               key_predicate, field_predicate)
 
             if args.count:
-                print(len(list(filtered_entries)))
+                num_entries = len(list(filtered_entries))
+                total_count += num_entries
                 filtered_entries = []
         else:
             for filename in iter_files(rest, '*.bib', args.recursive):
@@ -327,12 +337,23 @@ if __name__ == "__main__":
                                                         key_predicate,
                                                         field_predicate))
                 if args.count:
-                    print("{0}:{1}".format(filename, len(filtered_entries)))
+                    if args.no_filenames:
+                        total_count += len(filtered_entries)
+                    else:
+                        if args.abbreviate_filenames:
+                            filename = os.path.basename(filename)
+
+                        print("{0}:{1}".format(filename,
+                                               len(filtered_entries)))
+
                     filtered_entries = []
     except bibpy.error.ParseException as ex:
         sys.exit("bibgrep: {0}".format(ex))
     except KeyboardInterrupt:
         sys.exit(1)
+
+    if args.count and (args.no_filenames or not rest):
+        print(total_count)
 
     if filtered_entries:
         # Write all filtered entries to sys.stdout
