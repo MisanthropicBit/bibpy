@@ -226,6 +226,11 @@ def filter_entries(entries, entry_predicate, key_predicate, field_predicate):
             yield entry
 
 
+def unique_entries(entries):
+    """Remove duplicates from a set of entries."""
+    return [k for k, _ in itertools.groupby(entries)]
+
+
 if __name__ == "__main__":
     version_format = bibpy.tools.version_format()
 
@@ -300,7 +305,7 @@ if __name__ == "__main__":
                                       format='relaxed').entries
 
             if args.unique:
-                entries = [k for k, _ in itertools.groupby(entries)]
+                entries = unique_entries(entries)
 
             filtered_entries = filter_entries(entries, entry_predicate,
                                               key_predicate, field_predicate)
@@ -315,7 +320,7 @@ if __name__ == "__main__":
                 entries = bibpy.read_file(filename, format='relaxed').entries
 
                 if args.unique:
-                    entries = [k for k, _ in itertools.groupby(entries)]
+                    entries = unique_entries(entries)
 
                 filtered_entries += list(filter_entries(entries,
                                                         entry_predicate,
