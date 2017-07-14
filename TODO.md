@@ -7,3 +7,4 @@ states before `bibpy` 1.0.0 can be released.
 - [ ] Identify more cases for post- and preprocessing
 - [ ] Bring coverage to 100%
 - [ ] Handle file and string encodings across different Python versions
+- [ ] Implement approximate matching for removing duplicate entries
