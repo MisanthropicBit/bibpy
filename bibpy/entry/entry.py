@@ -74,10 +74,18 @@ class Entry(base.BaseEntry):
         """Return the entry type of this entry."""
         return self._entry_type
 
+    @entry_type.setter
+    def entry_type(self, value):
+        self._entry_type = value
+
     @property
     def entry_key(self):
         """Return the key of this entry."""
         return self._entry_key
+
+    @entry_key.setter
+    def entry_key(self, value):
+        self._entry_key = value
 
     @property
     def fields(self):
