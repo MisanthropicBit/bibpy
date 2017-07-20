@@ -61,7 +61,24 @@ def test_properties(test_entry):
     entry2 = bibpy.entry.Entry('manual', 'key2')
     assert test_entry != entry2
 
+    # Entries are not equal to other types
+    assert not entry2 == "Hello"
+
+    # Entries must have the same entry type and key to be equal
     entry2.author = 'Johnson'
     test_entry.author = 'Johnson'
+    assert test_entry != entry2
 
+    entry2.entry_type = 'article'
+    entry2.entry_key = 'key'
+    entry2.author = 'Johnson'
+
+    # Entries must have the same fields
+    test_entry.author = 'Johnson'
+    test_entry.year = 2007
+    assert test_entry != entry2
+
+    # Entries must have the same contents in their fields
+    entry2.author = 'johnson'
+    entry2.year = 2007
     assert test_entry != entry2
