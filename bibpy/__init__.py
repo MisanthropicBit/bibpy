@@ -18,8 +18,8 @@ __all__ = ('read_string',
            'read_file',
            'write_string',
            'write_file',
-           'is_format',
-           'is_format_file',
+           'string_is_format',
+           'file_is_format',
            'expand_strings',
            'unexpand_strings',
            'inherit_crossrefs',
@@ -171,7 +171,7 @@ def write_file(source, entries, encoding='utf-8', **format_options):
         fh.write(bibpy.write_string(entries, **format_options))
 
 
-def is_format(string, format):
+def string_is_format(string, format):
     """Check whether the string conforms to the given reference format."""
     try:
         read_string(string, format)
@@ -180,7 +180,7 @@ def is_format(string, format):
         return False
 
 
-def is_format_file(file, format):
+def file_is_format(file, format):
     """Check whether the file conforms to the given reference format."""
     try:
         read_file(file, format)
