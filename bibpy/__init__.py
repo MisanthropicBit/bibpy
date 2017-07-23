@@ -132,11 +132,9 @@ def read_file(source, format, encoding='utf-8', postprocess=False,
 def _read_common(parsed_tokens, format, postprocess=False,
                  name_delimiter='and', keyword_delimiter=';'):
     """Internal function for processing parsed tokens."""
-    entries = parsed_tokens.entries
-
     # Postprocess a subset of fields for automatic type conversion
     if postprocess:
-        for entry in entries:
+        for entry in parsed_tokens.entries:
             for field, value in\
                 bibpy.postprocess.postprocess(
                     entry,
@@ -145,7 +143,7 @@ def _read_common(parsed_tokens, format, postprocess=False,
                     keyword_delimiter=keyword_delimiter):
                 setattr(entry, field, value)
 
-    return entries
+    return parsed_tokens
 
 
 def write_string(entries, **format_options):
