@@ -1,7 +1,6 @@
 """Test requirements."""
 
 import bibpy
-import pytest
 
 
 def test_non_supported_formats():
@@ -9,20 +8,26 @@ def test_non_supported_formats():
     assert bibpy.requirements.check(None, 'mixed') == (frozenset(), [])
 
 
-@pytest.mark.skip
 def test_bibtex_requirements():
-    entries, _, _, _, _ =\
-        bibpy.read_file('tests/data/bibtex_missing_requirements.bib', 'bibtex')
+    entries =\
+        bibpy.read_file('tests/data/bibtex_missing_requirements.bib',
+                        'bibtex').entries
 
     expected_fields = [
         # article
         (set(), []),
-        (set(), []),
-        (set(), []),
-        (set(['author']), []),
+        (set(['author', 'year']), []),
         (set(['title']), []),
+        (set(['year']), []),
         (set(['journal']), []),
-        (set(['year']), [])
+        # book
+        (set(), [set(['author', 'editor'])]),
+        (set(['title']), [set(['author', 'editor'])]),
+        (set(['publisher', 'year']), [set(['author', 'editor'])]),
+        (set(['publisher']), [set(['author', 'editor'])]),
+        # booklet
+        (set([]), []),
+        (set(['title']), [])
     ]
 
     for entry, [required, either] in zip(entries, expected_fields):
