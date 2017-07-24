@@ -1,0 +1,73 @@
+All fields present
+@article{key,
+    author  = {a},
+    title   = {b},
+    journal = {c},
+    year    = {d}
+}
+
+Missing author and year fields are missing
+@article{key,
+    title   = {b},
+    journal = {c}
+}
+
+Missing title field
+@article{key,
+    author  = {a},
+    journal = {c},
+    year    = {e}
+}
+
+Missing year field
+@article{key,
+    author  = {a},
+    title   = {b},
+    journal = {c},
+}
+
+Missing journal field
+@article{key,
+    author = {a},
+    title  = {b},
+    year   = {c}
+}
+
+All fields present
+@book{key,
+    publisher = {a},
+    title     = {b},
+    year      = {d}
+}
+
+Missing title field
+@book{key,
+    publisher = {a},
+    year   = {b}
+}
+
+Missing year and publisher fields
+@book{key,
+    title = {b}
+}
+
+Missing publisher field
+@book{key,
+    year  = {a},
+    title = {b}
+}
+
+All fields present
+@booklet{key,
+    title  = {a}
+}
+
+Missing title field
+@booklet{key,
+}
+
+Only optional year missing
+@inbook{key,
+    author = {a},
+    title  = {b}
+}
