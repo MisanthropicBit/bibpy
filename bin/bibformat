@@ -15,8 +15,8 @@ __author__ = 'Alexander Asp Bock'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-_DESCRIPTION = """Format bib entries to look pretty and export them to another
-format."""
+_DESCRIPTION = """Format bib entries to look pretty and export them to other
+formats."""
 
 
 def export_to_xml(entries, format_options):
@@ -97,6 +97,8 @@ if __name__ == '__main__':
                         help='Inherit all crossreference fields')
     parser.add_argument('-x', '--inherit-xdata', action='store_true',
                         help='Inherit all xdata fields')
+    parser.add_argument('-t', '--expand-string-vars', action='store_true',
+                        help='Expand all string variables')
     parser.add_argument('-a', '--align', action='store_true',
                         help='Align the equal signs of all fields. Ignored '
                              'for xml and json.')
@@ -125,6 +127,10 @@ if __name__ == '__main__':
 
         if args.inherit_xdata:
             bibpy.inherit_xdata(results.entries)
+
+        if args.expand_string_vars:
+            # Expand string variables after crossref and xdata inheritance
+            bibpy.expand_strings(results.entries, results.strings)
 
         if args.order:
             if args.order.lower() == 'true':
