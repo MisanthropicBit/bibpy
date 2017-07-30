@@ -30,7 +30,7 @@ __all__ = ('read_string',
 __BIBPY_PY3__ = sys.version_info[0] > 2
 
 
-def is_string(s):  # pragma: no cover
+def is_string(s):
     """Check if the argument is a string or not."""
     if __BIBPY_PY3__:
         return isinstance(s, str)
