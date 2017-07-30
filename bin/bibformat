@@ -93,10 +93,10 @@ if __name__ == '__main__':
                         version='%(prog)s v' + __version__)
     parser.add_argument('-e', '--export', choices=['xml', 'json'],
                         help='Export bib entries to a desired format')
-    # parser.add_argument('-r', '--inherit-crossreferences', action='store_true',
-    #                     help='Inherit all crossreference fields')
-    # parser.add_argument('-x', '--inherit-xdata', action='store_true',
-    #                     help='Inherit all xdata fields')
+    parser.add_argument('-r', '--inherit-crossreferences', action='store_true',
+                        help='Inherit all crossreference fields')
+    parser.add_argument('-x', '--inherit-xdata', action='store_true',
+                        help='Inherit all xdata fields')
     parser.add_argument('-a', '--align', action='store_true',
                         help='Align the equal signs of all fields. Ignored '
                              'for xml and json.')
@@ -119,6 +119,12 @@ if __name__ == '__main__':
     # Iterate the files given on the command line
     for filename in rest:
         results = bibpy.read_file(filename, format='relaxed')
+
+        if args.inherit_crossreferences:
+            bibpy.inherit_crossrefs(results.entries)
+
+        if args.inherit_xdata:
+            bibpy.inherit_xdata(results.entries)
 
         if args.order:
             if args.order.lower() == 'true':
