@@ -53,6 +53,12 @@ _DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
 entry types and fields."""
 
 
+class BibgrepError(Exception):
+    """Exception class for bibgrep-specific errors."""
+
+    pass
+
+
 def iter_files(names, pattern, recursive):
     """Yield all files matching a specific file pattern in a directory."""
     for name in names:
@@ -122,7 +128,10 @@ def comparison_predicate(field, op_name, value):
     def _comparison_predicate(entry):
         attr = getattr(entry, field)
 
-        return attr and operator(int(attr), int(value))
+        try:
+            return attr and operator(int(attr), int(value))
+        except ValueError:
+            raise BibgrepError("Cannot compare with '{0}'".format(attr))
 
     return _comparison_predicate
 
@@ -138,7 +147,10 @@ def interval_predicate(field, lower, upper):
     def _interval_predicate(entry):
         attr = getattr(entry, field)
 
-        return attr and ilower <= int(attr) <= iupper
+        try:
+            return attr and ilower <= int(attr) <= iupper
+        except ValueError:
+            raise BibgrepError("Cannot compare with '{0}'".format(attr))
 
     return _interval_predicate
 
@@ -161,7 +173,10 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
     def _range_predicate(entry):
         attr = getattr(entry, field)
 
-        return attr and operator1(ilower, operator2(int(attr), iupper))
+        try:
+            return attr and operator1(ilower, operator2(int(attr), iupper))
+        except ValueError:
+            raise BibgrepError("Cannot compare with '{0}'".format(attr))
 
     return _range_predicate
 
@@ -348,6 +363,8 @@ if __name__ == "__main__":
 
                     filtered_entries = []
     except bibpy.error.ParseException as ex:
+        sys.exit("bibgrep: {0}".format(ex))
+    except BibgrepError as ex:
         sys.exit("bibgrep: {0}".format(ex))
     except KeyboardInterrupt:
         sys.exit(1)
