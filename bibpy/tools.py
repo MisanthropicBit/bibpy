@@ -71,7 +71,7 @@ def numeric_grammar():
     # NOTE: We put le before lt to parse both
     range_ = (integer + (le | lt) + field_name + (le | lt) + integer)('range')
 
-    return interval | range_ | comparison
+    return interval | comparison | range_
 
 
 _GRAMMARS = {
