@@ -9,6 +9,17 @@ import random
 import sys
 
 
+def test_postprocess_braces():
+    assert bibpy.postprocess.postprocess_braces("This is {A} test") ==\
+        "This is A test"
+
+    assert bibpy.postprocess.postprocess_braces("This is {A}     {t}est") ==\
+        "This is A     test"
+
+    assert bibpy.postprocess.postprocess_braces("This is {{  A }}  test") ==\
+        "This is   A   test"
+
+
 def test_postprocess_namelist():
     assert bibpy.postprocess.postprocess_namelist(
         'A. B. Cidric and D. E. Fraser', name_delimiter='and') ==\
