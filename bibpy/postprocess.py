@@ -3,10 +3,9 @@
 import bibpy.date
 import bibpy.error
 import bibpy.grammar
+import bibpy.parse
 import calendar
 import re
-
-# TODO: Create option for removing braces in text?
 
 _MONTH_ABBREVIATIONS = [
     'jan', 'feb', 'mar', 'apr', 'may', 'jun',
@@ -14,15 +13,12 @@ _MONTH_ABBREVIATIONS = [
 ]
 
 
-def postprocess_braces(value, **options):  # pragma: no cover
+def postprocess_braces(value, **options):
     """Remove any braces from a string value."""
-    if not bibpy.is_string(value):
-        return value
-
-    # 'This is {A} test' -> 'This is A test'
-    # tokens = bibpy.grammar.BRACED_EXPR.leaveWhitespace().parseString(value,
-    #                                                         parseAll=True).asList()
-    return "".join(bibpy.parse.parse_brace_string_expr(value))
+    # if not bibpy.is_string(value):
+    #     return value
+    return "".join([e for e in bibpy.parse.parse_braced_string_expr(value)
+                    if e not in '{}'])
 
 
 def postprocess_namelist(names, **options):

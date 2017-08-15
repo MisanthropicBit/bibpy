@@ -53,6 +53,10 @@ STRING_EXPR_EXPANSION =\
     (pp.delimitedList(QUOTED_VALUE |
                       VARIABLE, delim='#'))('string expression')
 
+BRACED_EXPR_ = pp.Forward()
+BRACED_EXPR_ <<= ('{' + pp.ZeroOrMore(BRACED_EXPR | pp.CharsNotIn('{}')) + '}')
+BE = pp.ZeroOrMore(BRACED_EXPR_ | pp.CharsNotIn('{}')).leaveWhitespace()
+
 
 def base_grammar(valid_fields, valid_entries):
     """Generate base grammar which all other grammars are based on.
