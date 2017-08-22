@@ -1,5 +1,6 @@
 *.err
 *.pyc
+*.sw[op]
 *.tasks
 .Python
 MANIFEST
