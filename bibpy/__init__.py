@@ -38,8 +38,8 @@ def is_string(s):
         return isinstance(s, basestring)
 
 
-def read_string(string, format, postprocess=False, name_delimiter='and',
-                keyword_delimiter=';'):
+def read_string(string, format, postprocess=False, remove_braces=False,
+                name_delimiter='and', keyword_delimiter=';'):
     """Read a string containing references in a given format.
 
     The function returns a 5-tuple of parsed entries and comments.
@@ -78,11 +78,12 @@ def read_string(string, format, postprocess=False, name_delimiter='and',
 
     """
     return _read_common(bibpy.parse.parse(string, format), format, postprocess,
-                        name_delimiter, keyword_delimiter)
+                        remove_braces, name_delimiter, keyword_delimiter)
 
 
 def read_file(source, format, encoding='utf-8', postprocess=False,
-              name_delimiter='and', keyword_delimiter=';'):
+              remove_braces=False, name_delimiter='and',
+              keyword_delimiter=';'):
     """Read a file containing references in a given format.
 
     The 'source' argument can either be a file handle or a filename. Files are
@@ -126,19 +127,21 @@ def read_file(source, format, encoding='utf-8', postprocess=False,
 
     with fh:
         return _read_common(bibpy.parse.parse_file(fh, format), format,
-                            postprocess, name_delimiter, keyword_delimiter)
+                            postprocess, remove_braces, name_delimiter,
+                            keyword_delimiter)
 
 
-def _read_common(parsed_tokens, format, postprocess=False,
+def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,
                  name_delimiter='and', keyword_delimiter=';'):
     """Internal function for processing parsed tokens."""
     # Postprocess a subset of fields for automatic type conversion
-    if postprocess:
+    if postprocess or remove_braces:
         for entry in parsed_tokens.entries:
             for field, value in\
                 bibpy.postprocess.postprocess(
                     entry,
                     postprocess,
+                    remove_braces=remove_braces,
                     name_delimiter=name_delimiter,
                     keyword_delimiter=keyword_delimiter):
                 setattr(entry, field, value)

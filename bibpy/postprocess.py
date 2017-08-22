@@ -133,19 +133,31 @@ postprocess_functions = {'address':       postprocess_namelist,
                          'year':          postprocess_int}
 
 
+# TODO: Add option for strictness? Failing early when any postprocessing fails?
 def postprocess(entry, fields, **options):
     """Postprocess a subset of fields in a list of parsed entries."""
     if type(fields) not in (bool, list):
         raise ValueError("postprocess takes either a bool or a list for fields"
                          ", not '{0}'".format(type(fields)))
 
+    remove_braces = options.get('remove_braces', False)
+    _fields = []
+
     if fields:
-        _fields = entry.fields if type(fields) is bool else fields
+        if type(fields) is bool:
+            _fields = entry.fields
+        elif type(fields) is list:
+            _fields = fields
+    elif remove_braces:
+        _fields = entry.fields
 
-        for field in _fields:
-            value = getattr(entry, field)
+    for field in _fields:
+        value = getattr(entry, field)
 
-            if field in postprocess_functions:
-                yield field, postprocess_functions[field](value, **options)
-            else:
-                yield field, value
+        if remove_braces:
+            value = postprocess_braces(value, **options)
+
+        if field in postprocess_functions:
+            yield field, postprocess_functions[field](value, **options)
+        else:
+            yield field, value
