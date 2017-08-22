@@ -19,6 +19,18 @@ def test_postprocess_braces():
     assert bibpy.postprocess.postprocess_braces("This is {{  A }}  test") ==\
         "This is   A   test"
 
+    assert bibpy.postprocess.postprocess_braces("{}This is A test") ==\
+        "This is A test"
+
+    assert bibpy.postprocess.postprocess_braces("This is A test{}") ==\
+        "This is A test"
+
+    assert bibpy.postprocess.postprocess_braces("{T}his is A test") ==\
+        "This is A test"
+
+    assert bibpy.postprocess.postprocess_braces("This is A tes{t}") ==\
+        "This is A test"
+
 
 def test_postprocess_namelist():
     assert bibpy.postprocess.postprocess_namelist(
