@@ -51,3 +51,33 @@ Test removing duplicate
 
     $ $TESTDIR/../../bin/bibgrep --count --unique --abbreviate-filenames $TESTDIR/../data/duplicates.bib
     duplicates.bib:1
+
+Test single comparison
+
+    $ $TESTDIR/../../bin/bibgrep --field="year>=2000" --count --abbreviate-filenames $TESTDIR/../data/simple_1.bib
+    simple_1.bib:1
+
+Test interval comparison
+
+    $ $TESTDIR/../../bin/bibgrep --field="year=2007-2011" --count --abbreviate-filenames $TESTDIR/../data/simple_1.bib
+    simple_1.bib:1
+
+Test range comparison
+
+    $ $TESTDIR/../../bin/bibgrep --field="2007<=year<2011" --count --abbreviate-filenames $TESTDIR/../data/simple_1.bib
+    simple_1.bib:1
+
+Test single comparison failure
+
+    $ $TESTDIR/../../bin/bibgrep --field="author>=2000" $TESTDIR/../data/small1.bib
+    bibgrep: Cannot compare '2000' with 'Bernd Meyer'
+
+Test interval comparison failure
+
+    $ $TESTDIR/../../bin/bibgrep --field="author=2007-2011" --count $TESTDIR/../data/small1.bib
+    bibgrep: Cannot compare 'Bernd Meyer' with interval [2007, 2011]
+
+Test range comparison failure
+
+    $ $TESTDIR/../../bin/bibgrep --field="2007<=author<2011" --count $TESTDIR/../data/small1.bib
+    bibgrep: Cannot compare 'Bernd Meyer' with range 2007 <= field < 2011
