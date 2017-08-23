@@ -77,7 +77,7 @@ def numeric_grammar():
 _GRAMMARS = {
     'entry_key':  key_grammar(),
     'entry_type': entry_grammar(),
-    'field':      field_grammar() | numeric_grammar()
+    'field':      numeric_grammar() | field_grammar()
 }
 
 
