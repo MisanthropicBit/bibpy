@@ -151,7 +151,7 @@ def interval_predicate(field, lower, upper):
         try:
             return attr and ilower <= int(attr) <= iupper
         except ValueError:
-            raise BibgrepError("Cannot compare with '{0}' with interval "
+            raise BibgrepError("Cannot compare '{0}' with interval "
                                "[{1}, {2}]".format(attr, lower, upper))
 
     return _interval_predicate
@@ -180,7 +180,7 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
                 iattr = int(attr)
                 return operator1(ilower, iattr) and operator2(iattr, iupper)
         except ValueError:
-            raise BibgrepError("Cannot compare with '{0}' with range "
+            raise BibgrepError("Cannot compare '{0}' with range "
                                "{1} {2} field {3} {4}"
                                .format(attr, lower, op_name1, op_name2, upper))
 
