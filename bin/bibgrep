@@ -176,7 +176,9 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
         attr = getattr(entry, field)
 
         try:
-            return attr and operator1(ilower, operator2(int(attr), iupper))
+            if attr:
+                iattr = int(attr)
+                return operator1(ilower, iattr) and operator2(iattr, iupper)
         except ValueError:
             raise BibgrepError("Cannot compare with '{0}' with range "
                                "{1} {2} field {3} {4}"
