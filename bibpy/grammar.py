@@ -82,7 +82,7 @@ def base_grammar(valid_fields, valid_entries):
                      (braced_entry | parenthesised_entry))('entries')\
         .setResultsName('entries', listAllMatches=True)
 
-    # '@string' entry
+    # @string entry
     braced_var = (OPEN_BRACE + VARIABLE + EQUAL_SIGN + value +
                   CLOSED_BRACE)('braced variable')
     parenthesised_var = (OPEN_PARENTHESIS + VARIABLE + EQUAL_SIGN +
@@ -92,7 +92,7 @@ def base_grammar(valid_fields, valid_entries):
                             (braced_var | parenthesised_var))('string entry')\
         .setResultsName('strings', listAllMatches=True)
 
-    # '@comment' entry
+    # @comment entry
     comment_entry = pp.Group(pp.CaselessKeyword('@comment') +
                              BRACED_EXPR)('comment entry')\
         .setResultsName('explicit_comments', listAllMatches=True)
@@ -103,7 +103,7 @@ def base_grammar(valid_fields, valid_entries):
                  (BRACED_EXPR | PARENTHESISED_EXPR))('preamble entry')\
         .setResultsName('preambles', listAllMatches=True)
 
-    # Comments (any not inside an entry)
+    # A regular comment: Any text outside of entries
     comments = (pp.CharsNotIn('@'))('comment')\
         .setResultsName('comments', listAllMatches=True)
 
