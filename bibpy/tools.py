@@ -41,9 +41,16 @@ def entry_grammar():
 
 
 def field_grammar():
-    """Return."""
-    return (pp.Optional(pp.Literal('!')) + pp.Word(pp.alphas) +
-            (pp.Literal('=') | pp.Literal('~')) + pp.Regex('.+'))('field')
+    """Return the grammar for parsing field queries."""
+    field_value = (pp.Optional(pp.Literal('!')) + pp.Word(pp.alphas) +
+                   (pp.Literal('=') | pp.Literal('~')) +
+                   pp.Regex('.+'))('field')
+
+    field_occurrence = (pp.Optional(pp.Literal('!')) +
+                        pp.delimitedList(pp.Word(pp.alphas),
+                                         delim=','))('field_occurrence')
+
+    return field_value | field_occurrence
 
 
 def numeric_grammar():

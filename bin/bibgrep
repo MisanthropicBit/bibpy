@@ -52,6 +52,13 @@ __license__ = 'MIT'
 _DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
 entry types and fields."""
 
+_NAME_TO_OPERATOR = {
+    '<':  operator.lt,
+    '>':  operator.gt,
+    '<=': operator.le,
+    '>=': operator.ge
+}
+
 
 class BibgrepError(Exception):
     """Exception class for bibgrep-specific errors."""
@@ -99,6 +106,16 @@ def exact_field_predicate(field, value, args):
     return _exact_match
 
 
+def field_occurrence_predicate(tokens):
+    fields = [str.lower(t) if tokens[0] != '!' else tokens[1:] for t in tokens]
+
+    def _field_occurrence(entry):
+        return all([hasattr(entry, f) and getattr(entry, f, False)
+                    for f in fields])
+
+    return _field_occurrence
+
+
 def negate(f):
     """Return a new function that negates the boolean result of f."""
     def _negate(entry):
@@ -109,16 +126,12 @@ def negate(f):
 
 def operator_from_string(op_name):
     """Return an operator function from its string equivalent."""
-    if op_name == '<':
-        return operator.lt
-    elif op_name == '>':
-        return operator.gt
-    elif op_name == '<=':
-        return operator.le
-    elif op_name == '>=':
-        return operator.ge
-    else:
+    op = _NAME_TO_OPERATOR.get(op_name, None)
+
+    if op is None:
         raise ValueError("Error: Invalid operator '" + op_name + "'")
+
+    return op
 
 
 def comparison_predicate(field, op_name, value):
@@ -216,6 +229,8 @@ def construct_field_predicate(name, key, tokens, args):
         else:
             raise ValueError("Error: Invalid field operator '" + tokens[1] +
                              "'")
+    elif name == 'field_occurrence':
+        return field_occurrence_predicate(tokens)
     elif name == 'comparison':
         return comparison_predicate(*tokens)
     elif name == 'interval':
