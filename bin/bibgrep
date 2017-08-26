@@ -48,6 +48,8 @@ __version__ = '0.1.0'
 __license__ = 'MIT'
 
 # TODO: How to combine predicates with '&&' and '||'?
+# TODO: Enable negation of ranges, intervals etc.
+# TODO: How to circumvent bash's history substitution syntax? ('!')
 
 _DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
 entry types and fields."""
