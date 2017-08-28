@@ -31,6 +31,16 @@ only to fields with numeric values, e.g.:
 which selects all entries from 2001 and forward as well as fields with a volume
 number in the range ]0;50].
 
+Informal grammars for queries:
+    key_grammar := [^][~] key
+    entry_query := [^][~] entry_type
+
+    interval    := [^] field_name = integer - integer
+    comparison  := [^] field_name (<= | < | >= | >) integer
+    range       := [^] integer (<= | <) field_name (<= | <) integer
+    numeric     := interval | comparison | range
+    field_query := numeric | field
+
 """
 
 import argparse
