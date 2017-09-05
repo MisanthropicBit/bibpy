@@ -7,6 +7,7 @@ import argparse
 import bibpy
 import bibpy.export
 import bibpy.tools
+import itertools
 import sys
 
 __author__ = 'Alexander Asp Bock'
@@ -45,6 +46,8 @@ if __name__ == '__main__':
                              'not in this list are output last in an '
                              'unspecified order. Currently ignored by xml and '
                              'json export.')
+    parser.add_argument('-g', '--group', action='store_true',
+                        help='Group entries by type.')
 
     args, rest = parser.parse_known_args()
 
@@ -73,6 +76,12 @@ if __name__ == '__main__':
                 args.order = [order for order in
                               [e.strip() for e in args.order.split(',')]]
 
+        if args.group:
+            entries = itertools.groupby(results.all,
+                                        key=lambda e: e.entry_type)
+        else:
+            entries = results.all
+
         format_options = dict([(f, getattr(args, f))
                                for f in ['align', 'indent', 'order']])
 
@@ -83,4 +92,4 @@ if __name__ == '__main__':
         else:
             writer = bibpy.write_string
 
-        print(writer(results.all, **format_options))
+        print(writer(entries, **format_options))
