@@ -25,7 +25,17 @@ def _entry_to_json_object(entry, **format_options):
     # indent=indent, sort_keys=sort_keys)
 
 
-def to_json(entries, **format_options):
+def read_json(string):
+    """Read a json string."""
+    pass
+
+
+def read_json_file(source):
+    """Read a file containing json."""
+    pass
+
+
+def write_json(entries, **format_options):
     """Export a list of entries to json."""
     # Entry types and keys are not necessarily unique, so we output a list of
     # single entries
