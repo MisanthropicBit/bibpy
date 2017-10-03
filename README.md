@@ -14,7 +14,7 @@ Python 2.7, 3.3, 3.4, 3.5 and PyPy.
 * [Requirements-checking for entry fields](/examples/requirements_check.py)
 * [String variable expansion and unexpansion](/examples/string_expansion.py)
 * [Crossreference and xdata inheritance](/examples/crossref_expansion.py)
-* [Import/export bibtexml, json, yaml and html](/examples/export.py)
+* [Support for bibtexml, json, yaml and html](/examples/formats.py)
 * Accompanying [tools](#tools)
 
 Take a look at the [quickstart example](#quickstart) for basic usage, or the
