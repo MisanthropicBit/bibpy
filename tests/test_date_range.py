@@ -2,13 +2,12 @@
 
 from bibpy.date import DateRange
 import bibpy.error
-import datetime
 import pytest
 
 
 def test_creation():
     """Test creation of DateRanges."""
-    d = DateRange(None, None, False)
+    d = DateRange((None, None, None), (None, None, None), False)
 
     assert str(d) == ''
     assert repr(d) == 'DateRange(start=None, end=None, open=False)'
@@ -19,8 +18,8 @@ def test_fromstring():
     # Single date
     s = '1988-01-12'
     d = DateRange.fromstring(s)
-    assert d.start == datetime.date(1988, 1, 12)
-    assert d.end is None
+    assert d.start == bibpy.date.PartialDate(1988, 1, 12)
+    assert not d.end
     assert not d.open
     assert str(d) == s
     assert repr(d) == 'DateRange(start=1988-01-12, end=None, open=False)'
@@ -28,8 +27,8 @@ def test_fromstring():
     # Date range
     s = '1988-01-12/2016-12-31'
     d = DateRange.fromstring(s)
-    assert d.start == datetime.date(1988, 1, 12)
-    assert d.end == datetime.date(2016, 12, 31)
+    assert d.start == bibpy.date.PartialDate(1988, 1, 12)
+    assert d.end == bibpy.date.PartialDate(2016, 12, 31)
     assert not d.open
     assert str(d) == s
     assert repr(d) == 'DateRange(start=1988-01-12, end=2016-12-31, open=False)'
@@ -37,8 +36,8 @@ def test_fromstring():
     # Open-ended date range
     s = '1988-01-12/'
     d = DateRange.fromstring(s)
-    assert d.start == datetime.date(1988, 1, 12)
-    assert d.end is None
+    assert d.start == bibpy.date.PartialDate(1988, 1, 12)
+    assert not d.end
     assert d.open
     assert str(d) == s
     assert repr(d) == 'DateRange(start=1988-01-12, end=None, open=True)'
@@ -46,11 +45,11 @@ def test_fromstring():
     # Date with a missing day
     s = '1988-01'
     d = DateRange.fromstring(s)
-    assert d.start == datetime.date(1988, 1, 1)
-    assert d.end is None
+    assert d.start == bibpy.date.PartialDate(1988, 1, None)
+    assert not d.end
     assert not d.open
-    assert str(d) == '1988-01-01'
-    assert repr(d) == 'DateRange(start=1988-01-01, end=None, open=False)'
+    assert str(d) == '1988-01'
+    assert repr(d) == 'DateRange(start=1988-01, end=None, open=False)'
 
 
 def test_wrong_format():
