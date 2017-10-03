@@ -38,8 +38,9 @@ def is_string(s):
         return isinstance(s, basestring)
 
 
-def read_string(string, format, postprocess=False, remove_braces=False,
-                name_delimiter='and', keyword_delimiter=';'):
+def read_string(string, format='relaxed', postprocess=False,
+                remove_braces=False, name_delimiter='and',
+                keyword_delimiter=';'):
     """Read a string containing references in a given format.
 
     The function returns a 5-tuple of parsed entries and comments.
@@ -82,7 +83,7 @@ def read_string(string, format, postprocess=False, remove_braces=False,
                         keyword_delimiter)
 
 
-def read_file(source, format, encoding='utf-8', postprocess=False,
+def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
               remove_braces=False, name_delimiter='and',
               keyword_delimiter=';'):
     """Read a file containing references in a given format.
