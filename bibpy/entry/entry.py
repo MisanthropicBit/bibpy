@@ -21,10 +21,10 @@ class Entry(base.BaseEntry):
 
         for field, value in fields.items():
             if field in bibpy.fields.all:
-                f = field.lower()
-                setattr(self, "_" + f, value)
+                f = field.encode('utf-8').lower()
+                setattr(self, '_' + f, value)
             else:
-                setattr(self, field, value)
+                setattr(self, field.encode('utf-8'), value)
 
     # TODO: How can we test this across versions?
     def format(self, align=True, indent='    ', order=[], surround='{}',
@@ -61,11 +61,11 @@ class Entry(base.BaseEntry):
                 setattr(self, field, value)
                 fields.append((field, value))
 
-        fields = (",\n".join(["{0}{1}{2} = {3}{4}{5}"
+        fields = (",\n".join([unicode("{0}{1}{2} = {3}{4}{5}")
                               .format(indent, field,
                                       ' ' * (i - len(field)),
                                       surround[0], value, surround[1])
-                             for field, value in fields]))
+                              for field, value in fields]))
 
         return entry_start + fields + "\n}"
 
