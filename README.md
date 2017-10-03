@@ -31,6 +31,10 @@ pip install bibpy
 Or `git clone https://github.com/MisanthropicBit/bibpy` and then run `python
 setup.py install` from the `bibpy` directory.
 
+`bibpy` requires either
+[`funcparserlib`](https://github.com/vlasovskikh/funcparserlib) or
+[`pyparsing`](http://pyparsing.wikispaces.com/) installed.
+
 <a name="quickstart"></a>
 # Quickstart
 
