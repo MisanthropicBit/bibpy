@@ -2,7 +2,6 @@
 
 import bibpy.postprocess
 import calendar
-import datetime
 import itertools
 import pytest
 import random
@@ -67,12 +66,12 @@ def test_postprocess_int_fail():
 def test_postprocess_date():
     d = bibpy.postprocess.postprocess_date('1998-05-02')
 
-    assert d.start == datetime.date(1998, 5, 2)
-    assert d.end is None
+    assert d.start == bibpy.date.PartialDate(1998, 5, 2)
+    assert not d.end
     assert not d.open
 
     assert bibpy.postprocess.postprocess_date('') ==\
-        bibpy.date.DateRange(None, None, False)
+        bibpy.date.DateRange((None, None, None), (None, None, None), False)
 
 
 def test_postprocess_month():

@@ -60,7 +60,8 @@ def postprocess_int(value, **options):
 def postprocess_date(datestring, **options):
     """Convert a string to a bibpy.date.DateRange."""
     if not datestring:
-        return bibpy.date.DateRange(None, None, False)
+        return bibpy.date.DateRange((None, None, None), (None, None, None),
+                                    False)
 
     return bibpy.date.DateRange.fromstring(datestring)
 
