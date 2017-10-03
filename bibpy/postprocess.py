@@ -53,7 +53,7 @@ def postprocess_int(value, **options):
     """Convert a string to an integer."""
     try:
         return int(value)
-    except ValueError:
+    except (ValueError, TypeError):
         return value
 
 
