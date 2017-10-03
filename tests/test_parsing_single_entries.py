@@ -2,6 +2,8 @@
 
 import bibpy
 
+# TODO: Test both parsers
+
 
 def test_single_comment():
     s = "This is a comment"
@@ -11,8 +13,8 @@ def test_single_comment():
 
 
 def test_single_comment_entry():
-    contents = "I can write whatever I want here"
-    s = "@comment{ " + contents + " }"
+    contents = " I can write whatever I want here "
+    s = "@comment{ I can write whatever I want here }"
     comment_entries = bibpy.read_string(s, 'bibtex').comment_entries
 
     assert type(comment_entries[0]) is bibpy.entry.Comment
@@ -55,6 +57,6 @@ def test_single_entry():
 def test_single_string_expr():
     s = 'var1 # " report on the " # Var_2 # " Conglomerate"'
 
-    assert bibpy.parse.parse_string_expr(s) == ['var1', " report on the ",
-                                                'Var_2', " Conglomerate"]
-    assert bibpy.parse.parse_string_expr('') == ''
+    assert bibpy.parser.parse_string_expr(s) == ['var1', " report on the ",
+                                                 'Var_2', " Conglomerate"]
+    assert bibpy.parser.parse_string_expr('') == ''

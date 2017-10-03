@@ -1,7 +1,6 @@
 """Special date class for handling biblatex date ranges."""
 
-import bibpy.parse
-import datetime
+import bibpy.parser
 
 __all__ = ('DateRange')
 
@@ -22,14 +21,7 @@ class DateRange(object):
     def fromstring(string):
         """Parse a date string then return a new DateRange object."""
         # Try to parse the date (ranges)
-        dates = [list(map(int, d)) for d in bibpy.parse.parse_date(string)]
-
-        # Provide missing information and create bibpy.date object
-        dates = [datetime.date(*(d + [1] * (3 - len(d)))) for d in dates]
-
-        return DateRange(dates[0] if dates else None,
-                         dates[1] if len(dates) > 1 else None,
-                         string.endswith('/'))
+        return bibpy.parser.parse_date(string)
 
     @property
     def start(self):

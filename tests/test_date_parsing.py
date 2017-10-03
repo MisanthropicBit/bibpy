@@ -1,6 +1,7 @@
 """Test parsing of dates and date ranges."""
 
-import bibpy.parse
+import bibpy.date
+from bibpy.parser import parse_date
 
 
 def test_date_fails():
