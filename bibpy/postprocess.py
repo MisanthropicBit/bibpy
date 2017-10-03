@@ -3,7 +3,7 @@
 import bibpy.date
 import bibpy.error
 import bibpy.grammar
-import bibpy.parse
+import bibpy.parser
 import calendar
 import re
 
@@ -17,7 +17,7 @@ def postprocess_braces(value, **options):
     """Remove any braces from a string value."""
     # if not bibpy.is_string(value):
     #     return value
-    return "".join([e for e in bibpy.parse.parse_braced_string_expr(value)
+    return "".join([e for e in bibpy.parser.parse_braced_expr(value)
                     if e not in '{}'])
 
 

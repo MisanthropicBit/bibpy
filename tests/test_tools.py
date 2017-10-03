@@ -2,6 +2,7 @@
 
 """Test the functions in the tools file."""
 
+import bibpy.parser
 import bibpy.tools
 import pytest
 
@@ -16,38 +17,40 @@ def test_version_format():
 
 # TODO: Expand grammar tests with failures
 def test_key_grammar():
-    assert bibpy.tools.parse_query('SomeKey', 'entry_key') ==\
-        ('key', ['', 'SomeKey'])
-    assert bibpy.tools.parse_query('!SomeKey', 'entry_key') ==\
-        ('key', ['!', 'SomeKey'])
-    assert bibpy.tools.parse_query('~SomeKey', 'entry_key') ==\
-        ('key', ['~', 'SomeKey'])
+    assert bibpy.parser.parse_query('SomeKey', 'key') ==\
+        ('key', (None, 'SomeKey'))
+    assert bibpy.parser.parse_query('^SomeKey', 'key') ==\
+        ('key', ('^', 'SomeKey'))
+    assert bibpy.parser.parse_query('~SomeKey', 'key') ==\
+        ('key', ('~', 'SomeKey'))
 
 
 def test_entry_grammar():
-    assert bibpy.tools.parse_query('article', 'entry_type') ==\
-        ('entry', ['', 'article'])
-    assert bibpy.tools.parse_query('!book', 'entry_type') ==\
-        ('entry', ['!', 'book'])
-    assert bibpy.tools.parse_query('~conference', 'entry_type') ==\
-        ('entry', ['~', 'conference'])
+    assert bibpy.parser.parse_query('article', 'entry_type') ==\
+        ('entry_type', (None, 'article'))
+    assert bibpy.parser.parse_query('^book', 'entry_type') ==\
+        ('entry_type', ('^', 'book'))
+    assert bibpy.parser.parse_query('~conference', 'entry_type') ==\
+        ('entry_type', ('~', 'conference'))
 
 
 # NOTE: We also test the numeric grammar here as it is part of the field query
 # grammar
 def test_field_grammar():
-    assert bibpy.tools.parse_query('year<2000', 'field') ==\
-        ('comparison', ['year', '<', '2000'])
-    assert bibpy.tools.parse_query('issue<=10', 'field') ==\
-        ('comparison', ['issue', '<=', '10'])
-    assert bibpy.tools.parse_query('volume>100', 'field') ==\
-        ('comparison', ['volume', '>', '100'])
-    assert bibpy.tools.parse_query('month>=9', 'field') ==\
-        ('comparison', ['month', '>=', '9'])
-    # assert bibpy.tools.parse_query('year=1990-2000', 'field') ==\
-    #     ('interval', ['year', '1900', '2000'])
-    # assert bibpy.tools.parse_query('1990 < year <= 2000', 'field') ==\
-    #     ('range', ['1900', 'year', '2000'])
+    assert bibpy.parser.parse_query('year<2000', 'field') ==\
+        ('comparison', (None, 'year', '<', '2000'))
+    assert bibpy.parser.parse_query('^year>2000', 'field') ==\
+        ('comparison', ('^', 'year', '>', '2000'))
+    assert bibpy.parser.parse_query('issue<=10', 'field') ==\
+        ('comparison', (None, 'issue', '<=', '10'))
+    assert bibpy.parser.parse_query('volume>100', 'field') ==\
+        ('comparison', (None, 'volume', '>', '100'))
+    assert bibpy.parser.parse_query('month>=9', 'field') ==\
+        ('comparison', (None, 'month', '>=', '9'))
+    assert bibpy.parser.parse_query('year=1990-2000', 'field') ==\
+        ('interval', (None, 'year', '1990', '2000'))
+    assert bibpy.parser.parse_query('1900 < year <= 2000', 'field') ==\
+        ('range', (None, '1900', '<', 'year', '<=', '2000'))
 
     # Test invalid queries
     invalid_queries = [
@@ -59,12 +62,7 @@ def test_field_grammar():
 
     for query in invalid_queries:
         with pytest.raises(bibpy.error.ParseException):
-            bibpy.tools.parse_query(query, 'field')
-
-
-# def test_parse_query():
-#     assert bibpy.tools.parse_query('~Author') == ('entry', ['~', 'Author'])
-#     assert bibpy.tools.parse_query('!Author') == ('entry', ['!', 'Author'])
+            bibpy.parser.parse_query(query, 'field')
 
 
 def test_predicate_composition():

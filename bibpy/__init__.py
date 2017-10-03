@@ -2,7 +2,7 @@
 
 """bibpy: Bib(la)tex parser and tools."""
 
-import bibpy.parse
+import bibpy.parser
 import bibpy.postprocess
 import bibpy.preprocess
 import bibpy.references
@@ -77,8 +77,9 @@ def read_string(string, format, postprocess=False, remove_braces=False,
     Note that keywords are stripped of surrounding whitespaces.
 
     """
-    return _read_common(bibpy.parse.parse(string, format), format, postprocess,
-                        remove_braces, name_delimiter, keyword_delimiter)
+    return _read_common(bibpy.parser.parse(string, format), format,
+                        postprocess, remove_braces, name_delimiter,
+                        keyword_delimiter)
 
 
 def read_file(source, format, encoding='utf-8', postprocess=False,
@@ -125,10 +126,9 @@ def read_file(source, format, encoding='utf-8', postprocess=False,
     """
     fh = (io.open(source, encoding=encoding) if is_string(source) else source)
 
-    with fh:
-        return _read_common(bibpy.parse.parse_file(fh, format), format,
-                            postprocess, remove_braces, name_delimiter,
-                            keyword_delimiter)
+    return _read_common(bibpy.parser.parse_file(fh, format), format,
+                        postprocess, remove_braces, name_delimiter,
+                        keyword_delimiter)
 
 
 def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,
@@ -229,8 +229,8 @@ def expand_strings(entries, strings, ignore_duplicates=False):
     for entry in entries:
         for field, value in entry:
             if is_string(value):
-                exprs = bibpy.parse.parse_string_expr(value)
-                expanded = "".join([variables.get(expr, expr)
+                exprs = bibpy.parser.parse_string_expr(value)
+                expanded = "".join([variables.get(expr.strip(), expr)
                                     for expr in exprs])
                 setattr(entry, field, expanded)
 
