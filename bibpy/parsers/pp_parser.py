@@ -194,10 +194,9 @@ def parse_query(query, query_type):
     """
     try:
         result = _GRAMMARS[query_type].parseString(query, parseAll=True)
-        print result
 
         return result.getName(), result.asList()
     except pp.ParseException as e:
         raise bibpy.error.ParseException("Error: One or more constraints "
-                                         "failed to parse at column " +
-                                         str(e.col))
+                                         "failed to parse at column {0}"
+                                         .format(e.col))
