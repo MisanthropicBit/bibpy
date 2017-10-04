@@ -186,9 +186,9 @@ def base_parser(validate_field, validate_entry):
     non_braced = if_token_type('content', lambda v: True)
     braced_expr = parser.forward_decl()
     braced_expr.define(
-       (if_token_type('lbrace', lambda v: True) +
-        parser.many(braced_expr | non_braced) +
-        if_token_type('rbrace', lambda v: True)) >> make_braced_expr
+        (if_token_type('lbrace', lambda v: True) +
+         parser.many(braced_expr | non_braced) +
+         if_token_type('rbrace', lambda v: True)) >> make_braced_expr
     )
     braced_expr = braced_expr >> remove_outer_braces
 
