@@ -359,8 +359,7 @@ if __name__ == "__main__":
 
     try:
         if not rest:
-            entries = bibpy.read_file(sys.stdin,
-                                      format='relaxed').entries
+            entries = bibpy.read_file(sys.stdin).entries
 
             if args.unique:
                 entries = unique_entries(entries)
@@ -376,7 +375,7 @@ if __name__ == "__main__":
             for filename in iter_files(rest, '*.bib', args.recursive):
                 # NOTE: Use scanFile if it ever gets into pyparsing to lazily
                 # read and filter the bib source(s)
-                entries = bibpy.read_file(filename, format='relaxed').entries
+                entries = bibpy.read_file(filename).entries
 
                 if args.unique:
                     entries = unique_entries(entries)
