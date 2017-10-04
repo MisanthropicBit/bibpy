@@ -1,0 +1,8 @@
+coverage
+coveralls
+cram
+funcparserlib
+pep257
+pyparsing
+pytest>=2.9
+pytest-quickcheck
