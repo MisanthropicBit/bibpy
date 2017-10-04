@@ -45,6 +45,7 @@ Informal grammars for queries:
 
 import argparse
 import bibpy
+import bibpy.parser
 import bibpy.tools
 import fnmatch
 import itertools
@@ -260,7 +261,7 @@ def construct_predicates(values, predicate_func, key,
     predicates = []
 
     for value in values:
-        name, tokens = bibpy.tools.parse_query(value, key)
+        name, tokens = bibpy.parser.parse_query(value, key)
         predicates.append(predicate_func(name, key, tokens, args))
 
     return bibpy.tools.compose_predicates(predicates, pred_combiner)
