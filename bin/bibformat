@@ -5,7 +5,7 @@
 
 import argparse
 import bibpy
-import bibpy.export
+import bibpy.formats
 import bibpy.tools
 import itertools
 import sys
@@ -86,9 +86,11 @@ if __name__ == '__main__':
                                for f in ['align', 'indent', 'order']])
 
         if args.export.lower() == 'xml':
-            writer = bibpy.export.to_xml
+            writer = bibpy.formats.xml.write_xml
         elif args.export.lower() == 'json':
-            writer = bibpy.export.to_json
+            writer = bibpy.formats.json.write_json
+        elif args.export.lower() == 'yaml':
+            writer = bibpy.formats.yaml.write_yaml
         else:
             writer = bibpy.write_string
 
