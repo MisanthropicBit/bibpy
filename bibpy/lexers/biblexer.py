@@ -8,25 +8,10 @@ parentheses instead of braces for string, preamble and comment entries, e.g.
 
 """
 
-import funcparserlib.lexer as lexer
-import re
+from bibpy.lexers.base_lexer import BaseLexer
 
 
-class LexerError(ValueError):
-    """General lexer error."""
-
-    def __init__(self, msg, pos, char, lnum):
-        self.msg = msg
-        self.pos = pos
-        self.char = char
-        self.lnum = lnum
-
-    def __str__(self):
-        return "Failed at line {0}, char {1}, position {2}"\
-            .format(self.lnum, self.char, self.pos)
-
-
-class BibLexer(object):
+class BibLexer(BaseLexer):
     """Lexer for generating bib tokens.
 
     A custom lexer is necessary as funcparserlib's lexing infrastructure is not
@@ -48,107 +33,25 @@ class BibLexer(object):
 
     def reset(self, string):
         """Reset the internal state of the lexer."""
-        self.mode = 'comment'
+        super(BibLexer, self).reset(string)
+
         self.in_entry = False
-        self.pos = 0
-        self.lastpos = 0
-        self.maxpos = len(string)
-        self.char = 1
-        self.lnum = 1
-        self.last_lnum = 1
-        self.brace_level = 0
-        self.string = string
         self.ignore_whitespace = True
 
-        self.patterns = dict([(name, (re.compile(pattern, re.UNICODE), f))
-                              for name, (pattern, f) in [
+        self._compile_regexes([
             ('lbrace',    (u'{', self.lex_lbrace)),
             ('rbrace',    (u'}', self.lex_rbrace)),
             ('equals',    (u'\s*(=)\s*', None)),
             ('comma',     (u',', None)),
             ('number',    (u'-?(0|([1-9][0-9]*))', None)),
-            ('name',      (u'\s*[\w\-:?\'\.]+\s*', None)),
+            ('name',      (ur"\s*[\w\-:?'\.]+\s*", None)),
             ('entry',     (u'@', self.found_entry)),
             ('string',    (u'"[^"]+"', self.lex_string)),
             ('lparen',    (u'\(', self.lex_lparen)),
             ('rparen',    (u'\)', self.lex_rparen)),
             ('concat',    (u'#', None)),
             ('space',     (u'[ \t\r\n]+', None)),
-        ]])
-
-    def eos(self):
-        """Return True if we have reached the end of the string."""
-        return self.pos >= self.maxpos
-
-    def advance(self, match):
-        """Advance the internal state based on a succesfull match."""
-        self.lastpos = self.pos
-        self.last_lnum = self.lnum
-
-        matched = match.group(0)
-        nls = matched.count('\n')
-        self.pos = match.start(0) + len(matched)
-        self.lnum += nls
-
-        if nls == 0:
-            self.char += len(matched)
-        else:
-            self.char = len(matched) - matched.rfind('\n') - 1
-
-    def unexpected(self, token):
-        """Raise an error for an unexpected token."""
-        raise LexerError("Unexpected token '{0}' at character {1}, line {2}"
-                         .format(token, self.char, self.lnum),
-                         self.pos, self.char, self.lnum)
-
-    def unbalanced(self):
-        """Raise an error for unbalanced braces."""
-        raise LexerError("Unbalanced braces at character {0}, line {1}"
-                         .format(self.char, self.lnum), self.pos, self.lnum)
-
-    def expect(self, token, strip_whitespace=True):
-        """Expect a token, fail otherwise."""
-        pattern, _ = self.patterns[token]
-        m = pattern.search(self.string, self.pos)
-
-        if not m:
-            self.unexpected(token)
-
-        self.advance(m)
-        token_value = m.group(0)
-
-        if self.ignore_whitespace:
-            token_value = token_value.strip()
-
-        return self.make_token(token, token_value)
-
-    def until(self, token):
-        """Scan until a particular token is found."""
-        if token == 'braces':
-            pattern = re.compile('{|}')
-        elif token == 'parens':
-            pattern = re.compile('\(|\)')
-        else:
-            pattern, _ = self.patterns[token]
-
-        m = pattern.search(self.string, self.pos)
-
-        if m:
-            scanned = m.group(0)
-            self.advance(m)
-
-            return self.string[self.lastpos:self.pos - 1], scanned
-        else:
-            rest = self.string[self.pos:]
-            self.pos = len(self.string)
-
-            return rest, ''
-
-    def make_token(self, token_type, value):
-        """Create a token of with a type and a value."""
-        return lexer.Token(token_type, value,
-                           (self.last_lnum, self.lastpos),
-                           (self.lnum, self.pos))
+        ])
 
     def found_entry(self, value):
         self.in_entry = True
@@ -177,7 +80,7 @@ class BibLexer(object):
             self.in_entry = False
             self.mode = 'comment'
         elif self.brace_level < 0:
-            raise self.unbalanced()
+            raise self.raise_unbalanced()
 
         return self.make_token('rbrace', value)
 
@@ -221,12 +124,9 @@ class BibLexer(object):
             if token == '{':
                 self.brace_level += 1
                 content += before + token
-                # yield self.make_token('content', before)
-                # yield self.make_token('lbrace', token)
             elif token == '}':
                 self.brace_level -= 1
                 content += before
-                # yield self.make_token('content', before)
 
                 if self.brace_level == 0:
                     yield self.make_token('content', content)
@@ -243,38 +143,9 @@ class BibLexer(object):
                     self.mode = 'bib'
                     break
                 elif self.brace_level < 0:
-                    self.unbalanced()
+                    self.raise_unbalanced()
                 else:
                     content += token
-                    # yield self.make_token('rbrace', token)
-
-    def lex_main(self):
-        for token_type, (pattern, handler) in self.patterns.items():
-            m = pattern.match(self.string, self.pos)
-
-            if m:
-                self.advance(m)
-                value = m.group(0)
-
-                if self.ignore_whitespace and token_type == 'space':
-                    break
-
-                if token_type != 'space':
-                    value = value.strip()
-
-                if handler:
-                    yield handler(value)
-                else:
-                    yield lexer.Token(token_type, value,
-                                      (self.last_lnum, self.lastpos),
-                                      (self.lnum, self.pos))
-
-                break
-        else:
-            # errline = self.string.splitlines()[self.lnum - 1]
-            raise LexerError("Unmatched token at character {0}, line {1}"
-                             .format(self.char, self.lnum),
-                             self.pos, self.lnum, self.char)
 
     def lex_comment(self):
         comment, entry = self.until('entry')
@@ -305,10 +176,4 @@ class BibLexer(object):
         self.mode = 'bib'
         self.ignore_whitespace = True
 
-    def lex(self, string):
-        """Generate tokens from a string."""
-        self.reset(string)
 
-        while not self.eos():
-            for token in self._modes[self.mode]():
-                yield token
