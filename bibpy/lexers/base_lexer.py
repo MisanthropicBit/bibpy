@@ -9,16 +9,19 @@ import re
 class LexerError(ValueError):
     """General lexer error."""
 
-    def __init__(self, msg, pos, char, lnum, line):
+    def __init__(self, msg, pos, char, lnum, brace_level, line):
         self.msg = msg
         self.pos = pos
         self.char = char
         self.lnum = lnum
+        self.brace_level = brace_level
         self.line = line
 
     def __str__(self):
-        return "Failed at line {0}, char {1}, position {2}: {3}"\
-            .format(self.lnum, self.char, self.pos, self.msg)
+        return "Failed at line {0}, char {1}, position {2}, brace level {3}: "\
+               "{4}"\
+               .format(self.lnum, self.char, self.pos, self.brace_level,
+                       self.msg)
 
 
 class BaseLexer(object):
@@ -78,15 +81,17 @@ class BaseLexer(object):
         else:
             self.char = len(matched) - matched.rfind('\n') - 1
 
+    def raise_error(self, msg):
+        """Raise a lexer error with the given message."""
+        raise LexerError(msg, self.pos, self.char, self.lnum, self.brace_level)
+
     def raise_unexpected(self, token):
         """Raise an error for an unexpected token."""
-        raise LexerError("Unexpected token '{0}'".format(token),
-                         self.pos, self.char, self.lnum)
+        self.raise_error("Unexpected token '{0}'".format(token))
 
     def raise_unbalanced(self):
         """Raise an error for unbalanced braces."""
-        raise LexerError("Unbalanced braces", self.pos, self.char, self.lnum,
-                         "")
+        self.raise_error("Unbalanced braces")
 
     def expect(self, token, strip_whitespace=True):
         """Expect a token, fail otherwise."""
