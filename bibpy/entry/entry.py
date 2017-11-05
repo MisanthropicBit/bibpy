@@ -9,7 +9,7 @@ import bibpy.requirements
 from bibpy.entry import base
 
 
-# TODO: Fix writing string expressions
+# TODO: Use collections.OrderedDict for fields(?)
 class Entry(base.BaseEntry):
     """Represents an entry in a bib(la)tex file."""
 
