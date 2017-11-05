@@ -7,6 +7,8 @@ import bibpy.parser
 import calendar
 import re
 
+# TODO: Sort order for names
+
 _MONTH_ABBREVIATIONS = [
     'jan', 'feb', 'mar', 'apr', 'may', 'jun',
     'jul', 'aug', 'sep', 'oct', 'nov', 'dec'
