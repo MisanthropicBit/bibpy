@@ -50,6 +50,14 @@ def preprocess_keylist(keylist, **options):
     return keylist
 
 
+def preprocess_pages(pages, **options):
+    """Convert a 2-element page range tuple to a string."""
+    if len(pages) != 2:
+        return str(pages)
+
+    return "{0}--{1}".format(pages[0], pages[1])
+
+
 # A dictionary of fields as keys and the functions that preprocess them as
 # values, e.g. 'year' should be converted to an integer etc.
 preprocess_functions = {'address':       preprocess_namelist,
@@ -78,6 +86,7 @@ preprocess_functions = {'address':       preprocess_namelist,
                         'origdate':      preprocess_date,
                         'origlocation':  preprocess_namelist,
                         'origpublisher': preprocess_namelist,
+                        'pages':         preprocess_pages,
                         'part':          preprocess_int,
                         'publisher':     preprocess_namelist,
                         'related':       preprocess_keylist,

@@ -100,6 +100,19 @@ def postprocess_keylist(keylist, **options):
     return list(filter(None, [key.strip() for key in keylist.split(',')]))
 
 
+def postprocess_pages(pages, **options):
+    """Convert a page range to a 2-element tuple."""
+    values = re.split('\-+', pages)
+
+    if len(values) == 2:
+        try:
+            return (int(values[0]), int(values[1]))
+        except (ValueError, TypeError):
+            return pages
+    else:
+        return pages
+
+
 # A dictionary of fields as keys and the functions that postprocess them as
 # values, e.g. 'year' should be converted to an integer etc.
 postprocess_functions = {'address':       postprocess_namelist,
@@ -125,6 +138,7 @@ postprocess_functions = {'address':       postprocess_namelist,
                          'origdate':      postprocess_date,
                          'origlocation':  postprocess_namelist,
                          'origpublisher': postprocess_namelist,
+                         'pages':         postprocess_pages,
                          'publisher':     postprocess_namelist,
                          'related':       postprocess_keylist,
                          'school':        postprocess_namelist,
