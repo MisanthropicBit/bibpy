@@ -163,6 +163,14 @@ def test_postprocess_keylist():
     assert keys == ['key1', 'key2', 'key3', 'key4', 'key5']
 
 
+def test_postprocess_pages():
+    assert bibpy.postprocess.postprocess_pages('1--200') == (1, 200)
+    assert bibpy.postprocess.postprocess_pages('1-200') == (1, 200)
+    assert bibpy.postprocess.postprocess_pages('1/200') == '1/200'
+    assert bibpy.postprocess.postprocess_pages('--200') == '--200'
+    assert bibpy.postprocess.postprocess_pages('1--') == '1--'
+
+
 def test_no_postprocess():
     entry = bibpy.entry.Entry('techreport', 'ula22',
                               **{'random_field': 23,

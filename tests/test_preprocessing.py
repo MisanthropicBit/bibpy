@@ -51,9 +51,16 @@ def test_keylist():
     assert bibpy.preprocess.preprocess_keylist("abc") == "abc"
 
 
-# @pytest.mark.skip
+def test_pages():
+    assert bibpy.preprocess.preprocess_pages((1, 200)) == '1--200'
+    assert bibpy.preprocess.preprocess_pages((1, 200)) == '1--200'
+    assert bibpy.preprocess.preprocess_pages('1/200') == '1/200'
+    assert bibpy.preprocess.preprocess_pages('--200') == '--200'
+    assert bibpy.preprocess.preprocess_pages('1--') == '1--'
+
+
 def test_preprocess():
-    entry = bibpy.read_file('tests/data/preprocess.bib', 'relaxed')[0][0]
+    entry = bibpy.read_file('tests/data/preprocess.bib', 'relaxed')[0]
 
     expected = {
         'address': 'Arthur Cunnings and Michelle Toulouse',

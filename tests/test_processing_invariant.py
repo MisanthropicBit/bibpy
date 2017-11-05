@@ -13,6 +13,7 @@ def test_string():
         keywords = {parsing; computer science   ; databases;  },
         year     = {1957},
         month    = {11},
+        pages    = "11--20",
         msg      = "Part of " # var # " string",
         foreword = {Jan Leo {and} the Editors}
     }"""
@@ -28,6 +29,7 @@ def test_processing_invariant(test_string):
     assert entry.keywords == ['parsing', 'computer science', 'databases']
     assert entry.year == 1957
     assert entry.month == 'November'
+    assert entry.pages == (11, 20)
     assert entry.msg == '"Part of " # var # " string"'
     assert entry.foreword == ['Jan Leo and the Editors']
 
@@ -39,5 +41,6 @@ def test_processing_invariant(test_string):
     assert entry.keywords == ['parsing', 'computer science', 'databases']
     assert entry.year == 1957
     assert entry.month == 'November'
+    assert entry.pages == '11--20'
     assert entry.msg == '"Part of " # var # " string"'
     assert entry.foreword == ['Jan Leo and the Editors']
