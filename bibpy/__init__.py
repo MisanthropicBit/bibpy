@@ -38,6 +38,17 @@ def is_string(s):
         return isinstance(s, basestring)
 
 
+# Portable unicode string literals
+if sys.version < '3':
+    import codecs
+
+    def u(s):
+        return codecs.unicode_escape_decode(s)[0]
+else:
+    def u(s):
+        return s
+
+
 def read_string(string, format='relaxed', postprocess=False,
                 remove_braces=False, name_delimiter='and',
                 keyword_delimiter=';'):
