@@ -21,7 +21,9 @@ class BibLexer(BaseLexer):
     """
 
     def __init__(self):
+        super(BibLexer, self).__init__()
         self.reset('')
+        self.mode = 'comment'
 
         self._modes = {
             'bib':     self.lex_main,
@@ -30,13 +32,6 @@ class BibLexer(BaseLexer):
             'parens':  self.lex_parens,
             'comment': self.lex_comment
         }
-
-    def reset(self, string):
-        """Reset the internal state of the lexer."""
-        super(BibLexer, self).reset(string)
-
-        self.in_entry = False
-        self.ignore_whitespace = True
 
         self._compile_regexes([
             ('lbrace',    (u'{', self.lex_lbrace)),
@@ -52,6 +47,11 @@ class BibLexer(BaseLexer):
             ('concat',    (u'#', None)),
             ('space',     (u'[ \t\r\n]+', None)),
         ])
+
+    def reset(self, string):
+        """Reset the internal state of the lexer."""
+        super(BibLexer, self).reset(string)
+        self.in_entry = False
 
     def found_entry(self, value):
         self.in_entry = True
@@ -175,5 +175,3 @@ class BibLexer(BaseLexer):
         yield entry_type
         self.mode = 'bib'
         self.ignore_whitespace = True
-
-

@@ -28,12 +28,11 @@ class BaseLexer(object):
     """Base class for all lexers in bibpy."""
 
     def __init__(self):
-        self.reset('')
+        self._modes = {}
+        self.patterns = {}
 
     def reset(self, string):
         """Reset the internal state of the lexer."""
-        self._modes = {}
-        # self._mode = ''
         self.pos = 0
         self.lastpos = 0
         self.maxpos = len(string)
@@ -43,7 +42,6 @@ class BaseLexer(object):
         self.brace_level = 0
         self.ignore_whitespace = False
         self.string = string
-        self.patterns = {}
 
     def _compile_regexes(self, patterns):
         self.patterns = dict([(name, (re.compile(pattern, re.UNICODE), f))
