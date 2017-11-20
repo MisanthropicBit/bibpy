@@ -6,7 +6,7 @@ from bibpy.lexers.biblexer import BibLexer
 
 def lex_bib(string):
     """Return a generator of bib(la)tex tokens."""
-    return [token for token in BibLexer().lex(string) if token != 'space']
+    return [token for token in BibLexer().lex(string) if token.type != 'space']
 
 
 def lex_date(date_string):
