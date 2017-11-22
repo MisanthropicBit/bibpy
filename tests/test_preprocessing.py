@@ -60,7 +60,7 @@ def test_pages():
 
 
 def test_preprocess():
-    entry = bibpy.read_file('tests/data/preprocess.bib', 'relaxed')[0]
+    entry = bibpy.read_file('tests/data/preprocess.bib', 'relaxed').entries[0]
 
     expected = {
         'address': 'Arthur Cunnings and Michelle Toulouse',
