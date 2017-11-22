@@ -89,7 +89,8 @@ class BaseLexer(object):
 
     def raise_error(self, msg):
         """Raise a lexer error with the given message."""
-        raise LexerError(msg, self.pos, self.char, self.lnum, self.brace_level)
+        raise LexerError(msg, self.pos, self.char, self.lnum, self.brace_level,
+                         '')
 
     def raise_unexpected(self, token):
         """Raise an error for an unexpected token."""
@@ -161,12 +162,8 @@ class BaseLexer(object):
                 if token_type != 'space':
                     value = value.strip()
 
-                if handler:
-                    yield handler(value)
-                else:
-                    yield lexer.Token(token_type, value,
-                                      (self.last_lnum, self.lastpos),
-                                      (self.lnum, self.pos))
+                yield handler(value) if handler else\
+                    self.make_token(token_type, value)
 
                 break
         else:

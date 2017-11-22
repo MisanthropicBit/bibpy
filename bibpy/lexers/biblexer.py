@@ -71,7 +71,7 @@ class BibLexer(BaseLexer):
         elif self.brace_level > 1:
             self.mode = 'value'
 
-        return self.make_token("lbrace", value)
+        return self.make_token('lbrace', value)
 
     def lex_rbrace(self, value):
         self.brace_level -= 1
