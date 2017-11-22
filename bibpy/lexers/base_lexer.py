@@ -64,6 +64,14 @@ class BaseLexer(object):
         """Return True if we have reached the end of the string."""
         return self.pos >= self.maxpos
 
+    @property
+    def current_char(self):
+        """Return the current character or None if no such character."""
+        if self.string and self.pos >= 0 and self.pos < len(self.string):
+            return self.string[self.pos]
+
+        return None
+
     def advance(self, match):
         """Advance the internal state based on a succesfull match."""
         self.lastpos = self.pos
