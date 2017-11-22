@@ -33,7 +33,8 @@ setup.py install` from the `bibpy` directory.
 
 `bibpy` requires either
 [`funcparserlib`](https://github.com/vlasovskikh/funcparserlib) or
-[`pyparsing`](http://pyparsing.wikispaces.com/) installed.
+[`pyparsing`](http://pyparsing.wikispaces.com/) installed for parsing and
+optionally [PyYAML](http://pyyaml.org/) for reading yaml files.
 
 <a name="quickstart"></a>
 # Quickstart
