@@ -3,6 +3,7 @@
 import bibpy.date
 import bibpy.entry
 import bibpy.lexers
+from bibpy.compat import u
 import funcparserlib.parser as parser
 import re
 
@@ -275,7 +276,7 @@ def mixed_parser():
 
 def relaxed_parser():
     """Return a grammar for a relaxed parser."""
-    regex = u'[\w\-:\.]+'
+    regex = u('[\w\-:\.]+')
 
     def validate_field(field):
         return re.match(regex, field, re.UNICODE)

@@ -2,6 +2,7 @@
 
 """bibpy: Bib(la)tex parser and tools."""
 
+import bibpy.compat
 import bibpy.parser
 import bibpy.postprocess
 import bibpy.preprocess
@@ -9,7 +10,6 @@ import bibpy.references
 import io
 import os
 import re
-import sys
 
 __version__ = '0.1.0-alpha'
 __license__ = 'MIT'
@@ -26,27 +26,6 @@ __all__ = ('read_string',
            'uninherit_crossrefs',
            'inherit_xdata',
            'uninherit_xdata')
-
-__BIBPY_PY3__ = sys.version_info[0] > 2
-
-
-def is_string(s):
-    """Check if the argument is a string or not."""
-    if __BIBPY_PY3__:
-        return isinstance(s, str)
-    else:
-        return isinstance(s, basestring)
-
-
-# Portable unicode string literals
-if sys.version < '3':
-    import codecs
-
-    def u(s):
-        return codecs.unicode_escape_decode(s)[0]
-else:
-    def u(s):
-        return s
 
 
 def read_string(string, format='relaxed', postprocess=False,
@@ -136,7 +115,8 @@ def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
     Note that keywords are stripped of surrounding whitespaces.
 
     """
-    fh = (io.open(source, encoding=encoding) if is_string(source) else source)
+    fh = (io.open(source, encoding=encoding)
+          if bibpy.compat.is_string(source) else source)
 
     return _read_common(bibpy.parser.parse_file(fh, format), format,
                         postprocess, remove_braces, name_delimiter,
@@ -177,7 +157,7 @@ def write_file(source, entries, encoding='utf-8', **format_options):
     The list of formatting options are the same as those for Entry.format.
 
     """
-    if is_string(source):
+    if bibpy.compat.is_string(source):
         source = io.open(source, 'w', encoding=encoding)
 
     with source as fh:
@@ -240,7 +220,7 @@ def expand_strings(entries, strings, ignore_duplicates=False):
 
     for entry in entries:
         for field, value in entry:
-            if is_string(value):
+            if bibpy.compat.is_string(value):
                 exprs = bibpy.parser.parse_string_expr(value)
                 expanded = "".join([variables.get(expr.strip(), expr)
                                     for expr in exprs])
@@ -272,7 +252,7 @@ def unexpand_strings(entries, strings, ignore_duplicates=False):
 
     for entry in entries:
         for field, value in entry:
-            if is_string(value):
+            if bibpy.compat.is_string(value):
                 temp = re.split(value_regex, value)
 
                 if len(temp) > 1:
