@@ -52,10 +52,10 @@ def preprocess_keylist(keylist, **options):
 
 def preprocess_pages(pages, **options):
     """Convert a 2-element page range tuple to a string."""
-    if len(pages) != 2:
-        return str(pages)
+    if isinstance(pages, tuple) and len(pages) == 2:
+        return "{0}--{1}".format(pages[0], pages[1])
 
-    return "{0}--{1}".format(pages[0], pages[1])
+    return str(pages)
 
 
 # A dictionary of fields as keys and the functions that preprocess them as

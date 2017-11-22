@@ -89,6 +89,7 @@ def test_preprocess():
         'origdate': '2016-10-19',
         'origlocation': 'Arthur Cunnings and Michelle Toulouse',
         'origpublisher': 'Arthur Cunnings and Michelle Toulouse',
+        'pages': '11-20',
         'part': '24',
         'publisher': 'Arthur Cunnings and Michelle Toulouse',
         'related': 'key1, key2, key3',
