@@ -378,6 +378,79 @@ def parse_braced_expr(expr):
     return [token.value for token in bibpy.lexers.lex_braced_expr(expr)]
 
 
+def prefix_indices(parts):
+    """Find the indices for a name prefix ('von' part) in a list of tokens."""
+    i, j = -1, -1
+
+    for k, p in enumerate(parts):
+        if p.islower():
+            i = k
+            break
+
+    if i != -1:
+        j = i + 1
+        for k in range(i+1, len(parts)):
+            if parts[k].islower():
+                j = k + 1
+
+    return i, j if j < len(parts) else j-1
+
+
+def parse_name(name):
+    """Parse a name, such as an author."""
+    if not name:
+        return bibpy.name.Name()
+
+    first, prefix, last, suffix = '', '', '', ''
+    tokens, commas = bibpy.lexers.lex_name(name)
+
+    if commas == 0:
+        # Assume 'first last' or 'first von last' format
+        tokens = tokens[0]
+
+        if len(tokens) == 1:
+            last = tokens[0]
+        else:
+            pi = prefix_indices(tokens)
+
+            if pi:
+                i, j = pi
+                first = " ".join(tokens[:i])
+                prefix = " ".join(tokens[i:j])
+                last = " ".join(tokens[j:])
+            else:
+                first = " ".join(tokens[:-1])
+                last = tokens[-1]
+    elif commas == 1:
+        # Assume 'von last, first' format
+        pi = prefix_indices(tokens[0])
+
+        if pi != (-1, -1):
+            i, j = pi
+            first = " ".join(tokens[1])
+            prefix = " ".join(tokens[0][i:j])
+            last = " ".join(tokens[0][j:])
+        else:
+            first = " ".join(tokens[1])
+            last = " ".join(tokens[0])
+    elif commas >= 2:
+        # Assume 'von last, jr, first' format
+        pi = prefix_indices(tokens[0])
+
+        if pi != (-1, -1):
+            i, j = pi
+            print i, j
+            first = " ".join(tokens[1])
+            prefix = " ".join(tokens[0][i:j])
+            last = " ".join(tokens[0][j:])
+        else:
+            first = " ".join(tokens[2])
+            last = " ".join(tokens[0])
+            suffix = " ".join(tokens[1])
+
+    return bibpy.name.Name(first, prefix, last, suffix)
+
+
 ##################################################################
 # Query Grammars
 ##################################################################

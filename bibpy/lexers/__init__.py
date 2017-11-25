@@ -3,6 +3,7 @@
 import funcparserlib.lexer as lexer
 from bibpy.compat import u
 from bibpy.lexers.biblexer import BibLexer
+from bibpy.lexers.name_lexer import NameLexer
 
 
 def lex_bib(string):
@@ -42,6 +43,13 @@ def lex_braced_expr(string):
     ])
 
     return [token for token in tokenizer(string) if token.type != 'space']
+
+
+def lex_name(string):
+    """Return a generator of bib(la)tex name tokens."""
+    name_lexer = NameLexer()
+
+    return [token.name for token in name_lexer.lex(string)], name_lexer.commas
 
 
 def lex_generic_query(query):
