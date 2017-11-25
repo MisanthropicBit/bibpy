@@ -56,5 +56,8 @@ class BaseEntry(object):
     def __str__(self):
         return self.format()
 
+    def __unicode__(self):
+        return unicode(str(self))
+
     def __repr__(self):
         raise NotImplementedError()
