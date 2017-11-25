@@ -22,6 +22,7 @@ for parserlib, abbrev in _parser_abbreviations:
         parse_date = pmod.parse_date
         parse_string_expr = pmod.parse_string_expr
         parse_braced_expr = pmod.parse_braced_expr
+        parse_name = pmod.parse_name
         parse_query = pmod.parse_query
 
         break
