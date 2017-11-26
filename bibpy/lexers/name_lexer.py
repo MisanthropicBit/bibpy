@@ -56,8 +56,9 @@ class NameLexer(BaseLexer):
             before, token = self.until('ws_or_braces')
 
             if not token:
+                # We hit the end of the string
                 if before:
-                    part.append(before)
+                    part.append(self.make_token('content', before))
 
                 yield self.make_token('part', part)
                 break
@@ -75,7 +76,7 @@ class NameLexer(BaseLexer):
                 else:
                     if self.brace_level == 0:
                         content += before
-                        part.append(content)
+                        part.append(self.make_token('braced', content))
                         content = ''
                     elif self.brace_level < 0:
                         self.raise_unbalanced()
@@ -87,7 +88,7 @@ class NameLexer(BaseLexer):
                         self._commas += 1
 
                         if before:
-                            part.append(before)
+                            part.append(self.make_token('content', before))
 
                         yield self.make_token('part', part)
                         part = []
@@ -95,4 +96,10 @@ class NameLexer(BaseLexer):
                     else:
                         # Token is whitespace
                         if before.strip():
-                            part.append(content + before.strip())
+                            if content:
+                                part.append(self.make_token('content',
+                                            content + before.strip()))
+                                content = ''
+                            else:
+                                part.append(self.make_token('content',
+                                                            before.strip()))
