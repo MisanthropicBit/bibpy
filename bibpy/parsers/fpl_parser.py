@@ -383,14 +383,14 @@ def prefix_indices(parts):
     i, j = -1, -1
 
     for k, p in enumerate(parts):
-        if p.islower():
+        if p.value.islower() and p.type != 'braced':
             i = k
             break
 
     if i != -1:
         j = i + 1
-        for k in range(i+1, len(parts)):
-            if parts[k].islower():
+        for k in range(i+1, len(parts)-1):
+            if parts[k].value.islower() and parts[k].type != 'braced':
                 j = k + 1
 
     return i, j if j < len(parts) else j-1
@@ -403,50 +403,50 @@ def parse_name(name):
 
     first, prefix, last, suffix = '', '', '', ''
     tokens, commas = bibpy.lexers.lex_name(name)
+    stripped_tokens = [[token.value for token in part] for part in tokens]
 
     if commas == 0:
         # Assume 'first last' or 'first von last' format
-        tokens = tokens[0]
+        stripped_tokens = stripped_tokens[0]
 
-        if len(tokens) == 1:
-            last = tokens[0]
+        if len(stripped_tokens) == 1:
+            last = stripped_tokens[0]
         else:
-            pi = prefix_indices(tokens)
+            pi = prefix_indices(tokens[0])
 
-            if pi:
+            if pi != (-1, -1):
                 i, j = pi
-                first = " ".join(tokens[:i])
-                prefix = " ".join(tokens[i:j])
-                last = " ".join(tokens[j:])
+                first = " ".join(stripped_tokens[:i])
+                prefix = " ".join(stripped_tokens[i:j])
+                last = " ".join(stripped_tokens[j:])
             else:
-                first = " ".join(tokens[:-1])
-                last = tokens[-1]
+                first = " ".join(stripped_tokens[:-1])
+                last = stripped_tokens[-1]
     elif commas == 1:
         # Assume 'von last, first' format
         pi = prefix_indices(tokens[0])
 
         if pi != (-1, -1):
-            i, j = pi
-            first = " ".join(tokens[1])
-            prefix = " ".join(tokens[0][i:j])
-            last = " ".join(tokens[0][j:])
+            _, j = pi
+            first = " ".join(stripped_tokens[1])
+            prefix = " ".join(stripped_tokens[0][0:j])
+            last = " ".join(stripped_tokens[0][j:])
         else:
-            first = " ".join(tokens[1])
-            last = " ".join(tokens[0])
+            first = " ".join(stripped_tokens[1])
+            last = " ".join(stripped_tokens[0])
     elif commas >= 2:
         # Assume 'von last, jr, first' format
         pi = prefix_indices(tokens[0])
 
         if pi != (-1, -1):
             i, j = pi
-            print i, j
-            first = " ".join(tokens[1])
-            prefix = " ".join(tokens[0][i:j])
-            last = " ".join(tokens[0][j:])
+            first = " ".join(stripped_tokens[1])
+            prefix = " ".join(stripped_tokens[0][i:j])
+            last = " ".join(stripped_tokens[0][j:])
         else:
-            first = " ".join(tokens[2])
-            last = " ".join(tokens[0])
-            suffix = " ".join(tokens[1])
+            first = " ".join(stripped_tokens[2])
+            last = " ".join(stripped_tokens[0])
+            suffix = " ".join(stripped_tokens[1])
 
     return bibpy.name.Name(first, prefix, last, suffix)
 
