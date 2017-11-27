@@ -1,5 +1,6 @@
 """Parsing functions using the funcparserlib library."""
 
+import bibpy.compat
 import bibpy.date
 import bibpy.entry
 import bibpy.lexers
@@ -326,7 +327,7 @@ def parse(string, format):
         return bibpy.entries.Entries(entries, strings, preambles,
                                      comment_entries, comments)
     except parser.NoParseError as e:
-        raise bibpy.error.ParseException(unicode(e))
+        raise bibpy.error.ParseException(bibpy.compat.u(e))
 
 
 def parse_file(source, format):

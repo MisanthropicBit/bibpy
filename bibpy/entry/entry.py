@@ -2,6 +2,7 @@
 
 """Class representing single entries in a bib(la)tex file."""
 
+import bibpy.compat
 import bibpy.entries
 import bibpy.error
 import bibpy.fields
@@ -21,10 +22,9 @@ class Entry(base.BaseEntry):
 
         for field, value in fields.items():
             if field in bibpy.fields.all:
-                f = field.encode('utf-8').lower()
-                setattr(self, '_' + f, value)
+                setattr(self, '_' + bibpy.compat.u(field.lower()), value)
             else:
-                setattr(self, field.encode('utf-8'), value)
+                setattr(self, field, value)
 
     # TODO: How can we test this across versions?
     def format(self, align=True, indent='    ', order=[], surround='{}',
@@ -61,7 +61,7 @@ class Entry(base.BaseEntry):
                 setattr(self, field, value)
                 fields.append((field, value))
 
-        fields = (",\n".join([unicode("{0}{1}{2} = {3}{4}{5}")
+        fields = (",\n".join([bibpy.compat.u("{0}{1}{2} = {3}{4}{5}")
                               .format(indent, field,
                                       ' ' * (i - len(field)),
                                       surround[0], value, surround[1])
