@@ -400,11 +400,11 @@ def prefix_indices(parts):
 
     if i != -1:
         j = i + 1
-        for k in range(i+1, len(parts)-1):
+        for k in range(i + 1, len(parts) - 1):
             if parts[k].value.islower() and parts[k].type != 'braced':
                 j = k + 1
 
-    return i, j if j < len(parts) else j-1
+    return i, j if j < len(parts) else j - 1
 
 
 def parse_name(name):
