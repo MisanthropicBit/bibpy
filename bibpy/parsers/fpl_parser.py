@@ -165,6 +165,16 @@ def join_list(delimiter):
     return _join_list
 
 
+def join_string_expr(delimiter):
+    def _join_string_expr(tokens):
+        if len(tokens) == 1:
+            return tokens[0].strip('"')
+        else:
+            return delimiter.join(tokens)
+
+    return _join_string_expr
+
+
 def delimited_list(element, separator):
     """Create a parser of a list of delimited tokens."""
     return element + parser.many(parser.skip(token_type(separator)) + element)\
@@ -199,7 +209,7 @@ def base_parser(validate_field, validate_entry):
         delimited_list(
             parser.some(lambda x: x.type == 'string') >> make_string |
             parser.some(lambda x: x.type == 'name') >> make_variable,
-            'concat') >> join_list(' # ')
+            'concat') >> join_string_expr(' # ')
 
     # The value of a field
     value = braced_expr | integer | variable | string_expr
