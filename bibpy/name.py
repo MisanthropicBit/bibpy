@@ -103,7 +103,8 @@ class Name(object):
         return " ".join(self.parts)
 
     def __repr__(self):
-        raise NotImplementedError()
+        return "Name(first={0}, prefix={1}, last={2}, suffix={3})"\
+            .format(self.first, self.prefix, self.last, self.suffix)
 
     def __unicode__(self):
         pass
