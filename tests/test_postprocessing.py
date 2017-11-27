@@ -1,76 +1,83 @@
 """Test field postprocessing."""
 
-import bibpy.postprocess
 import calendar
 import itertools
 import pytest
 import random
 import sys
+import bibpy.date
+from bibpy.postprocess import postprocess,\
+    postprocess_braces,\
+    postprocess_namelist,\
+    postprocess_keywords,\
+    postprocess_int,\
+    postprocess_date,\
+    postprocess_month,\
+    postprocess_keylist,\
+    postprocess_pages,\
+    postprocess_name
 
 
 def test_postprocess_braces():
-    assert bibpy.postprocess.postprocess_braces("This is {A} test") ==\
-        "This is A test"
-
-    assert bibpy.postprocess.postprocess_braces("This is {A}     {t}est") ==\
-        "This is A     test"
-
-    assert bibpy.postprocess.postprocess_braces("This is {{  A }}  test") ==\
-        "This is   A   test"
-
-    assert bibpy.postprocess.postprocess_braces("{}This is A test") ==\
-        "This is A test"
-
-    assert bibpy.postprocess.postprocess_braces("This is A test{}") ==\
-        "This is A test"
-
-    assert bibpy.postprocess.postprocess_braces("{T}his is A test") ==\
-        "This is A test"
-
-    assert bibpy.postprocess.postprocess_braces("This is A tes{t}") ==\
-        "This is A test"
+    assert postprocess_braces("This is {A} test") == "This is A test"
+    assert postprocess_braces("This is {A}     {t}est") == "This is A     test"
+    assert postprocess_braces("This is {{  A }}  test") == "This is   A   test"
+    assert postprocess_braces("{}This is A test") == "This is A test"
+    assert postprocess_braces("This is A test{}") == "This is A test"
+    assert postprocess_braces("{T}his is A test") == "This is A test"
+    assert postprocess_braces("This is A tes{t}") == "This is A test"
 
 
 def test_postprocess_namelist():
-    assert bibpy.postprocess.postprocess_namelist(
-        'A. B. Cidric and D. E. Fraser', name_delimiter='and') ==\
-            ['A. B. Cidric', 'D. E. Fraser']
+    assert postprocess_namelist('A. B. Cidric and D. E. Fraser',
+                                name_delimiter='and') ==\
+        ['A. B. Cidric', 'D. E. Fraser']
 
-    assert bibpy.postprocess.postprocess_namelist(
+    assert postprocess_namelist(
         'Department of Communications {and} Data and Department of Computer '
         'Science', name_delimiter='and') ==\
         ['Department of Communications and Data',
          'Department of Computer Science']
 
-    assert bibpy.postprocess.postprocess_namelist('') == []
-    assert bibpy.postprocess.postprocess_namelist([]) == []
+    assert postprocess_namelist('') == []
+    assert postprocess_namelist([]) == []
 
+
+def test_postprocess_names():
+    assert postprocess_name('A. B. Cidric') ==\
+        bibpy.name.Name(first='A. B.', last='Cidric')
+
+    assert postprocess_name('D. E. Fraser') ==\
+        bibpy.name.Name(first='D. E.', last='Fraser')
+
+    assert postprocess_name('Hancock, Jeffrey T.') ==\
+        bibpy.name.Name(first='Jeffrey T.', last='Hancock')
 
 def test_postprocess_keywords():
-    assert list(bibpy.postprocess.postprocess_keywords('')) == []
+    assert list(postprocess_keywords('')) == []
 
-    assert list(bibpy.postprocess.postprocess_keywords(
-        'java;c++; haskell;python', keyword_delimiter=';')) ==\
+    assert list(postprocess_keywords('java;c++; haskell;python',
+                                     keyword_delimiter=';')) ==\
         ['java', 'c++', 'haskell', 'python']
 
 
 @pytest.mark.randomize(s=str, str_attrs=('digits',), ncalls=100)
 def test_postprocess_int(s):
-    assert bibpy.postprocess.postprocess_int('2010') == 2010
+    assert postprocess_int('2010') == 2010
 
 
 def test_postprocess_int_fail():
-    assert bibpy.postprocess.postprocess_int('abcd') == 'abcd'
+    assert postprocess_int('abcd') == 'abcd'
 
 
 def test_postprocess_date():
-    d = bibpy.postprocess.postprocess_date('1998-05-02')
+    d = postprocess_date('1998-05-02')
 
     assert d.start == bibpy.date.PartialDate(1998, 5, 2)
     assert not d.end
     assert not d.open
 
-    assert bibpy.postprocess.postprocess_date('') ==\
+    assert postprocess_date('') ==\
         bibpy.date.DateRange((None, None, None), (None, None, None), False)
 
 
@@ -79,28 +86,28 @@ def test_postprocess_month():
     month_names = list(calendar.month_name)[1:]
 
     for i, name in enumerate(month_names):
-        assert bibpy.postprocess.postprocess_month(str(i + 1)) == name
+        assert postprocess_month(str(i + 1)) == name
 
 
 def test_postprocess_month_bounds():
-    assert bibpy.postprocess.postprocess_month("orsngpi")
-    assert bibpy.postprocess.postprocess_month("Jnauary")
-    assert bibpy.postprocess.postprocess_month("dec.")
+    assert postprocess_month("orsngpi")
+    assert postprocess_month("Jnauary")
+    assert postprocess_month("dec.")
 
 
 def test_postprocess_month_abbreviations():
-    assert bibpy.postprocess.postprocess_month('jan') == 'January'
-    assert bibpy.postprocess.postprocess_month('feb') == 'February'
-    assert bibpy.postprocess.postprocess_month('mar') == 'March'
-    assert bibpy.postprocess.postprocess_month('apr') == 'April'
-    assert bibpy.postprocess.postprocess_month('may') == 'May'
-    assert bibpy.postprocess.postprocess_month('jun') == 'June'
-    assert bibpy.postprocess.postprocess_month('jul') == 'July'
-    assert bibpy.postprocess.postprocess_month('aug') == 'August'
-    assert bibpy.postprocess.postprocess_month('sep') == 'September'
-    assert bibpy.postprocess.postprocess_month('oct') == 'October'
-    assert bibpy.postprocess.postprocess_month('nov') == 'November'
-    assert bibpy.postprocess.postprocess_month('dec') == 'December'
+    assert postprocess_month('jan') == 'January'
+    assert postprocess_month('feb') == 'February'
+    assert postprocess_month('mar') == 'March'
+    assert postprocess_month('apr') == 'April'
+    assert postprocess_month('may') == 'May'
+    assert postprocess_month('jun') == 'June'
+    assert postprocess_month('jul') == 'July'
+    assert postprocess_month('aug') == 'August'
+    assert postprocess_month('sep') == 'September'
+    assert postprocess_month('oct') == 'October'
+    assert postprocess_month('nov') == 'November'
+    assert postprocess_month('dec') == 'December'
 
 
 def generate_invalid_month():
@@ -115,7 +122,7 @@ def generate_invalid_month():
 def test_postprocess_month_fail():
     for i in itertools.islice(generate_invalid_month(), 100):
         with pytest.raises(bibpy.error.FieldError):
-            assert bibpy.postprocess.postprocess_month(i) == i
+            assert postprocess_month(i) == i
 
     # expected = {
     #     'afterword': ['Arthur Cunnings', 'Michelle Toulouse'],
@@ -157,18 +164,18 @@ def test_postprocess_month_fail():
 
 
 def test_postprocess_keylist():
-    keys = list(bibpy.postprocess.postprocess_keylist('key1,key2, key3, key4 '
-                                                      ',      key5,'))
+    keys = list(postprocess_keylist('key1,key2, key3, key4 '
+                                    ',      key5,'))
 
     assert keys == ['key1', 'key2', 'key3', 'key4', 'key5']
 
 
 def test_postprocess_pages():
-    assert bibpy.postprocess.postprocess_pages('1--200') == (1, 200)
-    assert bibpy.postprocess.postprocess_pages('1-200') == (1, 200)
-    assert bibpy.postprocess.postprocess_pages('1/200') == '1/200'
-    assert bibpy.postprocess.postprocess_pages('--200') == '--200'
-    assert bibpy.postprocess.postprocess_pages('1--') == '1--'
+    assert postprocess_pages('1--200') == (1, 200)
+    assert postprocess_pages('1-200') == (1, 200)
+    assert postprocess_pages('1/200') == '1/200'
+    assert postprocess_pages('--200') == '--200'
+    assert postprocess_pages('1--') == '1--'
 
 
 def test_no_postprocess():
@@ -176,11 +183,10 @@ def test_no_postprocess():
                               **{'random_field': 23,
                                  'nopostprocess': "OK!"})
 
-    postprocessed = bibpy.postprocess.postprocess(entry, True)
+    postprocessed = postprocess(entry, True)
     assert set(postprocessed) == set([('random_field', 23),
                                       ('nopostprocess', 'OK!')])
 
-    postprocessed = bibpy.postprocess.postprocess(entry, ['random_field',
-                                                          'nopostprocess'])
+    postprocessed = postprocess(entry, ['random_field', 'nopostprocess'])
     assert set(postprocessed) == set([('random_field', 23),
                                       ('nopostprocess', 'OK!')])
