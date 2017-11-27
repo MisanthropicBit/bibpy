@@ -221,7 +221,11 @@ def test_two_comma_names():
 
 
 def test_excess_comma_names():
-    pass
+    name = name_from_string('Doe, Jr., John, Excess')
+    assert name.first == 'John'
+    assert name.prefix == ''
+    assert name.last == 'Doe'
+    assert name.suffix == 'Jr.'
 
 
 def test_whitespace_in_names():
