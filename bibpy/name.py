@@ -89,11 +89,21 @@ class Name(object):
             return "{0} {1} {2} {3}".format(self.first, self.prefix,
                                             self.last, self.suffix)
 
-    def __len__(self):
-        return sum(int(len(p) != 0) for p in self.parts)
+    def __eq__(self, other):
+        if not isinstance(other, Name):
+            return False
+
+        return (self.first, self.prefix, self.last, self.suffix) ==\
+            (other.first, other.prefix, other.last, other.suffix)
+
+    def __ne__(self, other):
+        return not self == other
 
     def __str__(self):
         return " ".join(self.parts)
+
+    def __repr__(self):
+        raise NotImplementedError()
 
     def __unicode__(self):
         pass
