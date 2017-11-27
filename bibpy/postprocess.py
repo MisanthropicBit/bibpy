@@ -3,6 +3,7 @@
 import bibpy.date
 import bibpy.error
 import bibpy.grammar
+import bibpy.name
 import bibpy.parser
 import calendar
 import re
@@ -36,7 +37,20 @@ def postprocess_namelist(names, **options):
     names = list(filter(None, [n.strip() for n in split_on.split(names)]))
 
     # Remove any leftover curly braces after splitting
-    return [re.sub('\{(.+)\}', '\\1', name) for name in names]
+    names = [re.sub('\{(.+)\}', '\\1', name) for name in names]
+
+    if 'split_names' in options:
+        return [postprocess_name(n) for n in names]
+
+    return names
+
+
+def postprocess_name(author, **options):
+    """Attempts to split an author name into first, middle and last name."""
+    if author and bibpy.compat.is_string(author):
+        return bibpy.name.Name.fromstring(author)
+    else:
+        return author
 
 
 def postprocess_keywords(keywords, **options):
