@@ -30,7 +30,7 @@ __all__ = ('read_string',
 
 def read_string(string, format='relaxed', postprocess=False,
                 remove_braces=False, name_delimiter='and',
-                keyword_delimiter=';'):
+                keyword_delimiter=';', split_names=False):
     """Read a string containing references in a given format.
 
     The function returns a 5-tuple of parsed entries and comments.
@@ -75,7 +75,7 @@ def read_string(string, format='relaxed', postprocess=False,
 
 def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
               remove_braces=False, name_delimiter='and',
-              keyword_delimiter=';'):
+              keyword_delimiter=';', split_names=False):
     """Read a file containing references in a given format.
 
     The 'source' argument can either be a file handle or a filename. Files are
@@ -124,7 +124,8 @@ def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
 
 
 def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,
-                 name_delimiter='and', keyword_delimiter=';'):
+                 name_delimiter='and', keyword_delimiter=';',
+                 split_names=False):
     """Internal function for processing parsed tokens."""
     # Postprocess a subset of fields for automatic type conversion
     if postprocess or remove_braces:
@@ -135,7 +136,8 @@ def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,
                     postprocess,
                     remove_braces=remove_braces,
                     name_delimiter=name_delimiter,
-                    keyword_delimiter=keyword_delimiter):
+                    keyword_delimiter=keyword_delimiter,
+                    split_names=split_names):
                 setattr(entry, field, value)
 
     return parsed_tokens
