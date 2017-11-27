@@ -7,7 +7,7 @@ import bibpy.entry
 
 
 def test_unicode_string():
-    bibpy.read_string(u'@article{keåy, author = {荡 襡}, â = 10}')
+    bibpy.read_string(u'@article{keåy, author = {荡 襡}, title = "â"}')
 
 
 def test_unicode_file():
