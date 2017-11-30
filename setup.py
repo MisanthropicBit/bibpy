@@ -23,8 +23,8 @@ distutils.core.setup(
     license='MIT',
     keywords='bibpy, bibtex, biblatex, parser',
     url='https://github.com/MisanthropicBit/bibpy',
-    packages=['bibpy', 'bibpy.entry', 'bibpy.formats', 'bibpy.grammars',
-              'bibpy.lexers', 'bibpy.parsers'],
+    packages=['bibpy', 'bibpy.entry', 'bibpy.formats', 'bibpy.lexers',
+              'bibpy.parsers'],
     long_description=open('README.md').read(),
     scripts=['bin/bibgrep', 'bin/bibformat', 'bin/bibstats'],
     classifiers=[
