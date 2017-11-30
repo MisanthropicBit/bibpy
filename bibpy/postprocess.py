@@ -39,7 +39,7 @@ def postprocess_namelist(names, **options):
     # Remove any leftover curly braces after splitting
     names = [re.sub('\{(.+)\}', '\\1', name) for name in names]
 
-    if 'split_names' in options:
+    if options.get('split_names', False):
         return [postprocess_name(n) for n in names]
 
     return names

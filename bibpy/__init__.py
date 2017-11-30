@@ -70,7 +70,7 @@ def read_string(string, format='relaxed', postprocess=False,
     """
     return _read_common(bibpy.parser.parse(string, format), format,
                         postprocess, remove_braces, name_delimiter,
-                        keyword_delimiter)
+                        keyword_delimiter, split_names)
 
 
 def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
@@ -120,7 +120,7 @@ def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
 
     return _read_common(bibpy.parser.parse_file(fh, format), format,
                         postprocess, remove_braces, name_delimiter,
-                        keyword_delimiter)
+                        keyword_delimiter, split_names)
 
 
 def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,

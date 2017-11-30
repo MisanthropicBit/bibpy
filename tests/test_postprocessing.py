@@ -6,6 +6,7 @@ import pytest
 import random
 import sys
 import bibpy.date
+import bibpy.name
 from bibpy.postprocess import postprocess,\
     postprocess_braces,\
     postprocess_namelist,\
@@ -42,6 +43,16 @@ def test_postprocess_namelist():
     assert postprocess_namelist('') == []
     assert postprocess_namelist([]) == []
 
+    # Test splitting/parsing names
+    assert postprocess_namelist('A. B. Cidric and D. E. Fraser',
+                                name_delimiter='and', split_names=True) ==\
+        [bibpy.name.Name(first='A. B.', last='Cidric'),
+         bibpy.name.Name(first='D. E.', last='Fraser')]
+
+    assert postprocess_namelist('Hancock, Jeffrey T.', name_delimiter='and',
+                                split_names=True) ==\
+        [bibpy.name.Name(first='Jeffrey T.', last='Hancock')]
+
 
 def test_postprocess_names():
     assert postprocess_name('A. B. Cidric') ==\
@@ -52,6 +63,11 @@ def test_postprocess_names():
 
     assert postprocess_name('Hancock, Jeffrey T.') ==\
         bibpy.name.Name(first='Jeffrey T.', last='Hancock')
+
+    assert postprocess_name(20) == 20
+    assert postprocess_name([]) == []
+    assert postprocess_name('') == ''
+
 
 def test_postprocess_keywords():
     assert list(postprocess_keywords('')) == []
