@@ -191,7 +191,6 @@ class Entry(base.BaseEntry):
         return len(self.fields)
 
     def __repr__(self):
-        """Return the same string representation as __str()__."""
         return "Entry(type={0}, key={1})".format(self.entry_type,
                                                  self.entry_key)
 
