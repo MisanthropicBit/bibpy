@@ -70,7 +70,7 @@ class BaseLexer(object):
 
     def __init__(self):
         self._modes = {}
-        self.patterns = {}
+        self.patterns = None
 
     def reset(self, string):
         """Reset the internal state of the lexer."""
@@ -85,8 +85,14 @@ class BaseLexer(object):
         self.string = string
 
     def _compile_regexes(self, patterns):
-        self.patterns = dict([(name, (re.compile(pattern, re.UNICODE), f))
-                              for name, (pattern, f) in patterns])
+        # Save a copy of the patterns that respects the order. We could also
+        # use a collections.OrderedDict, but this actually affected performance
+        # ever so slighty
+        self._iter_patterns = [(name, (re.compile(pattern, re.UNICODE), f))
+                               for name, (pattern, f) in patterns]
+
+        # This is used for lookups
+        self.patterns = dict(self._iter_patterns)
 
     @property
     def mode(self):
@@ -189,7 +195,7 @@ class BaseLexer(object):
 
     def lex_main(self):
         """Main internal lexer method."""
-        for token_type, (pattern, handler) in self.patterns.items():
+        for token_type, (pattern, handler) in self._iter_patterns:
             m = pattern.match(self.string, self.pos)
 
             if m:
