@@ -2,8 +2,49 @@
 
 """Base class for all lexers."""
 
-import funcparserlib.lexer as lexer
 import re
+
+
+class Token(object):
+    """Class for lexer tokens.
+
+    This class has been modified from funcparserlib.lexer.Token to allow the
+    lexer classes to be used with pyparsing.
+
+    """
+    def __init__(self, type, value, start=None, end=None):
+        self.type = type
+        self.value = value
+        self.start = start
+        self.end = end
+
+    def __repr__(self):
+        return u'Token({0}, {1})'.format(self.type, self.value)
+
+    def __eq__(self, other):
+        # FIXME: Case sensitivity is assumed here
+        return self.type == other.type and self.value == other.value
+
+    def _pos_str(self):
+        if self.start is None or self.end is None:
+            return ''
+        else:
+            sl, sp = self.start
+            el, ep = self.end
+            return u'{0},{1}-{2},{3}:'.format(sl, sp, el, ep)
+
+    def __str__(self):
+        s = u"{0} {1} '{2}'".format(self._pos_str(), self.type, self.value)
+        return s.strip()
+
+    @property
+    def name(self):
+        return self.value
+
+    def pformat(self):
+        return u"{0} {1} '{2}'".format(self._pos_str().ljust(20),
+                                       self.type.ljust(14),
+                                       self.value)
 
 
 class LexerError(ValueError):
@@ -140,9 +181,8 @@ class BaseLexer(object):
 
     def make_token(self, token_type, value):
         """Create a token of with a type and a value."""
-        return lexer.Token(token_type, value,
-                           (self.last_lnum, self.lastpos),
-                           (self.lnum, self.pos))
+        return Token(token_type, value, (self.last_lnum, self.lastpos),
+                     (self.lnum, self.pos))
 
     def lex_string(self, value):
         return self.make_token('string', value)
