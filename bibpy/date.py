@@ -13,6 +13,9 @@ class PartialDate(object):
         self.month = month if month is None else int(month)
         self.day = day if day is None else int(day)
 
+        if self.year and self.year < 0:
+            raise ValueError("Year must be positive")
+
         if self.month and (self.month < 1 or self.month > 12):
             raise ValueError("Month not in range")
 
