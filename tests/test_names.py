@@ -3,6 +3,8 @@
 """Test extraction of parts of names."""
 
 import bibpy.name
+import pytest
+import sys
 
 
 def name_from_string(s):
@@ -219,6 +221,12 @@ def test_two_comma_names():
     assert name.last == 'Doe'
     assert name.suffix == 'Jr.'
 
+    name = name_from_string('von der Doe, Jr., John')
+    assert name.first == 'John'
+    assert name.prefix == 'von der'
+    assert name.last == 'Doe'
+    assert name.suffix == 'Jr.'
+
 
 def test_excess_comma_names():
     name = name_from_string('Doe, Jr., John, Excess')
@@ -250,4 +258,77 @@ def test_whitespace_in_names():
 
 
 def test_name_formatting():
-    pass
+    name1 = name_from_string(u'Møllenbach, Doermann')
+    name2 = name_from_string('Sterling, Archer')
+    name3 = name_from_string('Doe, Jr., John')
+    name4 = name_from_string('von der Doe, Jr., John')
+
+    assert name1.format(style='first-last') == u'Doermann Møllenbach'
+    assert name2.format(style='first-last') == 'Archer Sterling'
+    assert name3.format(style='first-last') == 'John Doe Jr.'
+    assert name4.format(style='first-last') == 'John von der Doe Jr.'
+    assert name1.format(style='last-first') == u'Møllenbach, Doermann'
+    assert name2.format(style='last-first') == 'Sterling, Archer'
+    assert name3.format(style='last-first') == 'Doe, Jr., John'
+    assert name4.format(style='last-first') == 'von der Doe, Jr., John'
+
+    assert name1.format(style='first-last', initials=True) == u'D. Møllenbach'
+    assert name2.format(style='first-last', initials=True) == 'A. Sterling'
+    assert name3.format(style='first-last', initials=True) == 'J. Doe Jr.'
+    assert name4.format(style='first-last', initials=True) ==\
+        'J. von der Doe Jr.'
+    assert name1.format(style='last-first', initials=True) == u'Møllenbach, D.'
+    assert name2.format(style='last-first', initials=True) == 'Sterling, A.'
+    assert name3.format(style='last-first', initials=True) == 'Doe, Jr., J.'
+    assert name4.format(style='last-first', initials=True) ==\
+        'von der Doe, Jr., J.'
+
+    with pytest.raises(ValueError):
+        name1.format(style='unknown')
+
+
+def test_name_properties():
+    name1 = name_from_string('Doermann')
+    name2 = name_from_string(u'Møllenbach, Doermann')
+    name3 = name_from_string('Sterling, Archer')
+    name4 = name_from_string(u'de la Møllenbach, Doermann')
+    name5 = name_from_string('von der Doe, Jr., John')
+    name6 = name_from_string(u'Møllenbach, Doermann')
+
+    assert len(name1) == 1
+    assert len(name2) == 2
+    assert len(name3) == 2
+    assert len(name4) == 3
+    assert len(name5) == 4
+    assert len(name6) == 2
+
+    assert name1 != name2
+    assert name1 != name3
+    assert name1 == name1
+    assert name2 == name6
+
+    assert str(name2) == 'Doermann Møllenbach'
+
+
+@pytest.mark.skipif(sys.version_info[0] < 3, reason="requires Python 3.x")
+def test_name_repr():
+    name1 = name_from_string(u'Møllenbach, Doermann')
+    name1 = name_from_string('Sterling, Archer')
+
+    assert repr(name1) ==\
+        'Name(first=Doermann, prefix=, last=Møllenbach, suffix=)'
+
+    assert repr(name2) ==\
+        "Name(first=Archer, prefix=b'', last=Sterling, suffix=b'')"
+
+
+@pytest.mark.skipif(sys.version_info[0] > 2, reason="Only on Python 2.x")
+def test_name_repr():
+    print(sys.version_info)
+    name1 = name_from_string(u'Møllenbach, Doermann')
+    name2 = name_from_string('Sterling, Archer')
+
+    assert repr(name1) ==\
+        'Name(first=Doermann, prefix=, last=Møllenbach, suffix=)'
+
+    assert repr(name2) == 'Name(first=Archer, prefix=, last=Sterling, suffix=)'

@@ -412,7 +412,7 @@ def parse_name(name):
     if not name:
         return bibpy.name.Name()
 
-    first, prefix, last, suffix = '', '', '', ''
+    first, prefix, last, suffix = u'', u'', u'', u''
     tokens, commas = bibpy.lexers.lex_name(name)
     stripped_tokens = [[token.value for token in part] for part in tokens]
 
@@ -451,9 +451,10 @@ def parse_name(name):
 
         if pi != (-1, -1):
             i, j = pi
-            first = " ".join(stripped_tokens[1])
+            first = " ".join(stripped_tokens[2])
             prefix = " ".join(stripped_tokens[0][i:j])
             last = " ".join(stripped_tokens[0][j:])
+            suffix = " ".join(stripped_tokens[1])
         else:
             first = " ".join(stripped_tokens[2])
             last = " ".join(stripped_tokens[0])

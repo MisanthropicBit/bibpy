@@ -1,20 +1,11 @@
+# -*- coding: utf-8 -*-
+
 """Class for names split into its components (given name, family name etc.)."""
 
 import bibpy.compat
 import bibpy.lexers
 
-__all__ = ('Name')
-
-
-# A set of valid prefixes for name prefixes
-_valid_prefixes = frozenset([
-    "de",
-    "da",
-    "del",
-    "della",
-    "van",
-    "von"
-])
+__all__ = frozenset(['Name'])
 
 
 @bibpy.compat.unicode_compatibility
@@ -77,9 +68,20 @@ class Name(object):
 
     @property
     def parts(self):
-        return [self.first, self.prefix, self.last, self.suffix]
+        """Return a tuple of all the name parts of this Name."""
+        return (self.first, self.prefix, self.last, self.suffix)
 
-    def format(self, style='first-last'):
+    def _initials(self, s):
+        """Return the initials for a name part.
+
+        E.g. "Jane Gustav" => "J. G."
+
+        """
+        return ' '.join(e[0] + '.' for e in s.split())
+
+    # NOTE: Support '{ff }{vv }{ll}{, jj}' syntax?
+    # E.g. '{ff }{vv }{ll}{, jj}' => 'John von der Doe, Jr.'
+    def format(self, style='first-last', initials=False):
         """Format the name using different styles. Default is 'first-last'.
 
         Consider the name 'John Smith' and its different styled formatings:
@@ -88,25 +90,38 @@ class Name(object):
 
         """
         if style == 'first-last':
-            return "{0} {1} {2} {3}".format(self.first, self.prefix,
-                                            self.last, self.suffix)
+            first = self._initials(self.first) if initials else self.first
+
+            return ' '.join([first] + [p for p in self.parts[1:] if p])
+        elif style == 'last-first':
+            result = self.prefix if self.prefix else ''
+            result += (' ' if self.prefix else '') + self.last
+            result += ', ' + self.suffix if self.suffix else ''
+
+            if self.first and (self.prefix or self.last):
+                first = self._initials(self.first) if initials else self.first
+                result += ', ' + first
+
+            return result
+        else:
+            raise ValueError("Unrecognised style '{0}'".format(style))
+
+    def __len__(self):
+        """Return the number of name parts that this Name consists of."""
+        return sum(1 for p in self.parts if p)
 
     def __eq__(self, other):
         if not isinstance(other, Name):
             return False
 
-        return (self.first, self.prefix, self.last, self.suffix) ==\
-            (other.first, other.prefix, other.last, other.suffix)
+        return self.parts == other.parts
 
     def __ne__(self, other):
         return not self == other
 
     def __str__(self):
-        return " ".join(self.parts)
+        return self.format()
 
     def __repr__(self):
-        return "Name(first={0}, prefix={1}, last={2}, suffix={3})"\
-            .format(self.first, self.prefix, self.last, self.suffix)
-
-    def __unicode__(self):
-        pass
+        return 'Name(first={0}, prefix={1}, last={2}, suffix={3})'\
+            .format(*[p.encode('utf-8') for p in self.parts])
