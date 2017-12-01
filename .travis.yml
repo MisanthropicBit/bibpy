@@ -20,6 +20,11 @@ script:
     - coverage --version
     - cram --version
     - coverage run --source=bibpy -m py.test --verbose
+    - python examples/crossref_expansion.py
+    - python examples/field_conversion.py
+    - python examples/entry_formatting.py
+    - python examples/requirements_check.py
+    - python examples/string_expansion.py
     #- cram --verbose tests/bin/test_bib*.t
 
 after_success:
