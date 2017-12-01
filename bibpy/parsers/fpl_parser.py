@@ -337,7 +337,7 @@ def parse(string, format):
         return bibpy.entries.Entries(entries, strings, preambles,
                                      comment_entries, comments)
     except parser.NoParseError as e:
-        raise bibpy.error.ParseException(bibpy.compat.u(e))
+        raise bibpy.error.ParseException(bibpy.compat.u(str(e)))
 
 
 def parse_file(source, format):
