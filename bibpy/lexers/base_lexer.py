@@ -222,6 +222,6 @@ class BaseLexer(object):
         """Generate tokens from a string."""
         self.reset(string)
 
-        while not self.eos:
+        while self.pos < self.maxpos:
             for token in self.modes[self.mode]():
                 yield token
