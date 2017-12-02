@@ -13,9 +13,6 @@ install:
     - pip install -r testing_requirements.txt
     - travis_retry pip install coverage
 
-#before_script:
-    #- pep257 --ignore=D102,D103,D211,D400 .
-
 script:
     - virtualenv --version
     - coverage --version
@@ -26,7 +23,6 @@ script:
     - python examples/entry_formatting.py
     - python examples/requirements_check.py
     - python examples/string_expansion.py
-    #- cram --verbose tests/bin/test_bib*.t
 
 after_success:
     - coveralls
