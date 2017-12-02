@@ -164,7 +164,6 @@ postprocess_functions = {'address':       postprocess_namelist,
                          'year':          postprocess_int}
 
 
-# TODO: Add option for strictness? Failing early when any postprocessing fails?
 def postprocess(entry, fields, **options):
     """Postprocess a subset of fields in a list of parsed entries."""
     if type(fields) not in (bool, list):

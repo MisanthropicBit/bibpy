@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Test the lexer."""
+"""Test the bib lexer."""
 
 from bibpy.lexers.biblexer import BibLexer
 

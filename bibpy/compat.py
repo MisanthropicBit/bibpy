@@ -8,7 +8,7 @@ __BIBPY_PY3__ = sys.version_info[0] > 2
 
 
 def is_string(s):
-    """Check if the argument is a string or not."""
+    """Check if the argument is a string."""
     if __BIBPY_PY3__:
         return isinstance(s, str)
     else:

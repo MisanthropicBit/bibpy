@@ -10,7 +10,7 @@ import bibpy.requirements
 from bibpy.entry import base
 
 
-# TODO: Use collections.OrderedDict for fields(?)
+# TODO: Use collections.OrderedDict for fields(?) (kwargs are not ordered)
 class Entry(base.BaseEntry):
     """Represents an entry in a bib(la)tex file."""
 
