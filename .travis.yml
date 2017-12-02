@@ -18,6 +18,7 @@ script:
     - coverage --version
     - cram --version
     - coverage run --source=bibpy -m py.test --verbose
+    - python setup.py install
     - python examples/crossref_expansion.py
     - python examples/field_conversion.py
     - python examples/entry_formatting.py
