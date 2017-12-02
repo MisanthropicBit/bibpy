@@ -3,9 +3,8 @@
 
 """bibgrep: Grep for bib(la)tex files.
 
-The tool has been designed to have the same parameters as the ordinary grep
-when this is sensible. To get all articles where the author contains 'Johnson'
-and the article is from 2010 or beyond:
+To get all articles where the author contains 'Johnson' and the article is from
+2010 or beyond:
 
 >>> bibgrep --entry="article" --field="author~Johnson" --field="year>=2010"
 
@@ -39,6 +38,7 @@ Informal grammars for queries:
     comparison  := [^] field_name (<= | < | >= | >) integer
     range       := [^] integer (<= | <) field_name (<= | <) integer
     numeric     := interval | comparison | range
+    field       := [^] field_name | ([^] field_name , field_occ)
     field_query := numeric | field
 
 """
@@ -60,7 +60,8 @@ __license__ = 'MIT'
 
 # TODO: How to combine predicates with '&&' and '||'?
 # TODO: Enable negation of ranges, intervals etc.
-# TODO: How to circumvent bash's history substitution syntax? ('!')
+# TODO: How to circumvent bash's history substitution syntax? ('!') => Use '^'
+# TODO: Write full grammar and stick to it
 
 _DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
 entry types and fields."""
