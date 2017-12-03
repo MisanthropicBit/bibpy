@@ -13,248 +13,248 @@ def name_from_string(s):
 
 def test_zero_comma_names():
     name = name_from_string('')
-    assert name.first == ''
-    assert name.prefix == ''
-    assert name.last == ''
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == ''
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Louise')
-    assert name.first == ''
-    assert name.prefix == ''
-    assert name.last == 'Louise'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Louise'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('louise')
-    assert name.first == ''
-    assert name.prefix == ''
-    assert name.last == 'louise'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'louise'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Catherine Crook de Camp')
-    assert name.first == 'Catherine Crook'
-    assert name.prefix == 'de'
-    assert name.last == 'Camp'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Catherine Crook'
+    assert name.prefix == name.von == 'de'
+    assert name.last == name.family == 'Camp'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Jean de la Fontaine du Bois Joli')
-    assert name.first == 'Jean'
-    assert name.prefix == 'de la Fontaine du'
-    assert name.last == 'Bois Joli'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean'
+    assert name.prefix == name.von == 'de la Fontaine du'
+    assert name.last == name.family == 'Bois Joli'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Jean de La Fontaine Du Bois Joli')
-    assert name.first == 'Jean'
-    assert name.prefix == 'de'
-    assert name.last == 'La Fontaine Du Bois Joli'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean'
+    assert name.prefix == name.von == 'de'
+    assert name.last == name.family == 'La Fontaine Du Bois Joli'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('jean de la fontaine du bois joli')
-    assert name.first == ''
-    assert name.prefix == 'jean de la fontaine du bois'
-    assert name.last == 'joli'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == 'jean de la fontaine du bois'
+    assert name.last == name.family == 'joli'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Jean {de} la fontaine')
-    assert name.first == 'Jean de'
-    assert name.prefix == 'la'
-    assert name.last == 'fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean de'
+    assert name.prefix == name.von == 'la'
+    assert name.last == name.family == 'fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('jean {de} {la} fontaine')
-    assert name.first == ''
-    assert name.prefix == 'jean'
-    assert name.last == 'de la fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == 'jean'
+    assert name.last == name.family == 'de la fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Jean {de} {la} fontaine')
-    assert name.first == 'Jean de la'
-    assert name.prefix == ''
-    assert name.last == 'fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean de la'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Jean De La Fontaine')
-    assert name.first == 'Jean De La'
-    assert name.prefix == ''
-    assert name.last == 'Fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean De La'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('jean De la Fontaine')
-    assert name.first == ''
-    assert name.prefix == 'jean De la'
-    assert name.last == 'Fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == 'jean De la'
+    assert name.last == name.family == 'Fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Jean de La Fontaine')
-    assert name.first == 'Jean'
-    assert name.prefix == 'de'
-    assert name.last == 'La Fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean'
+    assert name.prefix == name.von == 'de'
+    assert name.last == name.family == 'La Fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Kim Stanley Robinson')
-    assert name.first == 'Kim Stanley'
-    assert name.prefix == ''
-    assert name.last == 'Robinson'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Kim Stanley'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Robinson'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Michael {Marshall Smith}')
-    assert name.first == 'Michael'
-    assert name.prefix == ''
-    assert name.last == 'Marshall Smith'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Michael'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Marshall Smith'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Louis-Albert')
-    assert name.first == ''
-    assert name.prefix == ''
-    assert name.last == 'Louis-Albert'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Louis-Albert'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Charles Louis Xavier Joseph de la '
                             'Vall{\’e}e Poussin')
-    assert name.first == 'Charles Louis Xavier Joseph'
-    assert name.prefix == 'de la'
-    assert name.last == 'Vall\’ee Poussin'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Charles Louis Xavier Joseph'
+    assert name.prefix == name.von == 'de la'
+    assert name.last == name.family == 'Vall\’ee Poussin'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('John Smith')
-    assert name.first == 'John'
-    assert name.prefix == ''
-    assert name.last == 'Smith'
-    assert name.suffix == ''
+    assert name.first == name.given == 'John'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Smith'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('J. R. R. Tolkien')
-    assert name.first == 'J. R. R.'
-    assert name.prefix == ''
-    assert name.last == 'Tolkien'
-    assert name.suffix == ''
+    assert name.first == name.given == 'J. R. R.'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Tolkien'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Jean Baptiste-Poquelin')
-    assert name.first == 'Jean'
-    assert name.prefix == ''
-    assert name.last == 'Baptiste-Poquelin'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Baptiste-Poquelin'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Jean-Baptiste-Poquelin')
-    assert name.first == ''
-    assert name.prefix == ''
-    assert name.last == 'Jean-Baptiste-Poquelin'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Jean-Baptiste-Poquelin'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('R. J. Van de Graaff')
-    assert name.first == 'R. J. Van'
-    assert name.prefix == 'de'
-    assert name.last == 'Graaff'
-    assert name.suffix == ''
+    assert name.first == name.given == 'R. J. Van'
+    assert name.prefix == name.von == 'de'
+    assert name.last == name.family == 'Graaff'
+    assert name.suffix == name.junior == ''
 
 
 def test_one_comma_names():
     name = name_from_string('Brinch Hansen, Per')
-    assert name.first == 'Per'
-    assert name.prefix == ''
-    assert name.last == 'Brinch Hansen'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Per'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Brinch Hansen'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('van der Graaf, Horace Q.')
-    assert name.first == 'Horace Q.'
-    assert name.prefix == 'van der'
-    assert name.last == 'Graaf'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Horace Q.'
+    assert name.prefix == name.von == 'van der'
+    assert name.last == name.family == 'Graaf'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('van der graaf, Horace Q.')
-    assert name.first == 'Horace Q.'
-    assert name.prefix == 'van der'
-    assert name.last == 'graaf'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Horace Q.'
+    assert name.prefix == name.von == 'van der'
+    assert name.last == name.family == 'graaf'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Smith, John')
-    assert name.first == 'John'
-    assert name.prefix == ''
-    assert name.last == 'Smith'
-    assert name.suffix == ''
+    assert name.first == name.given == 'John'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Smith'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('{Phillips Bong}, Kevin ')
-    assert name.first == 'Kevin'
-    assert name.prefix == ''
-    assert name.last == 'Phillips Bong'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Kevin'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Phillips Bong'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('jean de la fontaine,')
-    assert name.first == ''
-    assert name.prefix == 'jean de la'
-    assert name.last == 'fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == 'jean de la'
+    assert name.last == name.family == 'fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('de la fontaine, Jean')
-    assert name.first == 'Jean'
-    assert name.prefix == 'de la'
-    assert name.last == 'fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean'
+    assert name.prefix == name.von == 'de la'
+    assert name.last == name.family == 'fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('De La Fontaine, Jean')
-    assert name.first == 'Jean'
-    assert name.prefix == ''
-    assert name.last == 'De La Fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'De La Fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('De la Fontaine, Jean')
-    assert name.first == 'Jean'
-    assert name.prefix == 'De la'
-    assert name.last == 'Fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean'
+    assert name.prefix == name.von == 'De la'
+    assert name.last == name.family == 'Fontaine'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('de La Fontaine, Jean')
-    assert name.first == 'Jean'
-    assert name.prefix == 'de'
-    assert name.last == 'La Fontaine'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Jean'
+    assert name.prefix == name.von == 'de'
+    assert name.last == name.family == 'La Fontaine'
+    assert name.suffix == name.junior == ''
 
 
 def test_two_comma_names():
     name = name_from_string('{Foo, Bar, and Sons}')
-    assert name.first == ''
-    assert name.prefix == ''
-    assert name.last == 'Foo, Bar, and Sons'
-    assert name.suffix == ''
+    assert name.first == name.given == ''
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Foo, Bar, and Sons'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('Doe, Jr., John')
-    assert name.first == 'John'
-    assert name.prefix == ''
-    assert name.last == 'Doe'
-    assert name.suffix == 'Jr.'
+    assert name.first == name.given == 'John'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Doe'
+    assert name.suffix == name.junior == 'Jr.'
 
     name = name_from_string('von der Doe, Jr., John')
-    assert name.first == 'John'
-    assert name.prefix == 'von der'
-    assert name.last == 'Doe'
-    assert name.suffix == 'Jr.'
+    assert name.first == name.given == 'John'
+    assert name.prefix == name.von == 'von der'
+    assert name.last == name.family == 'Doe'
+    assert name.suffix == name.junior == 'Jr.'
 
 
 def test_excess_comma_names():
     name = name_from_string('Doe, Jr., John, Excess')
-    assert name.first == 'John'
-    assert name.prefix == ''
-    assert name.last == 'Doe'
-    assert name.suffix == 'Jr.'
+    assert name.first == name.given == 'John'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Doe'
+    assert name.suffix == name.junior == 'Jr.'
 
 
 def test_whitespace_in_names():
     name = name_from_string('  Nigel   Incubator-Jones')
-    assert name.first == 'Nigel'
-    assert name.prefix == ''
-    assert name.last == 'Incubator-Jones'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Nigel'
+    assert name.prefix == name.von == ''
+    assert name.last == name.family == 'Incubator-Jones'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('   Charles Louis \nXavier Joseph    de \t   la '
                             'Vall{\’e}e Poussin \t\r\n')
-    assert name.first == 'Charles Louis Xavier Joseph'
-    assert name.prefix == 'de la'
-    assert name.last == 'Vall\’ee Poussin'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Charles Louis Xavier Joseph'
+    assert name.prefix == name.von == 'de la'
+    assert name.last == name.family == 'Vall\’ee Poussin'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('    Catherine \n\n  Crook \r\n  de \tCamp  \t')
-    assert name.first == 'Catherine Crook'
-    assert name.prefix == 'de'
-    assert name.last == 'Camp'
-    assert name.suffix == ''
+    assert name.first == name.given == 'Catherine Crook'
+    assert name.prefix == name.von == 'de'
+    assert name.last == name.family == 'Camp'
+    assert name.suffix == name.junior == ''
 
 
 def test_name_formatting():
@@ -306,6 +306,7 @@ def test_name_properties():
     assert name1 != name3
     assert name1 == name1
     assert name2 == name6
+    assert name1 != tuple()
 
     assert str(name2) == 'Doermann Møllenbach'
 
