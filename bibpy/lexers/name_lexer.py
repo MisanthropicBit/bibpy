@@ -42,10 +42,6 @@ class NameLexer(BaseLexer):
         """Return the indices of commas at brace-level zero."""
         return self._commas
 
-    def _update_commas(self, token):
-        if ',' in token:
-            self.commas.append(self.token_count)
-
     def lex_name(self):
         """Lex a name and return its tokens."""
         part = []
