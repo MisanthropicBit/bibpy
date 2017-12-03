@@ -21,8 +21,8 @@ class Name(object):
         self._last = last
         self._suffix = suffix
 
-    @staticmethod
-    def fromstring(string):
+    @classmethod
+    def fromstring(_, string):
         """Extract the name parts of a string name."""
         return bibpy.parser.parse_name(string)
 
