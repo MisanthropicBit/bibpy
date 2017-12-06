@@ -161,6 +161,7 @@ postprocess_functions = {'address':       postprocess_namelist,
                          'translator':    postprocess_namelist,
                          'urldate':       postprocess_date,
                          'xdata':         postprocess_keylist,
+                         'volume':        postprocess_int,
                          'year':          postprocess_int}
 
 
