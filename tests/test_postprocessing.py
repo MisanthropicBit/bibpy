@@ -28,6 +28,12 @@ def test_postprocess_braces():
     assert postprocess_braces("{T}his is A test") == "This is A test"
     assert postprocess_braces("This is A tes{t}") == "This is A test"
 
+    entry = bibpy.entry.Entry('article', 'key', **{'author': 'Ar{T}hur'})
+    assert next(postprocess(entry, [], remove_braces=True))[1][0] == 'ArThur'
+
+    entry = bibpy.entry.Entry('article', 'key', **{'author': 'Arthur'})
+    assert next(postprocess(entry, [], remove_braces=True))[1][0] == 'Arthur'
+
 
 def test_postprocess_namelist():
     assert postprocess_namelist('A. B. Cidric and D. E. Fraser',
