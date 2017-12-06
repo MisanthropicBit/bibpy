@@ -5,7 +5,6 @@
 import bibpy.compat
 import bibpy.parser
 import bibpy.postprocess
-import bibpy.preprocess
 import bibpy.references
 import io
 import os
