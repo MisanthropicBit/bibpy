@@ -6,6 +6,7 @@ import bibpy.compat
 import bibpy.entries
 import bibpy.error
 import bibpy.fields
+import bibpy.preprocess
 import bibpy.requirements
 from bibpy.entry import base
 
