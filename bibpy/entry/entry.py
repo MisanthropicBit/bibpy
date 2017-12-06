@@ -58,7 +58,6 @@ class Entry(base.BaseEntry):
                                  "'{0}'".format(type(order)))
         else:
             for field, value in bibpy.preprocess.preprocess(self, self.fields):
-                setattr(self, field, value)
                 fields.append((field, value))
 
         fields = (",\n".join([bibpy.compat.u("{0}{1}{2} = {3}{4}{5}")
