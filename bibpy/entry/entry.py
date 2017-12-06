@@ -21,10 +21,7 @@ class Entry(base.BaseEntry):
         self._entry_key = entry_key
 
         for field, value in fields.items():
-            if field in bibpy.fields.all:
-                setattr(self, '_' + bibpy.compat.u(field.lower()), value)
-            else:
-                setattr(self, field, value)
+            setattr(self, field, value)
 
     # TODO: How can we test this across versions?
     def format(self, align=True, indent='    ', order=[], surround='{}',
@@ -93,9 +90,7 @@ class Entry(base.BaseEntry):
         Active fields are fields that are not None or empty strings.
 
         """
-        return [prop for prop in vars(self) if not prop.startswith('_')
-                if getattr(self, prop)] +\
-            [field for field in bibpy.fields.all if getattr(self, field)]
+        return list(self._fields)
 
     @property
     def extra_fields(self):
@@ -162,17 +157,15 @@ class Entry(base.BaseEntry):
         """Check if a field is set for this entry."""
         return item in self.fields
 
-    def __getattr__(self, name):
-        return None
-
     def __setattr__(self, name, value):
         super(Entry, self).__setattr__(name, value)
 
-        if value == '' or value is None:
-            if name in self._fields:
-                self._fields.remove(name)
-        else:
-            self._fields.add(name)
+        if not name.startswith('_'):
+            if value is None or value == '':
+                if name in self._fields:
+                    self._fields.remove(name)
+            else:
+                self._fields.add(name)
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
@@ -199,16 +192,9 @@ def autoproperty(name, getter=True, setter=True, prefix='_'):
     attribute = prefix + name
 
     def _getter(self):
-        return getattr(self, attribute)
+        return getattr(self, attribute, None)
 
     def _setter(self, value):
-        # Update the entry's list of active fields
-        if value is None or value == '':
-            if name in self._fields:
-                self._fields.remove(name)
-        else:
-            self._fields.add(name)
-
         setattr(self, attribute, value)
 
     return property(_getter if getter else None,
