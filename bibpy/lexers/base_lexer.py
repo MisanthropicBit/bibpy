@@ -214,9 +214,11 @@ class BaseLexer(object):
                 break
         else:
             errline = self.string.splitlines()[self.lnum - 1]
+
             raise LexerError("Unmatched token at character {0}, line {1}"
                              .format(self.char, self.lnum),
-                             self.pos, self.lnum, self.char, errline)
+                             self.pos, self.char, self.lnum, self.brace_level,
+                             errline)
 
     def lex(self, string):
         """Generate tokens from a string."""
