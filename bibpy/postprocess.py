@@ -192,3 +192,15 @@ def postprocess(entry, fields, **options):
             yield field, postprocess_functions[field](value, **options)
         else:
             yield field, value
+
+
+# TODO: split_names should also work like postprocess and take the fields to
+# postprocess as allowed
+def postprocess_entry(entry, **options):
+    """Convenience function for postprocessing the fields in an entry."""
+    processed_fields =\
+        bibpy.postprocess.postprocess(entry, options.get('postprocess', []),
+                                      **options)
+
+    for field, value in processed_fields:
+        setattr(entry, field, value)
