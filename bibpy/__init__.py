@@ -216,7 +216,7 @@ def expand_strings(entries, strings, ignore_duplicates=False):
             raise ValueError("Strings contain duplicate variables: " +
                              ", ".join(duplicates))
     # For faster lookup
-    variables = dict((var, val) for string in strings for var, val in string)
+    variables = {var: val for string in strings for var, val in string}
 
     for entry in entries:
         for field, value in entry:
@@ -246,7 +246,7 @@ def unexpand_strings(entries, strings, ignore_duplicates=False):
                              ", ".join(duplicates))
 
     # For faster lookup
-    values = dict((val, var) for string in strings for var, val in string)
+    values = {val: var for string in strings for var, val in string}
     value_regex = re.compile('(' + "|".join(map(re.escape, values.keys())) +
                              ')')
 
@@ -345,8 +345,8 @@ def _xdata_common(entries, xdata_func):
         return
 
     # For faster lookup
-    xdata_keys = dict((entry.entry_key, entry) for entry in entries
-                      if entry.entry_type == 'xdata')
+    xdata_keys = {entry.entry_key: entry for entry in entries
+                  if entry.entry_type == 'xdata'}
 
     if not xdata_keys:
         return
