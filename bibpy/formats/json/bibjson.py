@@ -7,7 +7,7 @@ import json
 
 
 def _entry_to_json_object(entry, **format_options):
-    fields = dict([(field, value) for field, value in entry])
+    fields = {field: value for field, value in entry}
 
     # order = format_options['order']
     # sort_keys = True if order and isinstance(order, bool) else False

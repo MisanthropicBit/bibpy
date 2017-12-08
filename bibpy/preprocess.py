@@ -3,7 +3,7 @@
 import calendar
 import re
 
-_MONTHNAME_TO_INT = dict((v, k) for k, v in enumerate(calendar.month_name))
+_MONTHNAME_TO_INT = {v: k for k, v in enumerate(calendar.month_name)}
 
 
 def preprocess_namelist(namelist, **options):
