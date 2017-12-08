@@ -100,7 +100,12 @@ class Entry(base.BaseEntry):
 
     @property
     def extra_fields(self):
-        """Return any extra fields not recognised as bibtex or biblatex."""
+        """Return any extra fields not recognised as bibtex or biblatex.
+
+        This also ignores user-defined attributes that begin with an
+        underscore.
+
+        """
         return [prop for prop in vars(self) if not prop.startswith('_')]
 
     def get(self, name, default=None):
