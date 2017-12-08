@@ -15,7 +15,12 @@ from bibpy.entry import base
 class Entry(base.BaseEntry):
     """Represents an entry in a bib(la)tex file."""
 
-    def __init__(self, entry_type, entry_key, **fields):
+    # List of predefined properties that cannot be set through setattr etc.
+    _locked_fields = frozenset(['entry_key', 'entry_type', 'fields',
+                                'extra_fields', 'aliases', 'valid', 'validate',
+                                'keys', 'values', 'clear'])
+
+    def __init__(self, entry_type='', entry_key='', **fields):
         """Create a bib entry and set fields."""
         self._fields = set(fields.keys())
         self._entry_type = entry_type
@@ -162,11 +167,12 @@ class Entry(base.BaseEntry):
         super(Entry, self).__setattr__(name, value)
 
         if not name.startswith('_'):
-            if value is None or value == '':
-                if name in self._fields:
-                    self._fields.remove(name)
-            else:
-                self._fields.add(name)
+            if name not in Entry._locked_fields:
+                if value is None or value == '':
+                    if name in self._fields:
+                        self._fields.remove(name)
+                else:
+                    self._fields.add(name)
 
     def __setitem__(self, key, value):
         setattr(self, key, value)
