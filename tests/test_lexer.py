@@ -2,7 +2,9 @@
 
 """Test the bib lexer."""
 
+import bibpy
 from bibpy.lexers.biblexer import BibLexer
+import pytest
 
 
 def token_types(tokens):
@@ -56,3 +58,8 @@ This is another"""
     assert token_types(BibLexer().lex(string)) ==\
         ['comment', 'entry', 'name', 'lbrace', 'name', 'comma', 'name',
          'equals', 'number', 'comma', 'rbrace', 'comment']
+
+
+def test_lexer_fail():
+    with pytest.raises(bibpy.lexers.base_lexer.LexerError):
+        print list(BibLexer().lex('@entry!{key,author} ={bib}}'))
