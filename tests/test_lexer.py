@@ -62,4 +62,4 @@ This is another"""
 
 def test_lexer_fail():
     with pytest.raises(bibpy.lexers.base_lexer.LexerError):
-        print list(BibLexer().lex('@entry!{key,author} ={bib}}'))
+        list(BibLexer().lex('@entry!{key,author} ={bib}}'))
