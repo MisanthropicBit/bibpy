@@ -1,5 +1,6 @@
 """Conversion functions for pre- and postprocessing of bib(la)tex fields."""
 
+import bibpy.name
 import calendar
 import re
 
@@ -11,8 +12,17 @@ def preprocess_namelist(namelist, **options):
     if type(namelist) is not list:
         return namelist
 
+    processed_namelist = []
+
+    for name in namelist:
+        if isinstance(name, bibpy.name.Name):
+            # TODO: Make name style an option
+            processed_namelist.append(name.format(style='first-last'))
+        else:
+            processed_namelist.append(name)
+
     # First make sure that delimiter's are braced properly
-    namelist = [re.sub('(and)', '{\\1}', name) for name in namelist]
+    namelist = [re.sub('(and)', '{\\1}', name) for name in processed_namelist]
 
     # Then return the delimited list of names
     return (' ' + options.get('namelist_delimiter', 'and') + ' ')\

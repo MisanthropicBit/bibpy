@@ -15,8 +15,14 @@ _MONTH_ABBREVIATIONS = [
     'jul', 'aug', 'sep', 'oct', 'nov', 'dec'
 ]
 
+# TODO: Let users split on default names and custom ones
+_SPLIT_NAMES = ['author', 'afterword', 'bookauthor', 'commentator',
+                'editor', 'editora', 'editorb', 'editorc', 'foreword',
+                'holder', 'introduction', 'language', 'origpublisher',
+                'publisher', 'shortauthor', 'shorteditor', 'translator']
 
-def postprocess_braces(value, **options):
+
+def postprocess_braces(field, value, **options):
     """Remove any braces from a string value."""
     # if not bibpy.is_string(value):
     #     return value
@@ -24,7 +30,7 @@ def postprocess_braces(value, **options):
                     if e not in '{}'])
 
 
-def postprocess_namelist(names, **options):
+def postprocess_namelist(field, names, **options):
     """Convert a string of authors to a list."""
     if not names:
         return []
@@ -39,13 +45,13 @@ def postprocess_namelist(names, **options):
     # Remove any leftover curly braces after splitting
     names = [re.sub('\{(.+)\}', '\\1', name) for name in names]
 
-    if options.get('split_names', False):
-        return [postprocess_name(n) for n in names]
+    if field in options.get('split_names', []):
+        return [postprocess_name(field, n) for n in names]
 
     return names
 
 
-def postprocess_name(author, **options):
+def postprocess_name(field, author, **options):
     """Attempts to split an author name into first, middle and last name."""
     if author and bibpy.compat.is_string(author):
         return bibpy.name.Name.fromstring(author)
@@ -53,7 +59,7 @@ def postprocess_name(author, **options):
         return author
 
 
-def postprocess_keywords(keywords, **options):
+def postprocess_keywords(field, keywords, **options):
     """Convert a string of keywords to a list."""
     if not keywords:
         return []
@@ -65,7 +71,7 @@ def postprocess_keywords(keywords, **options):
                                   for keyword in keywords.split(delimiter)]))
 
 
-def postprocess_int(value, **options):
+def postprocess_int(field, value, **options):
     """Convert a string to an integer."""
     try:
         return int(value)
@@ -73,7 +79,7 @@ def postprocess_int(value, **options):
         return value
 
 
-def postprocess_date(datestring, **options):
+def postprocess_date(field, datestring, **options):
     """Convert a string to a bibpy.date.DateRange."""
     if not datestring:
         return bibpy.date.DateRange((None, None, None), (None, None, None),
@@ -87,7 +93,7 @@ def get_month_name(i):
     return calendar.month_name[i]
 
 
-def postprocess_month(month, **options):
+def postprocess_month(field, month, **options):
     """Convert a month number to its name."""
     try:
         i = int(month)
@@ -106,7 +112,7 @@ def postprocess_month(month, **options):
     return month
 
 
-def postprocess_keylist(keylist, **options):
+def postprocess_keylist(field, keylist, **options):
     """Convert a comma-separated string of keys to a list."""
     if not keylist:
         return []
@@ -114,7 +120,7 @@ def postprocess_keylist(keylist, **options):
     return list(filter(None, [key.strip() for key in keylist.split(',')]))
 
 
-def postprocess_pages(pages, **options):
+def postprocess_pages(field, pages, **options):
     """Convert a page range to a 2-element tuple."""
     values = re.split('\-+', pages)
 
@@ -171,6 +177,12 @@ def postprocess(entry, fields, **options):
         raise ValueError("postprocess takes either a bool or a list for fields"
                          ", not '{0}'".format(type(fields)))
 
+    split_names = options.get('split_names', [])
+
+    if type(split_names) not in (bool, list):
+        raise ValueError("split_names takes either a bool or a list for fields"
+                         ", not '{0}'".format(type(split_names)))
+
     remove_braces = options.get('remove_braces', False)
     _fields = []
 
@@ -182,6 +194,11 @@ def postprocess(entry, fields, **options):
     elif remove_braces:
         _fields = entry.fields
 
+    if type(split_names) is bool:
+        split_names = _SPLIT_NAMES if split_names else []
+
+    options['split_names'] = split_names
+
     for field in _fields:
         value = getattr(entry, field)
 
@@ -189,7 +206,7 @@ def postprocess(entry, fields, **options):
             value = postprocess_braces(value, **options)
 
         if field in postprocess_functions:
-            yield field, postprocess_functions[field](value, **options)
+            yield field, postprocess_functions[field](field, value, **options)
         else:
             yield field, value
 
