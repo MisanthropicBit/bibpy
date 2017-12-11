@@ -114,7 +114,10 @@ preprocess_functions = {'address':       preprocess_namelist,
 def preprocess(entry, fields, **options):
     """Preprocess a subset of fields in a list of entries to be written."""
     for field in fields:
-        value = getattr(entry, field, '')
+        value = getattr(entry, field, None)
+
+        if value is None:
+            continue
 
         if field in preprocess_functions:
             yield field, preprocess_functions[field](value, **options)
