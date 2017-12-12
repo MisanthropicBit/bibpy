@@ -335,7 +335,7 @@ def uninherit_crossrefs(entries, inherit=True, override=False, exceptions={}):
 def _filter_xdata_by_keys(entry, xdata_keys):
     """Filter and return the xdata keys in entry that are in xdata_keys."""
     return [xdata_keys[xdata_key] for xdata_key in
-            bibpy.postprocess.postprocess_keylist(entry.xdata)
+            bibpy.postprocess.postprocess_keylist('xdata', entry.xdata)
             if xdata_key in xdata_keys]
 
 
