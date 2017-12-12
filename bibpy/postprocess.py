@@ -16,13 +16,15 @@ _MONTH_ABBREVIATIONS = [
 ]
 
 # TODO: Let users split on default names and custom ones
-_SPLIT_NAMES = ['author', 'afterword', 'bookauthor', 'commentator',
-                'editor', 'editora', 'editorb', 'editorc', 'foreword',
-                'holder', 'introduction', 'language', 'origpublisher',
-                'publisher', 'shortauthor', 'shorteditor', 'translator']
+_SPLIT_NAMES = frozenset([
+    'author', 'afterword', 'bookauthor', 'commentator',
+    'editor', 'editora', 'editorb', 'editorc', 'foreword',
+    'holder', 'introduction', 'language', 'origpublisher',
+    'publisher', 'shortauthor', 'shorteditor', 'translator'
+])
 
 
-def postprocess_braces(field, value, **options):
+def postprocess_braces(value, **options):
     """Remove any braces from a string value."""
     # if not bibpy.is_string(value):
     #     return value
