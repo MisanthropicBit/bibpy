@@ -33,8 +33,6 @@ class NameLexer(BaseLexer):
     def reset(self, string):
         """Reset the internal state of the lexer."""
         super(NameLexer, self).reset(string)
-
-        self.token_count = 0
         self._commas = 0
 
     @property
