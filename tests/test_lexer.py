@@ -4,6 +4,7 @@
 
 import bibpy
 from bibpy.lexers.biblexer import BibLexer
+from bibpy.lexers.namelist_lexer import NamelistLexer
 import pytest
 
 
@@ -58,6 +59,25 @@ This is another"""
     assert token_types(BibLexer().lex(string)) ==\
         ['comment', 'entry', 'name', 'lbrace', 'name', 'comma', 'name',
          'equals', 'number', 'comma', 'rbrace', 'comment']
+
+
+def test_namelist_lexer():
+    test1 = "T. Ohtsuki and H. Mori and T. Kashiwabara and T. Fujisawa"
+    test2 = "T. Ohtsuki and H. Moriand and T. Kashiwabara and T. Fujisawa"
+    test3 = "L. {Sunil Chandran} and C. R. Subramanian"
+    test4 = "L. {Sunil Chandran} {and } C. R. Subramanian"
+
+    assert list(NamelistLexer().lex(test1)) ==\
+        ['T. Ohtsuki', 'H. Mori', 'T. Kashiwabara', 'T. Fujisawa']
+
+    assert list(NamelistLexer().lex(test2)) ==\
+        ['T. Ohtsuki', 'H. Moriand', 'T. Kashiwabara', 'T. Fujisawa']
+
+    assert list(NamelistLexer().lex(test3)) ==\
+        ['L. {Sunil Chandran}', 'C. R. Subramanian']
+
+    assert list(NamelistLexer().lex(test4)) ==\
+        ['L. {Sunil Chandran} {and } C. R. Subramanian']
 
 
 def test_lexer_fail():

@@ -4,6 +4,7 @@ import funcparserlib.lexer as lexer
 from bibpy.compat import u
 from bibpy.lexers.biblexer import BibLexer
 from bibpy.lexers.name_lexer import NameLexer
+from bibpy.lexers.namelist_lexer import NamelistLexer
 
 
 def lex_bib(string):
@@ -43,6 +44,11 @@ def lex_braced_expr(string):
     ])
 
     return [token for token in tokenizer(string) if token.type != 'space']
+
+
+def lex_namelist(string):
+    """Lex a namelist delimited by 'and'."""
+    return [token for token in NamelistLexer().lex(string) if token]
 
 
 def lex_name(string):

@@ -62,6 +62,11 @@ def test_postprocess_namelist():
                                 name_delimiter='and', split_names=['author'])\
         == [bibpy.name.Name(first='Jeffrey T.', last='Hancock')]
 
+    # Make sure that the 'and' in 'Chandran' is not interpreted as a delimiter
+    assert postprocess_namelist('author', 'L. {Sunil Chandran}',
+                                split_names=['author']) ==\
+        [bibpy.name.Name(first='L.', last='Sunil Chandran')]
+
 
 def test_postprocess_names():
     assert postprocess_name('author', 'A. B. Cidric') ==\
