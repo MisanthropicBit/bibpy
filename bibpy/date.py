@@ -39,7 +39,7 @@ class PartialDate(object):
 
     def __bool__(self):
         # Python 3.x
-        return any(e is not None for e in [self.year, self.month, self.day])
+        self.__nonzero__()
 
 
 # NOTE: Implement comparison operators? How?
