@@ -3,6 +3,7 @@
 import bibpy.date
 import bibpy.error
 import bibpy.grammar
+import bibpy.lexers
 import bibpy.name
 import bibpy.parser
 import calendar
@@ -37,18 +38,16 @@ def postprocess_namelist(field, names, **options):
     if not names:
         return []
 
-    split_on = re.compile('(?<!{)' + options.get('name_delimiter', 'and') +
-                          '(?!})')
+    # First, split on zero brace-level 'and'
+    names = bibpy.lexers.lex_namelist(names)
 
-    # Split names on the chosen delimiter which is NOT surrounded by curly
-    # braces
-    names = list(filter(None, [n.strip() for n in split_on.split(names)]))
-
-    # Remove any leftover curly braces after splitting
-    names = [re.sub('\{(.+)\}', '\\1', name) for name in names]
-
+    # Second, if requested, parse each name
     if field in options.get('split_names', []):
         return [postprocess_name(field, n) for n in names]
+
+    # Remove any leftover curly braces after splitting
+    if not options.get('split_names', False):
+        names = [re.sub('\{(.+?)\}', '\\1', name) for name in names]
 
     return names
 

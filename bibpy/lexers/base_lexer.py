@@ -193,6 +193,25 @@ class BaseLexer(object):
     def lex_string(self, value):
         return self.make_token('string', value)
 
+    def scan(self):
+        while True:
+            for token_type, (pattern, handler) in self._iter_patterns:
+                m = pattern.search(self.string, self.pos)
+
+                if m:
+                    token = m.group(0)
+                    self.advance(m)
+
+                    yield self.string[self.lastpos:self.pos - len(token)],\
+                        token
+                    break
+            else:
+                rest = self.string[self.pos:]
+                self.pos = len(self.string)
+
+                yield rest, None
+                return
+
     def lex_main(self):
         """Main internal lexer method."""
         for token_type, (pattern, handler) in self._iter_patterns:
