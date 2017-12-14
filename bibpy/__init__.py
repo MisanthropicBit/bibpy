@@ -28,8 +28,7 @@ __all__ = ('read_string',
 
 
 def read_string(string, format='relaxed', postprocess=False,
-                remove_braces=False, name_delimiter='and',
-                keyword_delimiter=';', split_names=False):
+                remove_braces=False, ignore_comments=True, split_names=False):
     """Read a string containing references in a given format.
 
     The function returns a 5-tuple of parsed entries and comments.
@@ -59,22 +58,13 @@ def read_string(string, format='relaxed', postprocess=False,
           shorteditor, translator                 List of names
         * xdata                                   List of keys
 
-    Use 'name_delimiter' as a delimiter for author lists etc. if 'postprocess'
-    is enabled, such that 'Myers and Gregg' -> ['Myers', 'Gregg']
-
-    Use 'keyword_delimiter' as a delimiter for keywords if 'postprocess'
-    is enabled, such that 'keyword1; keyword2' -> ['keyword1', 'keyword2'].
-    Note that keywords are stripped of surrounding whitespaces.
-
     """
     return _read_common(bibpy.parser.parse(string, format), format,
-                        postprocess, remove_braces, name_delimiter,
-                        keyword_delimiter, split_names)
+                        postprocess, remove_braces, split_names)
 
 
 def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
-              remove_braces=False, name_delimiter='and',
-              keyword_delimiter=';', split_names=False):
+              remove_braces=False, split_names=False):
     """Read a file containing references in a given format.
 
     The 'source' argument can either be a file handle or a filename. Files are
@@ -106,24 +96,15 @@ def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
           shorteditor, translator                 List of names
         * xdata                                   List of keys
 
-    Use 'name_delimiter' as a delimiter for author lists etc. if 'postprocess'
-    is enabled, such that 'Myers and Gregg' -> ['Myers', 'Gregg']
-
-    Use 'keyword_delimiter' as a delimiter for keywords if 'postprocess'
-    is enabled, such that 'keyword1; keyword2' -> ['keyword1', 'keyword2'].
-    Note that keywords are stripped of surrounding whitespaces.
-
     """
     fh = (io.open(source, encoding=encoding)
           if bibpy.compat.is_string(source) else source)
 
     return _read_common(bibpy.parser.parse_file(fh, format), format,
-                        postprocess, remove_braces, name_delimiter,
-                        keyword_delimiter, split_names)
+                        postprocess, remove_braces, split_names)
 
 
 def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,
-                 name_delimiter='and', keyword_delimiter=';',
                  split_names=False):
     """Internal function for processing parsed tokens."""
     # Postprocess a subset of fields for automatic type conversion
@@ -133,8 +114,6 @@ def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,
                 entry,
                 postprocess=postprocess,
                 remove_braces=remove_braces,
-                name_delimiter=name_delimiter,
-                keyword_delimiter=keyword_delimiter,
                 split_names=split_names
             )
 

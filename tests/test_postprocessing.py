@@ -38,28 +38,26 @@ def test_postprocess_braces():
 
 
 def test_postprocess_namelist():
-    assert postprocess_namelist('author', 'A. B. Cidric and D. E. Fraser',
-                                name_delimiter='and') ==\
-        ['A. B. Cidric', 'D. E. Fraser']
+    assert postprocess_namelist('author', 'A. B. Cidric and D. E. Fraser',)\
+        == ['A. B. Cidric', 'D. E. Fraser']
 
     assert postprocess_namelist(
         'institution',
         'Department of Communications {and} Data and Department of Computer '
-        'Science', name_delimiter='and') ==\
-        ['Department of Communications and Data',
-         'Department of Computer Science']
+        'Science') == ['Department of Communications and Data',
+                       'Department of Computer Science']
 
     assert postprocess_namelist('institution', '') == []
     assert postprocess_namelist('institution', []) == []
 
     # Test splitting/parsing names
     assert postprocess_namelist('author', 'A. B. Cidric and D. E. Fraser',
-                                name_delimiter='and', split_names=['author'])\
+                                split_names=['author'])\
         == [bibpy.name.Name(first='A. B.', last='Cidric'),
             bibpy.name.Name(first='D. E.', last='Fraser')]
 
     assert postprocess_namelist('author', 'Hancock, Jeffrey T.',
-                                name_delimiter='and', split_names=['author'])\
+                                split_names=['author'])\
         == [bibpy.name.Name(first='Jeffrey T.', last='Hancock')]
 
     # Make sure that the 'and' in 'Chandran' is not interpreted as a delimiter
@@ -86,8 +84,7 @@ def test_postprocess_names():
 def test_postprocess_keywords():
     assert list(postprocess_keywords('key', '')) == []
 
-    assert list(postprocess_keywords('key', 'java;c++; haskell;python',
-                                     keyword_delimiter=';')) ==\
+    assert list(postprocess_keywords('key', 'java;c++; haskell;python')) ==\
         ['java', 'c++', 'haskell', 'python']
 
 
