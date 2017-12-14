@@ -65,11 +65,8 @@ def postprocess_keywords(field, keywords, **options):
     if not keywords:
         return []
 
-    delimiter = options.get('keyword_delimiter')
-
-    if delimiter:
-        return list(filter(None, [keyword.strip()
-                                  for keyword in keywords.split(delimiter)]))
+    return [keyword.strip() for keyword in keywords.split(';')
+            if keyword.strip()]
 
 
 def postprocess_int(field, value, **options):
