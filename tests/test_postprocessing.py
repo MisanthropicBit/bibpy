@@ -148,8 +148,7 @@ def generate_invalid_month():
 
 def test_postprocess_month_fail():
     for i in itertools.islice(generate_invalid_month(), 100):
-        with pytest.raises(bibpy.error.FieldError):
-            assert postprocess_month('month', i) == i
+        assert postprocess_month('month', i) == i
 
     # expected = {
     #     'afterword': ['Arthur Cunnings', 'Michelle Toulouse'],
