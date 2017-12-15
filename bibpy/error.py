@@ -34,10 +34,3 @@ class RequiredFieldError(Exception):
         self.entry = entry
         self.required = required
         self.optional = optional
-
-
-# NOTE: Use FieldFormatError instead?
-class FieldError(Exception):
-    """TODO."""
-
-    pass

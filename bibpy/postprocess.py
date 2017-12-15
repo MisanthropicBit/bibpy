@@ -97,7 +97,7 @@ def postprocess_month(field, month, **options):
         i = int(month)
 
         if i not in range(1, 13):
-            raise bibpy.error.FieldError("month must be in range [1-12]")
+            return month
 
         return get_month_name(i)
     except (ValueError, IndexError):
