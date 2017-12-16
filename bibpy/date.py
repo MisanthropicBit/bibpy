@@ -39,7 +39,7 @@ class PartialDate(object):
 
     def __bool__(self):
         # Python 3.x
-        self.__nonzero__()
+        return self.__nonzero__()
 
 
 # NOTE: Implement comparison operators? How?
