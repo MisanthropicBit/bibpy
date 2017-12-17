@@ -70,7 +70,7 @@ print entries[0].aliases('bibtex')
 bibpy.write_file("references.bib", entries, 'biblatex')
 ```
 
-See the `examples` folder for more usage examples or read the
+See the [`examples`](/examples) folder for more usage examples or read the
 [tutorial](TUTORIAL.md).
 
 ## Tools
