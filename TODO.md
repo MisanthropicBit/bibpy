@@ -10,5 +10,4 @@ states before `bibpy` 1.0.0 can be released.
 - [x] Handle file and string encodings across different Python versions
 - [ ] Implement approximate matching for removing duplicate entries
 - [x] Implement a name splitter for authors etc.
-- [ ] Implement bibtexml, yaml, json and html exporters/importers
 - [ ] Implement codec for LaTeX/unicode
