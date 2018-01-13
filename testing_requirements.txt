@@ -6,4 +6,3 @@ pep257
 pyparsing
 pytest>=2.9
 pytest-quickcheck
-PyYAML>=3.08
