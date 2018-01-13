@@ -28,8 +28,6 @@ for parserlib, abbrev in _parser_abbreviations:
         break
     except AttributeError:
         pass  # Ignore parser if not all functions are implemented
-    except ImportError:
-        pass
 else:
     raise ImportError("None of the supported parsers exist on this system "
                       "(attempted: {0})"
