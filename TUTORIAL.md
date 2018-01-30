@@ -186,6 +186,21 @@ dates. In this case, it refers to an open-ended date (hence the '/' at the end)
 starting on the 19th of July, 2001. When writing entries, its postprocessed
 fields are automatically converted back to their pre-postprocessed counterparts.
 
+If you need to postprocess fields manually (for example, you need to postprocess
+a subset of fields only when a condition is met), you can use the postprocessing
+functions directly.
+
+```python
+from bibpy.postprocess import postprocess
+
+entries = bibpy.read_file(...).entries
+
+if condition:
+    for entry in entries:
+        # Postprocess the 'author' and 'date' fields if present
+        postprocess(entry, ['author', 'date'])
+```
+
 <a name="strings"></a>
 ## String Variable Expansion
 
