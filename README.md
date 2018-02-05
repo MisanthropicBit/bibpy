@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/MisanthropicBit/bibpy/badge.svg?branch=master)](https://coveralls.io/github/MisanthropicBit/bibpy?branch=master)
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 [![PyPI version](https://badge.fury.io/py/bibpy.svg)](https://badge.fury.io/py/bibpy)
+[![Can I Use Python 3?](https://caniusepython3.com/check/82202c33-6111-4c2c-9870-6245623dd3a8.svg)](https://caniusepython3.com/check/82202c33-6111-4c2c-9870-6245623dd3a8)
 
 _`bibpy` is currently in alpha and will go up on PyPI after beta (also see [TODO.md](TODO.md))_.
 
