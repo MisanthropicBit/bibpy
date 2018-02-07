@@ -125,11 +125,11 @@ class BaseLexer(object):
         self.last_lnum = self.lnum
 
         matched = match.group(0)
-        nls = matched.count('\n')
+        newlines = matched.count('\n')
         self.pos = match.start(0) + len(matched)
-        self.lnum += nls
+        self.lnum += newlines
 
-        if nls == 0:
+        if newlines == 0:
             self.char += len(matched)
         else:
             self.char = len(matched) - matched.rfind('\n') - 1
