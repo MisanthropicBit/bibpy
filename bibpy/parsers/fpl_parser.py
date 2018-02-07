@@ -157,14 +157,6 @@ def enclosed(start, end, inner):
     return skip(start) + inner + skip(end)
 
 
-def join_list(delimiter):
-    """Join a list from the list of parsed tokens."""
-    def _join_list(tokens):
-        return delimiter.join(tokens)
-
-    return _join_list
-
-
 def join_string_expr(delimiter):
     def _join_string_expr(tokens):
         if len(tokens) == 1:
