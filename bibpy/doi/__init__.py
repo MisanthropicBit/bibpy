@@ -10,7 +10,7 @@ except ImportError:
     from urllib2 import Request, urlopen
 
 
-def download(doi, source='http://dx.doi.org/{0}', raw=False):
+def retrieve(doi, source='http://dx.doi.org/{0}', raw=False, **options):
     """Download a bibtex file specified by a digital object identifier.
 
     The source is a URL containing a single format specifier which is where the
@@ -27,6 +27,9 @@ def download(doi, source='http://dx.doi.org/{0}', raw=False):
         handle = urlopen(req)
         contents = handle.read()
 
-        return contents if raw else bibpy.read_string(contents).entries[0]
+        if raw:
+            return contents
+        else:
+            return bibpy.read_string(contents, **options).entries[0]
     finally:
         handle.close()
