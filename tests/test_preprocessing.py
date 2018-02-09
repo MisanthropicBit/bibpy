@@ -1,62 +1,79 @@
 """Test field preprocessing."""
 
-import bibpy.preprocess
+import bibpy
+from bibpy.preprocess import preprocess,\
+    preprocess_namelist,\
+    preprocess_keywords,\
+    preprocess_int,\
+    preprocess_date,\
+    preprocess_month,\
+    preprocess_keylist,\
+    preprocess_pages,\
+    preprocess_functions
 import calendar
 import pytest
 
 
 def test_preprocess_namelist():
-    assert bibpy.preprocess.preprocess_namelist(['A. B. Cidric',
-                                                 'D. E. Fraser']) ==\
+    assert preprocess_namelist(['A. B. Cidric', 'D. E. Fraser']) ==\
         'A. B. Cidric and D. E. Fraser'
 
-    assert bibpy.preprocess.preprocess_namelist('string') == 'string'
+    assert preprocess_namelist('string') == 'string'
     t = tuple()
-    assert bibpy.preprocess.preprocess_namelist(t) is t
+    assert preprocess_namelist(t) is t
+
+    assert preprocess_namelist([
+        bibpy.name.Name(first='A. B.', last='Cidric'),
+        bibpy.name.Name(first='D. E.', last='Fraser')
+    ]) == 'A. B. Cidric and D. E. Fraser'
+
+    assert preprocess_namelist([
+        bibpy.name.Name(first='A. B.', last='Cidric'),
+        bibpy.name.Name(first='D. E.', last='Fraser')
+    ], name_style='last-first') == 'Cidric, A. B. and Fraser, D. E.'
 
 
 def test_preprocess_keywords():
-    assert bibpy.preprocess.preprocess_keywords(['java', 'c++',
-                                                 'haskell', 'python']) ==\
+    assert preprocess_keywords(['java', 'c++', 'haskell', 'python']) ==\
         'java;c++;haskell;python'
 
-    assert bibpy.preprocess.preprocess_keywords('string') == 'string'
+    assert preprocess_keywords('string') == 'string'
     t = tuple()
-    assert bibpy.preprocess.preprocess_keywords(t) is t
+    assert preprocess_keywords(t) is t
 
 
 def test_preprocess_date():
     d = bibpy.date.DateRange.fromstring('1998-05-02')
-    assert bibpy.preprocess.preprocess_date(d) == '1998-05-02'
+    assert preprocess_date(d) == '1998-05-02'
 
 
 def test_preprocess_month():
     for func in [str.capitalize, str.lower, str.upper]:
         for i, m in enumerate(list(calendar.month_name)[1:]):
-            assert bibpy.preprocess.preprocess_month(func(m)) == i + 1
+            assert preprocess_month(func(m)) == i + 1
 
     for m in ['gibberish', 'not_a_month', 'fail']:
-        assert bibpy.preprocess.preprocess_month(m) == m
+        assert preprocess_month(m) == m
 
 
 @pytest.mark.randomize(i=int, ncalls=100)
 def test_preproces_int(i):
-    assert bibpy.preprocess.preprocess_int(i) == str(i)
+    assert preprocess_int(i) == str(i)
 
 
 def test_keylist():
     keylist = ['key1', 'key2', 'key3']
 
-    assert bibpy.preprocess.preprocess_keylist(keylist) == 'key1, key2, key3'
-    assert bibpy.preprocess.preprocess_keylist("abc") == "abc"
+    assert preprocess_keylist(keylist) == 'key1, key2, key3'
+    assert preprocess_keylist("abc") == "abc"
 
 
 def test_pages():
-    assert bibpy.preprocess.preprocess_pages((1, 200)) == '1--200'
-    assert bibpy.preprocess.preprocess_pages((1, 200)) == '1--200'
-    assert bibpy.preprocess.preprocess_pages('1/200') == '1/200'
-    assert bibpy.preprocess.preprocess_pages('--200') == '--200'
-    assert bibpy.preprocess.preprocess_pages('1--') == '1--'
+    assert preprocess_pages((1, 200)) == '1--200'
+    assert preprocess_pages((1, 200)) == '1--200'
+    assert preprocess_pages('1/200') == '1/200'
+    assert preprocess_pages('--200') == '--200'
+    assert preprocess_pages('1--') == '1--'
 
 
 def test_preprocess():
@@ -107,13 +124,13 @@ def test_preprocess():
 
     # Ensure that there are no duplicates
     assert len(expected.keys()) == len(set(expected.keys()))
-    assert len(bibpy.preprocess.preprocess_functions.keys()) ==\
-        len(set(bibpy.preprocess.preprocess_functions.keys()))
+    assert len(preprocess_functions.keys()) ==\
+        len(set(preprocess_functions.keys()))
 
     assert set(expected.keys()) ==\
-        set(bibpy.preprocess.preprocess_functions.keys())
+        set(preprocess_functions.keys())
 
-    for field, value in bibpy.preprocess.preprocess(entry, expected.keys()):
+    for field, value in preprocess(entry, expected.keys()):
         assert value == expected.get(field, value)
 
 
@@ -122,8 +139,7 @@ def test_no_postprocess():
                               **{'random_field': 23,
                                  'nopreprocess': "OK!, OK!, OK!"})
 
-    preprocessed = bibpy.preprocess.preprocess(entry, ['random_field',
-                                                       'nopreprocess'])
+    preprocessed = preprocess(entry, ['random_field', 'nopreprocess'])
 
     assert next(preprocessed) == ('random_field', 23)
     assert next(preprocessed) == ('nopreprocess', "OK!, OK!, OK!")
