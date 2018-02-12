@@ -2,7 +2,9 @@
 
 """Class representing single entries in a bib(la)tex file."""
 
-import bibpy.compat
+from bibpy.compat import u
+from bibpy.entry import base
+from bibpy.preprocess import preprocess
 import bibpy.entries
 import bibpy.error
 import bibpy.fields
