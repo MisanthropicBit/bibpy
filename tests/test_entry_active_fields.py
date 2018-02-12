@@ -44,7 +44,7 @@ def test_entry_extra_fields(test_entry):
     assert test_entry.author is None
     assert test_entry.extra == ''
     assert test_entry.fields == []
-    assert test_entry.extra_fields == ['extra']
+    assert test_entry.extra_fields == []
 
 
 def test_all_fields():

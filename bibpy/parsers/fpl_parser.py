@@ -116,8 +116,7 @@ def make_entry(tokens):
     bibkey = tokens[1]
     fields = tokens[2] if tokens[2] is not None else []
 
-    return bibpy.entry.Entry(entry_type.lower(), entry_key,
-                             **{k: v for k, v in fields})
+    return bibpy.entry.Entry(bibtype.lower(), bibkey, fields=fields)
 
 
 def make_date(tokens):

@@ -4,10 +4,6 @@ import bibpy
 import pytest
 
 
-# Use a predefined order until we can fix arbitrary ordering
-_PRESET_ORDER = ['author', 'title', 'year', 'month', 'institution']
-
-
 @pytest.fixture
 def test_entries():
     return bibpy.read_file('tests/data/simple_1.bib', 'biblatex').entries
@@ -16,8 +12,7 @@ def test_entries():
 def test_formatting(test_entries):
     print(test_entries[0].format())
 
-    assert test_entries[0].format(align=True, indent='    ',
-                                  order=_PRESET_ORDER) ==\
+    assert test_entries[0].format(align=True, indent='    ') ==\
         """@article{test,
     author      = {James Conway and Archer Sterling},
     title       = {1337 Hacker},
@@ -33,8 +28,7 @@ def test_formatting(test_entries):
 
 
 def test_align(test_entries):
-    assert test_entries[0].format(align=False, indent='    ',
-                                  order=_PRESET_ORDER) ==\
+    assert test_entries[0].format(align=False, indent='    ') ==\
         """@article{test,
     author = {James Conway and Archer Sterling},
     title = {1337 Hacker},
@@ -45,12 +39,7 @@ def test_align(test_entries):
 
 
 def test_indent(test_entries, monkeypatch):
-    # Set PYTHONHASHSEED to zero for Python 3+ to ensure predictable ordering
-    # of Python's dictionary
-    monkeypatch.setenv('PYTHONHASHSEED', 0)
-
-    assert test_entries[0].format(align=True, indent='',
-                                  order=_PRESET_ORDER) ==\
+    assert test_entries[0].format(align=True, indent='') ==\
         """@article{test,
 author      = {James Conway and Archer Sterling},
 title       = {1337 Hacker},
@@ -59,8 +48,7 @@ month       = {4},
 institution = {Office of Information Management {and} Communications}
 }"""
 
-    assert test_entries[0].format(align=True, indent=' ' * 9,
-                                  order=_PRESET_ORDER) ==\
+    assert test_entries[0].format(align=True, indent=' ' * 9) ==\
         """@article{test,
          author      = {James Conway and Archer Sterling},
          title       = {1337 Hacker},
