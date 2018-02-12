@@ -48,8 +48,8 @@ def test_single_entry():
     entries = bibpy.read_string(s, 'bibtex').entries
 
     assert type(entries[0]) is bibpy.entry.Entry
-    assert entries[0].entry_type == 'article'
-    assert entries[0].entry_key == 'example_key'
+    assert entries[0].bibtype == 'article'
+    assert entries[0].bibkey == 'example_key'
     assert entries[0].author == 'McLovin\''
     assert entries[0].title == 'Hawaiian Organ Donation'
 

@@ -92,13 +92,13 @@ biblatex = base_entry_types | biblatex_entry_types |\
 all = biblatex | bibtex
 
 
-def aliases(entry_type, format):
+def aliases(bibtype, format):
     """Return the aliases of the given entry type and format."""
     # There are no aliases in bibtex
     if format != 'biblatex':
         return []
 
-    return biblatex_entry_type_aliases.get(entry_type, [])
+    return biblatex_entry_type_aliases.get(bibtype, [])
 
 
 # Private named tuple used as a base class for the real Entries class

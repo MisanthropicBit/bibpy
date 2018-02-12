@@ -259,7 +259,7 @@ def _crossref_common(entries, ref_func, inherit=True, override=False,
             targets.append(entry)
 
         # All entries can be sources of a crossref field
-        crossref_keys[entry.entry_key] = entry
+        crossref_keys[entry.bibkey] = entry
 
     for entry in targets:
         if entry.crossref in crossref_keys:
@@ -324,8 +324,8 @@ def _xdata_common(entries, xdata_func):
         return
 
     # For faster lookup
-    xdata_keys = {entry.entry_key: entry for entry in entries
-                  if entry.entry_type == 'xdata'}
+    xdata_keys = {entry.bibkey: entry for entry in entries
+                  if entry.bibtype == 'xdata'}
 
     if not xdata_keys:
         return

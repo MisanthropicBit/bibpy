@@ -19,7 +19,7 @@ class RequiredFieldError(Exception):
                              "options")
 
         s = "Entry '{0}' (type '{1}') is missing required field(s): "\
-            .format(entry.entry_key, entry.entry_type)
+            .format(entry.bibkey, entry.bibtype)
 
         if required:
             s += "{0}".format(", ".join(required))

@@ -31,8 +31,8 @@ def test_formatting(test_entry):
 def test_properties(test_entry):
     contents, entry = test_entry
 
-    assert entry.entry_type == 'preamble'
-    assert entry.entry_key is None
+    assert entry.bibtype == 'preamble'
+    assert entry.bibkey is None
     assert entry.fields == []
     assert entry == entry
     assert 'LaTeX' in entry

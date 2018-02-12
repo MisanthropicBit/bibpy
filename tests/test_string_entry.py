@@ -25,8 +25,8 @@ variable = \"value\"
 
 
 def test_properties(test_entry):
-    assert test_entry.entry_type == 'string'
-    assert test_entry.entry_key is None
+    assert test_entry.bibtype == 'string'
+    assert test_entry.bibkey is None
     assert test_entry.fields == ['variable']
     assert test_entry.aliases('bibtex') == []
     assert test_entry.valid('bibtex')

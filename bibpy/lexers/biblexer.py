@@ -66,8 +66,7 @@ class BibLexer(BaseLexer):
     def lex_lbrace(self, value):
         self.brace_level += 1
 
-        if self.brace_level == 1 and self.entry_type in ('comment',
-                                                         'preamble'):
+        if self.brace_level == 1 and self.bibtype in ('comment', 'preamble'):
             self.mode = 'value'
         elif self.brace_level > 1:
             self.mode = 'value'
@@ -86,10 +85,10 @@ class BibLexer(BaseLexer):
         return self.make_token('rbrace', value)
 
     def lex_lparen(self, value):
-        if self.entry_type in ('string'):
+        if self.bibtype in ('string'):
             self.mode = 'bib'
             self.ignore_whitespace = True
-        elif self.entry_type in ('comment', 'preamble'):
+        elif self.bibtype in ('comment', 'preamble'):
             self.mode = 'parens'
 
         return self.make_token('lparen', value)
@@ -135,9 +134,9 @@ class BibLexer(BaseLexer):
                     self.in_entry = False
                     self.ignore_whitespace = False
                     self.mode = 'comment'
-                    self.entry_type = None
+                    self.bibtype = None
                     break
-                elif self.brace_level == 1 and self.entry_type not in\
+                elif self.brace_level == 1 and self.bibtype not in\
                         ('comment', 'string', 'preamble'):
                     yield self.make_token('content', content)
                     yield self.make_token('rbrace', token)
@@ -162,17 +161,17 @@ class BibLexer(BaseLexer):
 
     def lex_entry(self):
         self.brace_level = 0
-        entry_type = self.expect('name')
+        bibtype = self.expect('name')
 
-        if entry_type.value == 'comment':
-            self.entry_type = 'comment'
-        elif entry_type.value == 'string':
-            self.entry_type = 'string'
-        elif entry_type.value == 'preamble':
-            self.entry_type = 'preamble'
+        if bibtype.value == 'comment':
+            self.bibtype = 'comment'
+        elif bibtype.value == 'string':
+            self.bibtype = 'string'
+        elif bibtype.value == 'preamble':
+            self.bibtype = 'preamble'
         else:
-            self.entry_type = 'entry'
+            self.bibtype = 'entry'
 
-        yield entry_type
+        yield bibtype
         self.mode = 'bib'
         self.ignore_whitespace = True

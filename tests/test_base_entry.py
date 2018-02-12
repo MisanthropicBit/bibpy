@@ -12,10 +12,10 @@ def test_base_entry():
         be.format()
 
     with pytest.raises(NotImplementedError):
-        be.entry_type()
+        be.bibtype()
 
     with pytest.raises(NotImplementedError):
-        be.entry_key()
+        be.bibkey()
 
     with pytest.raises(NotImplementedError):
         be.fields()

@@ -30,18 +30,17 @@ def scan_file(source, format):  # pragma: no cover
 def _extract_entries_scan(parsed_results, format):  # pragma: no cover
     """Internal function for extracting and yielding parsed results."""
     for tokens, _, _ in parsed_results:
-        entry_type = tokens[0][0]
+        bibtype = tokens[0][0]
 
         if len(tokens[0]) == 3:
-            if entry_type == 'string':
+            if bibtype == 'string':
                 yield bibpy.entry.String(tokens[1])
-            elif entry_type == 'comment':
+            elif bibtype == 'comment':
                 yield bibpy.entry.Comment(tokens[1])
-            elif entry_type == 'preamble':
+            elif bibtype == 'preamble':
                 yield bibpy.entry.Preamble(tokens[1])
             else:
-                yield bibpy.entry.Entry(entry_type, tokens[0][1],
-                                        **tokens[0][2])
+                yield bibpy.entry.Entry(bibtype, tokens[0][1], **tokens[0][2])
         else:
             yield tokens[0][0]
 
@@ -84,10 +83,8 @@ def _extract_entries(parsed_results, format):
                             for e in parsed_results.get('comments', [])]))
 
     # We need to account for missing fields
-    entries = [bibpy.entry.Entry(entry_type,
-                                 entry_key,
-                                 **dict(fields.asList()))
-               for entry_type, entry_key, fields
+    entries = [bibpy.entry.Entry(bibtype, bibkey, **dict(fields.asList()))
+               for bibtype, bibkey, fields
                in parsed_results.get('entries', [])]
 
     return bibpy.entries.Entries(entries, strings, preambles, comment_entries,
@@ -180,9 +177,9 @@ def numeric_grammar():
 
 
 _GRAMMARS = {
-    'entry_key':  key_grammar(),
-    'entry_type': entry_grammar(),
-    'field':      numeric_grammar() | field_grammar()
+    'bibkey':  key_grammar(),
+    'bibtype': entry_grammar(),
+    'field':   numeric_grammar() | field_grammar()
 }
 
 

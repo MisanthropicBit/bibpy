@@ -17,8 +17,8 @@ def test_formatting(test_entry):
 
 
 def test_properties(test_entry):
-    assert test_entry.entry_type == 'article'
-    assert test_entry.entry_key == 'key'
+    assert test_entry.bibtype == 'article'
+    assert test_entry.bibkey == 'key'
     assert test_entry.aliases('bibtex') == []
 
     test_entry.author = 'Author'
@@ -69,8 +69,8 @@ def test_properties(test_entry):
     test_entry.author = 'Johnson'
     assert test_entry != entry2
 
-    entry2.entry_type = 'article'
-    entry2.entry_key = 'key'
+    entry2.bibtype = 'article'
+    entry2.bibkey = 'key'
     entry2.author = 'Johnson'
 
     # Entries must have the same fields

@@ -13,11 +13,11 @@ class BaseEntry(object):
         raise NotImplementedError()
 
     @property
-    def entry_type(self):
+    def bibtype(self):
         raise NotImplementedError()
 
     @property
-    def entry_key(self):
+    def bibkey(self):
         raise NotImplementedError()
 
     @property

@@ -32,8 +32,8 @@ This is a comment
 def test_properties(test_entries):
     entry = test_entries[0]
 
-    assert entry.entry_type == 'comment'
-    assert entry.entry_key is None
+    assert entry.bibtype == 'comment'
+    assert entry.bibkey is None
     assert entry.fields == []
     assert entry == entry
     assert entry != test_entries[1]
