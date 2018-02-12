@@ -27,12 +27,12 @@ class Comment(base.BaseEntry):
                     '}' if braces else ')')
 
     @property
-    def entry_type(self):
+    def bibtype(self):
         """Return the entry type of this entry."""
         return 'comment'
 
     @property
-    def entry_key(self):
+    def bibkey(self):
         """Return the key of this entry."""
         return None
 

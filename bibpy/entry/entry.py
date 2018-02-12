@@ -16,15 +16,16 @@ class Entry(base.BaseEntry):
     """Represents an entry in a bib(la)tex file."""
 
     # List of predefined properties that cannot be set through setattr etc.
-    _locked_fields = frozenset(['entry_key', 'entry_type', 'fields',
+    _locked_fields = frozenset(['bibkey', 'bibtype', 'fields',
                                 'extra_fields', 'aliases', 'valid', 'validate',
                                 'keys', 'values', 'clear'])
 
-    def __init__(self, entry_type='', entry_key='', **fields):
-        """Create a bib entry and set fields."""
-        self._fields = set(fields.keys())
-        self._entry_type = entry_type
-        self._entry_key = entry_key
+    def __init__(self, bibtype='', bibkey='', fields=(), **kw_fields):
+        """Create a bib entry with a type, key and fields.
+
+        Pass an iterable of name/value pairs denoting fields to keep the order.
+        Using keyword arguments are not guaranteed to keep the same ordering
+        until Python 3.6 (also see PEP 468).
 
         for field, value in fields.items():
             setattr(self, field, value)
@@ -39,7 +40,7 @@ class Entry(base.BaseEntry):
         'order' is a list of the order of a subset of fields.
 
         """
-        entry_start = "@" + self.entry_type + "{" + self.entry_key + ",\n"
+        entry_start = "@" + self.bibtype + "{" + self.bibkey + ",\n"
 
         if not self.fields:
             return entry_start + "}"
@@ -72,22 +73,22 @@ class Entry(base.BaseEntry):
         return entry_start + fields + "\n}"
 
     @property
-    def entry_type(self):
+    def bibtype(self):
         """Return the entry type of this entry."""
-        return self._entry_type
+        return self._bibtype
 
-    @entry_type.setter
-    def entry_type(self, value):
-        self._entry_type = value
+    @bibtype.setter
+    def bibtype(self, value):
+        self._bibtype = value
 
     @property
-    def entry_key(self):
+    def bibkey(self):
         """Return the key of this entry."""
-        return self._entry_key
+        return self._bibkey
 
-    @entry_key.setter
-    def entry_key(self, value):
-        self._entry_key = value
+    @bibkey.setter
+    def bibkey(self, value):
+        self._bibkey = value
 
     @property
     def fields(self):
@@ -147,8 +148,8 @@ class Entry(base.BaseEntry):
         if not isinstance(other, Entry):
             return False
 
-        if self.entry_type != other.entry_type or\
-                self.entry_key != other.entry_key:
+        if self.bibtype != other.bibtype or\
+                self.bibkey != other.bibkey:
             return False
 
         if set(self.fields) == set(other.fields):
@@ -195,8 +196,8 @@ class Entry(base.BaseEntry):
         return len(self.fields)
 
     def __repr__(self):
-        return "Entry(type={0}, key={1})".format(self.entry_type,
-                                                 self.entry_key)
+        return "Entry(type={0}, key={1})".format(self.bibtype,
+                                                 self.bibkey)
 
 
 def autoproperty(name, getter=True, setter=True, prefix='_'):

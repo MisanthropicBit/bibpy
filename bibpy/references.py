@@ -101,16 +101,16 @@ mappings['suppperiodical'] = mappings['article']
 def inherit_crossrefs(source, target, inherit=True, override=False,
                       exceptions={}):
     """Update an entry with the fields from a crossrefed entry."""
-    if (target.entry_type, source.entry_type) in exceptions:
+    if (target.bibtype, source.bibtype) in exceptions:
         # Handle special inheritance rules for this pair of entry types
-        options = exceptions[(target.entry_type, source.entry_type)]
+        options = exceptions[(target.bibtype, source.bibtype)]
         inherit = options.get('inherit', inherit)
         override = options.get('override', override)
 
     if not inherit:
         return
 
-    mapping = mappings.get(target.entry_type, {}).get(source.entry_type, []) +\
+    mapping = mappings.get(target.bibtype, {}).get(source.bibtype, []) +\
         _DEFAULT_MAPPING
 
     for source_field, target_field in mapping:
@@ -122,16 +122,16 @@ def inherit_crossrefs(source, target, inherit=True, override=False,
 def uninherit_crossrefs(source, target, inherit='all', override=False,
                         exceptions={}):
     """Strip a target of the fields from a crossrefed entry (source)."""
-    if (target.entry_type, source.entry_type) in exceptions:
+    if (target.bibtype, source.bibtype) in exceptions:
         # Handle special inheritance rules for this pair of entry types
-        options = exceptions[(target.entry_type, source.entry_type)]
+        options = exceptions[(target.bibtype, source.bibtype)]
         inherit = options.get('inherit', inherit)
         override = options.get('override', override)
 
     if not inherit:
         return
 
-    mapping = mappings.get(target.entry_type, {}).get(source.entry_type, []) +\
+    mapping = mappings.get(target.bibtype, {}).get(source.bibtype, []) +\
         _DEFAULT_MAPPING
 
     for source_field, target_field in mapping:

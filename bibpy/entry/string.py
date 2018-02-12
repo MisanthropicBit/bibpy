@@ -29,12 +29,12 @@ class String(base.BaseEntry):
                     '}' if braces else ')')
 
     @property
-    def entry_type(self):
+    def bibtype(self):
         """Return the entry type of this entry."""
         return 'string'
 
     @property
-    def entry_key(self):
+    def bibkey(self):
         """Get the key (variable name) of this string entry."""
         return None
 

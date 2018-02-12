@@ -88,32 +88,32 @@ def make_field(tokens):
 
 def make_string_entry(tokens):
     """Make a bib string entry from a list of parsed tokens."""
-    entry_type, [var, value] = tokens
-    assert is_string_entry(entry_type.value)
+    bibtype, [var, value] = tokens
+    assert is_string_entry(bibtype.value)
 
     return bibpy.entry.String(var, value.strip('"'))
 
 
 def make_comment_entry(tokens):
     """Make a comment entry from a list of parsed tokens."""
-    entry_type, value = tokens
-    assert is_comment_entry(entry_type.value)
+    bibtype, value = tokens
+    assert is_comment_entry(bibtype.value)
 
     return bibpy.entry.Comment(value)
 
 
 def make_preamble_entry(tokens):
     """Make a preamble entry from a list of parsed tokens."""
-    entry_type, value = tokens
-    assert is_preamble_entry(entry_type.value)
+    bibtype, value = tokens
+    assert is_preamble_entry(bibtype.value)
 
     return bibpy.entry.Preamble(value)
 
 
 def make_entry(tokens):
     """Make a bib entry from a list of parsed tokens."""
-    entry_type = tokens[0]
-    entry_key = tokens[1]
+    bibtype = tokens[0]
+    bibkey = tokens[1]
     fields = tokens[2] if tokens[2] is not None else []
 
     return bibpy.entry.Entry(entry_type.lower(), entry_key,
@@ -312,7 +312,7 @@ def parse(string, format):
             [], [], [], [], []
 
         for result in grammar.parse(bibpy.lexers.lex_bib(string)):
-            et = getattr(result, 'entry_type', False)
+            et = getattr(result, 'bibtype', False)
 
             if et == 'string':
                 strings.append(result)
@@ -474,7 +474,7 @@ def key_query_parser():
 def entry_query_parser():
     """Return a parser for name queries."""
     return (parser.maybe(token_type('ops')) + token_type('name') +
-            parser.skip(parser.finished)) >> make_query_result('entry_type')
+            parser.skip(parser.finished)) >> make_query_result('bibtype')
 
 
 def field_query_parser():
@@ -522,9 +522,9 @@ def numeric_query_parser():
 
 
 _query_grammars = {
-    'key':        key_query_parser(),
-    'entry_type': entry_query_parser(),
-    'field':      numeric_query_parser()
+    'key':     key_query_parser(),
+    'bibtype': entry_query_parser(),
+    'field':   numeric_query_parser()
 }
 
 
