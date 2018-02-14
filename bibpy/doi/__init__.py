@@ -22,6 +22,7 @@ def retrieve(doi, source='http://dx.doi.org/{0}', raw=False, **options):
     """
     req = Request(source.format(doi))
     req.add_header('accept', 'application/x-bibtex')
+    handle = None
 
     try:
         handle = urlopen(req)
@@ -32,4 +33,5 @@ def retrieve(doi, source='http://dx.doi.org/{0}', raw=False, **options):
         else:
             return bibpy.read_string(contents, **options).entries[0]
     finally:
-        handle.close()
+        if handle:
+            handle.close()
