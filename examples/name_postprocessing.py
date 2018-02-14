@@ -21,4 +21,4 @@ if __name__ == '__main__':
     for entry in entries:
         if entry.author:
             if any(name.last == 'Fujisawa' for name in entry.author if name):
-                print(entry.entry_key)
+                print(entry.bibkey)

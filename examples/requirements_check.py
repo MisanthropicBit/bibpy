@@ -40,7 +40,7 @@ if __name__ == '__main__':
         if required or optional:
             # Either a missing required or optional field for this entry
             print("{0}:{1} is missing {2}"
-                  .format(entry.entry_type, entry.entry_key,
+                  .format(entry.bibtype, entry.bibkey,
                           format_requirements_check(required, optional)))
 
     # Requirements checks can also be performed on individual entries.
@@ -49,6 +49,6 @@ if __name__ == '__main__':
     entry = entries[2]
     print()
     print("* {0} for {1}:{2} = {3}".format("entry.valid('biblatex')",
-                                           entry.entry_type,
-                                           entry.entry_key,
+                                           entry.bibtype,
+                                           entry.bibkey,
                                            entry.valid('biblatex')))
