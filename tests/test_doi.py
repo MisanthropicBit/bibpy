@@ -17,6 +17,8 @@ def test_doi():
         entry = bibpy.doi.retrieve(doi)
 
         assert len(entry.fields) == 11
+        assert entry.bibtype == 'article'
+        assert entry.bibkey == 'Hancock_2004'
         assert entry.author == 'Jeffrey T. Hancock'
         assert entry.title == '{LOL}'
         assert entry.journal == 'interactions'
