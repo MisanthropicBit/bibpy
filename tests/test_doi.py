@@ -38,7 +38,7 @@ def test_doi_raw():
         doi = '10.1145/1015530.1015557'
         entry = bibpy.doi.retrieve(doi, raw=True)
 
-        assert entry == """@article{Hancock_2004,
+        assert entry == b"""@article{Hancock_2004,
 \tdoi = {10.1145/1015530.1015557},
 \turl = {https://doi.org/10.1145%2F1015530.1015557},
 \tyear = 2004,

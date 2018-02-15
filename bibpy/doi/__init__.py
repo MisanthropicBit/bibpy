@@ -31,7 +31,8 @@ def retrieve(doi, source='http://dx.doi.org/{0}', raw=False, **options):
         if raw:
             return contents
         else:
-            return bibpy.read_string(contents, **options).entries[0]
+            return bibpy.read_string(contents.decode('utf-8'),
+                                     **options).entries[0]
     finally:
         if handle:
             handle.close()
