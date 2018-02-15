@@ -1,5 +1,6 @@
 """Conversion functions for pre- and postprocessing of bib(la)tex fields."""
 
+import bibpy.compat
 import bibpy.date
 import bibpy.error
 import bibpy.grammar
@@ -27,10 +28,11 @@ _SPLIT_NAMES = frozenset([
 
 def postprocess_braces(value, **options):
     """Remove any braces from a string value."""
-    # if not bibpy.is_string(value):
-    #     return value
-    return "".join([e for e in bibpy.parser.parse_braced_expr(value)
-                    if e not in '{}'])
+    if bibpy.compat.is_string(value):
+        return "".join([e for e in bibpy.parser.parse_braced_expr(value)
+                        if e not in '{}'])
+
+    return value
 
 
 def postprocess_namelist(field, names, **options):
