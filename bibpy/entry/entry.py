@@ -110,7 +110,7 @@ class Entry(base.BaseEntry):
         Active fields are fields that are not None or empty strings.
 
         """
-        return self._fields.keys()
+        return list(self._fields)
 
     @property
     def extra_fields(self):
