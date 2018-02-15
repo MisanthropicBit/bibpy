@@ -15,7 +15,6 @@ Python 2.7, 3.3, 3.4, 3.5 and PyPy.
 * [Requirements-checking for entry fields](/examples/requirements_check.py)
 * [String variable expansion and unexpansion](/examples/string_expansion.py)
 * [Crossreference and xdata inheritance](/examples/crossref_expansion.py)
-* [Support for bibtexml, json, yaml and html](/examples/formats.py)
 * Accompanying [tools](#tools)
 
 Take a look at the [quickstart example](#quickstart) for basic usage, or the
@@ -34,8 +33,7 @@ setup.py install` from the `bibpy` directory.
 
 `bibpy` requires either
 [`funcparserlib`](https://github.com/vlasovskikh/funcparserlib) or
-[`pyparsing`](http://pyparsing.wikispaces.com/) installed for parsing and
-optionally [PyYAML](http://pyyaml.org/) for reading yaml files.
+[`pyparsing`](http://pyparsing.wikispaces.com/) installed.
 
 <a name="quickstart"></a>
 # Quickstart
