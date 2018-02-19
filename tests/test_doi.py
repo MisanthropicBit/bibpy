@@ -6,7 +6,7 @@ import os
 import pytest
 import vcr
 
-not_on_travis = pytest.mark.skipif(os.environ.get('TRAVIS', False),
+not_on_travis = pytest.mark.skipif(os.environ.get('TRAVIS') is not None,
                                    reason='Do not test web requests on Travis')
 
 
