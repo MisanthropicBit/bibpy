@@ -16,8 +16,8 @@ def preprocess_namelist(namelist, **options):
 
     for name in namelist:
         if isinstance(name, bibpy.name.Name):
-            # TODO: Make name style an option
-            processed_namelist.append(name.format(style='first-last'))
+            style = options.get('name_style', 'first-last')
+            processed_namelist.append(name.format(style=style))
         else:
             processed_namelist.append(name)
 
