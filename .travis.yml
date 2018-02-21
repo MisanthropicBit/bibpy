@@ -15,7 +15,9 @@ script:
     - virtualenv --version
     - coverage --version
     - cram --version
-    - coverage run --source=bibpy -m py.test --verbose
+    - pytest --version
+    - coverage run --source=bibpy -m pytest --verbose
+
     - python setup.py install
     - python examples/crossref_expansion.py
     - python examples/field_conversion.py
