@@ -173,53 +173,44 @@ postprocess_functions = {'address':       postprocess_namelist,
                          'year':          postprocess_int}
 
 
+def find_postprocess_fields(parameter, value):
+    """Find the fields that need to be postprocessed for a given parameter."""
+    if type(parameter) is bool:
+        return value if parameter else []
+    else:
+        return parameter
+
+
 def postprocess(entry, fields, **options):
     """Postprocess a subset of fields in a list of parsed entries."""
-    if type(fields) not in (bool, list):
-        raise ValueError("postprocess takes either a bool or a list for fields"
-                         ", not '{0}'".format(type(fields)))
+    remove_braces = find_postprocess_fields(options.get('remove_braces',
+                                            False), entry.fields)
+    split_names = find_postprocess_fields(options.get('split_names', False),
+                                          _SPLIT_NAMES)
+    fields = find_postprocess_fields(fields, entry.fields)
 
-    split_names = options.get('split_names', [])
+    postprocess_fields = set()
+    postprocess_fields.update(remove_braces, split_names, fields)
 
-    if type(split_names) not in (bool, list):
-        raise ValueError("split_names takes either a bool or a list for fields"
-                         ", not '{0}'".format(type(split_names)))
+    for field in postprocess_fields:
+        value = getattr(entry, field, None)
 
-    remove_braces = options.get('remove_braces', False)
-    _fields = []
+        if value is not None and value != '':
+            if field in fields and field in postprocess_functions:
+                value = postprocess_functions[field](
+                    field, value,
+                    remove_braces=remove_braces,
+                    split_names=split_names
+                )
 
-    if fields:
-        if type(fields) is bool:
-            _fields = entry.fields
-        elif type(fields) is list:
-            _fields = fields
-    elif remove_braces:
-        _fields = entry.fields
+            if remove_braces:
+                if type(value) is list:
+                    value = [postprocess_braces(e, remove_braces=remove_braces,
+                                                split_names=split_names)
+                             for e in value]
+                else:
+                    value = postprocess_braces(value,
+                                               remove_braces=remove_braces,
+                                               split_names=split_names)
 
-    if type(split_names) is bool:
-        split_names = _SPLIT_NAMES if split_names else []
-
-    options['split_names'] = split_names
-
-    for field in _fields:
-        value = getattr(entry, field)
-
-        if remove_braces:
-            value = postprocess_braces(value, **options)
-
-        if field in postprocess_functions:
-            yield field, postprocess_functions[field](field, value, **options)
-        else:
-            yield field, value
-
-
-# TODO: split_names should also work like postprocess and take the fields to
-# postprocess as allowed
-def postprocess_entry(entry, **options):
-    """Convenience function for postprocessing the fields in an entry."""
-    processed_fields =\
-        bibpy.postprocess.postprocess(entry, options.get('postprocess', []),
-                                      **options)
-
-    for field, value in processed_fields:
-        setattr(entry, field, value)
+            setattr(entry, field, value)
