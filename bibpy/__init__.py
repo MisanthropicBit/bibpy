@@ -110,9 +110,8 @@ def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,
     # Postprocess a subset of fields for automatic type conversion
     if postprocess or remove_braces:
         for entry in parsed_tokens.entries:
-            bibpy.postprocess.postprocess_entry(
-                entry,
-                postprocess=postprocess,
+            bibpy.postprocess.postprocess(
+                entry, postprocess,
                 remove_braces=remove_braces,
                 split_names=split_names
             )
