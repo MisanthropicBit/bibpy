@@ -44,10 +44,6 @@ def postprocess_namelist(field, names, **options):
     # Second, if requested, parse each name
     if field in options.get('split_names', []):
         return [postprocess_name(field, name) for name in names]
-    else:
-        if options.get('remove_braces', False):
-            # Remove any leftover curly braces
-            return [re.sub('\{(.+?)\}', '\\1', name) for name in names]
 
     return names
 
