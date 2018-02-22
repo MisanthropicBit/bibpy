@@ -29,23 +29,32 @@ def test_postprocess_braces():
     assert postprocess_braces("This is A tes{t}") == "This is A test"
 
     entry = bibpy.entry.Entry('article', 'key', **{'author': 'Ar{T}hur'})
-    assert next(postprocess(entry, [], remove_braces=True))[1][0] ==\
-        'ArThur'
+    postprocess(entry, [], remove_braces=True)
+    assert entry.author == 'ArThur'
 
     entry = bibpy.entry.Entry('article', 'key', **{'author': 'Arthur'})
-    assert next(postprocess(entry, [], remove_braces=True))[1][0] ==\
-        'Arthur'
+    postprocess(entry, [], remove_braces=True)
+    assert entry.author == 'Arthur'
 
 
 def test_postprocess_namelist():
-    assert postprocess_namelist('author', 'A. B. Cidric and D. E. Fraser',)\
-        == ['A. B. Cidric', 'D. E. Fraser']
+    assert postprocess_namelist('author', 'A. B. Cidric and D. E. Fraser') ==\
+        ['A. B. Cidric', 'D. E. Fraser']
 
     assert postprocess_namelist(
         'institution',
         'Department of Communications {and} Data and Department of Computer '
-        'Science') == ['Department of Communications and Data',
+        'Science') == ['Department of Communications {and} Data',
                        'Department of Computer Science']
+
+    entry = bibpy.entry.Entry('key', 'type',
+                              institution='Department of Communications {and} '
+                                          'Data and Department of Computer '
+                                          'Science')
+
+    postprocess(entry, ['institution'], remove_braces=True)
+    assert entry.institution == ['Department of Communications and Data',
+                                 'Department of Computer Science']
 
     assert postprocess_namelist('institution', '') == []
     assert postprocess_namelist('institution', []) == []
@@ -64,6 +73,10 @@ def test_postprocess_namelist():
     assert postprocess_namelist('author', 'L. {Sunil Chandran}',
                                 split_names=['author']) ==\
         [bibpy.name.Name(first='L.', last='Sunil Chandran')]
+
+    assert postprocess_namelist('author', 'A. B. Cidric and D. E. Fraser',
+                                split_names=[]) == ['A. B. Cidric',
+                                                    'D. E. Fraser']
 
 
 def test_postprocess_names():
