@@ -15,7 +15,6 @@ script:
     - virtualenv --version
     - coverage --version
     - cram --version
-    - pytest --version
     - coverage run --source=bibpy -m pytest --verbose
 
     - python setup.py install
