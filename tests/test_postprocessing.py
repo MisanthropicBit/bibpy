@@ -222,10 +222,10 @@ def test_no_postprocess():
                               **{'random_field': 23,
                                  'nopostprocess': "OK!"})
 
-    postprocessed = postprocess(entry, True)
-    assert set(postprocessed) == set([('random_field', 23),
-                                      ('nopostprocess', 'OK!')])
+    postprocess(entry, True)
+    entry.random_field == 23
+    entry.nopostprocess == 'OK!'
 
-    postprocessed = postprocess(entry, ['random_field', 'nopostprocess'])
-    assert set(postprocessed) == set([('random_field', 23),
-                                      ('nopostprocess', 'OK!')])
+    postprocess(entry, ['random_field', 'nopostprocess'])
+    entry.random_field == 23
+    entry.nopostprocess == 'OK!'
