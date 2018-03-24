@@ -2,6 +2,6 @@ coverage
 coveralls
 cram
 pep257
-pyparsing
+funcparserlib
 pytest>=2.9
 pytest-quickcheck

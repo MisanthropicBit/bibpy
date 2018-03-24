@@ -11,3 +11,4 @@ states before `bibpy` 1.0.0 can be released.
 - [ ] Implement approximate matching for removing duplicate entries
 - [x] Implement a name splitter for authors etc.
 - [ ] Implement codec for LaTeX/unicode
+- [x] Remove dependency on pyparsing
