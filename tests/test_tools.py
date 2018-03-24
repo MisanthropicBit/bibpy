@@ -17,11 +17,11 @@ def test_version_format():
 
 # TODO: Expand grammar tests with failures
 def test_key_grammar():
-    assert bibpy.parser.parse_query('SomeKey', 'key') ==\
+    assert bibpy.parser.parse_query('SomeKey', 'bibkey') ==\
         ('key', (None, 'SomeKey'))
-    assert bibpy.parser.parse_query('^SomeKey', 'key') ==\
+    assert bibpy.parser.parse_query('^SomeKey', 'bibkey') ==\
         ('key', ('^', 'SomeKey'))
-    assert bibpy.parser.parse_query('~SomeKey', 'key') ==\
+    assert bibpy.parser.parse_query('~SomeKey', 'bibkey') ==\
         ('key', ('~', 'SomeKey'))
 
 
