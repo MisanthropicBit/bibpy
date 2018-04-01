@@ -70,7 +70,7 @@ if __name__ == '__main__':
             entries = bibpy.read_file(file, 'relaxed').entries
             all_entries += entries
 
-    types = collections.Counter([entry.entry_type for entry in all_entries])
+    types = collections.Counter([entry.bibtype for entry in all_entries])
     total = sum(types.values())
     stats = types.most_common(args.top)
 

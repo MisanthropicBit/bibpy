@@ -99,9 +99,9 @@ operations.
 'James Conway and Archer Sterling'
 >>> entry.year
 '2010'
->>> entry.entry_type
+>>> entry.bibtype
 'article'
->>> entries[1].entry_key
+>>> entries[1].bibkey
 'key2'
 >>> entry['month']
 '4'

@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
         if args.group:
             entries = itertools.groupby(results.all,
-                                        key=lambda e: e.entry_type)
+                                        key=lambda e: e.bibtype)
         else:
             entries = results.all
 
