@@ -3,7 +3,6 @@
 import bibpy.compat
 import bibpy.date
 import bibpy.error
-import bibpy.grammar
 import bibpy.lexers
 import bibpy.name
 import bibpy.parser
