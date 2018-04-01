@@ -7,9 +7,14 @@ from bibpy.lexers.name_lexer import NameLexer
 from bibpy.lexers.namelist_lexer import NamelistLexer
 
 
+def remove_whitespace_tokens(tokens):
+    """Remove any whitespace tokens from the given list of tokens."""
+    return [token for token in tokens if token.type != 'space']
+
+
 def lex_bib(string):
     """Return a generator of bib(la)tex tokens."""
-    return [token for token in BibLexer().lex(string) if token.type != 'space']
+    return remove_whitespace_tokens(BibLexer().lex(string))
 
 
 def lex_date(date_string):
@@ -32,7 +37,7 @@ def lex_string_expr(string):
         ('space',  [u('[ \t\r\n]+')]),
     ])
 
-    return [token for token in tokenizer(string) if token.type != 'space']
+    return remove_whitespace_tokens(tokenizer(string))
 
 
 def lex_braced_expr(string):
@@ -43,7 +48,7 @@ def lex_braced_expr(string):
         ('content', [u('[^{}]+')]),
     ])
 
-    return [token for token in tokenizer(string) if token.type != 'space']
+    return remove_whitespace_tokens(tokenizer(string))
 
 
 def lex_namelist(string):
@@ -75,4 +80,4 @@ def lex_generic_query(query):
         ('any',    [u('.+?')])
     ])
 
-    return [token for token in tokenizer(query) if token.type != 'space']
+    return remove_whitespace_tokens(tokenizer(query))
