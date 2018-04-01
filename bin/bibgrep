@@ -422,3 +422,14 @@ if __name__ == "__main__":
     if filtered_entries:
         # Write all filtered entries to sys.stdout
         print(bibpy.write_string(filtered_entries))
+
+    # Ensure we close stdout and stderr when piping
+    try:
+        sys.stdout.close()
+    except:
+        pass
+
+    try:
+        sys.stderr.close()
+    except:
+        pass
