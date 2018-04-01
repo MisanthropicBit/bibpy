@@ -70,7 +70,8 @@ _NAME_TO_OPERATOR = {
     '<':  operator.lt,
     '>':  operator.gt,
     '<=': operator.le,
-    '>=': operator.ge
+    '>=': operator.ge,
+    '=':  operator.eq
 }
 
 
@@ -217,17 +218,18 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
 def construct_key_entry_predicate(name, key, tokens, args):
     """Return a key/entry predicate to test if they are of given types."""
     f = None
+    prefix_op = tokens[0] if tokens[0] else ''
 
-    if not set(tokens[0]).issubset(set('!~')):
+    if prefix_op and not set(prefix_op).issubset(set('^~')):
         raise ValueError("Error: Invalid field operator(s) '" + tokens[0] +
                          "'")
 
-    if '~' in tokens[0]:
+    if '~' in prefix_op:
         f = approx_field_predicate(key, tokens[1], args)
     else:
         f = exact_field_predicate(key, tokens[1], args)
 
-    if '!' in tokens[0]:
+    if '!' in prefix_op:
         f = negate(f)
 
     return f
@@ -235,24 +237,35 @@ def construct_key_entry_predicate(name, key, tokens, args):
 
 def construct_field_predicate(name, key, tokens, args):
     """Construct and return a function that reflects the parsed query."""
-    if name == 'field':
-        if tokens[1] == '=':
-            return exact_field_predicate(tokens[0], tokens[2], args)
-        elif tokens[1] == '~':
-            return approx_field_predicate(tokens[0], tokens[2], args)
+    predicate = None
+    neg = tokens[0] == '^'
+
+    if name == 'value':
+        i = 3 if neg else 2
+
+        if tokens[i] == '=':
+            predicate = exact_field_predicate(tokens[i], tokens[-1], args)
+        elif tokens[i] == '~':
+            predicate = approx_field_predicate(tokens[i-1], tokens[-1], args)
         else:
-            raise ValueError("Error: Invalid field operator '" + tokens[1] +
+            raise ValueError("Error: Invalid field operator '" + tokens[i] +
                              "'")
-    elif name == 'field_occurrence':
-        return field_occurrence_predicate(tokens)
+    elif name == 'occurrence':
+        predicate = field_occurrence_predicate(tokens)
     elif name == 'comparison':
-        return comparison_predicate(*tokens)
+        predicate = comparison_predicate(*tokens)
     elif name == 'interval':
-        return interval_predicate(tokens[0], tokens[2], tokens[3])
+        predicate = interval_predicate(tokens[1], tokens[2], tokens[3])
     elif name == 'range':
-        return range_predicate(*tokens)
+        predicate = range_predicate(*tokens)
+    elif name == 'value':
+        predicate = comparison_predicate(*tokens)
+    # elif name == 'occurrence':
+    #     predicate = comparison_predicate(*tokens)
     else:
         raise ValueError("Error: Invalid field query syntax")
+
+    return negate(predicate) if neg else predicate
 
 
 def construct_predicates(values, predicate_func, key,

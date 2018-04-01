@@ -467,22 +467,22 @@ def make_query_result(query_type):
 
 def key_query_parser():
     """Return a parser for key queries."""
-    return (parser.maybe(token_type('ops')) + token_type('name') +
+    return (parser.maybe(token_type('not')) + token_type('name') +
             parser.skip(parser.finished)) >> make_query_result('key')
 
 
 def entry_query_parser():
     """Return a parser for name queries."""
-    return (parser.maybe(token_type('ops')) + token_type('name') +
+    return (parser.maybe(token_type('not')) + token_type('name') +
             parser.skip(parser.finished)) >> make_query_result('bibtype')
 
 
 def field_query_parser():
     """Return a parser for field queries."""
-    field_value = token_type('ops') + token_type('name') +\
-        (token_type('equals') | token_type('tilde')) + token_type('any')
+    field_value = token_type('not') + token_type('name') +\
+        (token_type('equals') | token_type('approx')) + token_type('any')
 
-    field_occurrence = delimited_list(parser.maybe(token_type('ops')) +
+    field_occurrence = delimited_list(parser.maybe(token_type('not')) +
                                       token_type('name'), 'comma')
 
     return (field_value | field_occurrence) + parser.skip(parser.finished)
@@ -494,30 +494,42 @@ def numeric_query_parser():
     Example queries: '1900-1995' or '>= 1998'
 
     """
-    integer = token_type('number')
+    number = token_type('number')
     field_name = token_type('name')
     lt = token_type('lt')
     le = token_type('le')
     gt = token_type('gt')
     ge = token_type('ge')
+    eq = token_type('equals')
+    approx = token_type('approx')
 
     # Simple comparisons
     # NOTE: We put le before lt to parse both
-    comparison = parser.maybe(token_type('ops')) + field_name +\
-        (le | lt | ge | gt) + integer
+    comparison = parser.maybe(token_type('not')) + field_name +\
+        (le | lt | ge | gt) + number
 
     # Values can be given as intervals ('1990-2000')
-    interval = parser.maybe(token_type('ops')) + field_name +\
-        skip('equals') + integer + skip('dash') + integer
+    interval = parser.maybe(token_type('not')) + field_name +\
+        skip('equals') + number + skip('dash') + number
 
     # Values can be given as ranges ('1990<=year<=2000')
     # NOTE: We put le before lt to parse both
-    range_ = parser.maybe(token_type('ops')) + integer + (le | lt) +\
-        field_name + (le | lt) + integer
+    range_ = parser.maybe(token_type('not')) + number + (le | lt) +\
+        field_name + (le | lt) + number
+
+    # Field value queries ('year=2000' or 'author~Augustus')
+    field_value = parser.maybe(token_type('not')) + field_name +\
+        (eq | approx) + (token_type('name') | token_type('number') |
+                         token_type('any'))
+
+    # Field occurrence ('publisher' or '^publisher')
+    field_occurrence = parser.maybe(token_type('not')) + field_name
 
     return (interval >> make_query_result('interval') |
             comparison >> make_query_result('comparison') |
-            range_ >> make_query_result('range')) +\
+            range_ >> make_query_result('range') |
+            field_value >> make_query_result('value') |
+            field_occurrence >> make_query_result('occurrence')) +\
         parser.skip(parser.finished)
 
 

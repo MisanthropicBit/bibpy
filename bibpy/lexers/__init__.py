@@ -66,8 +66,9 @@ def lex_name(string):
 def lex_generic_query(query):
     """Return the tokens in a query."""
     tokenizer = lexer.make_tokenizer([
-        ('ops',    [u('[\^~]')]),
+        ('not',    [u('\^')]),
         ('equals', [u('=')]),
+        ('approx', [u('~')]),
         ('le',     [u('<=')]),
         ('lt',     [u('<')]),
         ('ge',     [u('>=')]),
@@ -77,7 +78,7 @@ def lex_generic_query(query):
         ('number', [u('-?(0|([1-9][0-9]*))')]),
         ('name',   [u('\w+')]),
         ('space',  [u('[ \t\r\n]+')]),
-        ('any',    [u('.+?')])
+        ('any',    [u('[^<><=>=\s=\^~]+')])
     ])
 
     return remove_whitespace_tokens(tokenizer(query))
