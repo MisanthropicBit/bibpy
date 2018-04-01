@@ -342,7 +342,7 @@ if __name__ == "__main__":
         if args.keys:
             key_predicate = construct_predicates(args.keys,
                                                  construct_key_entry_predicate,
-                                                 'entry_key',
+                                                 'bibkey',
                                                  any,
                                                  args)
 
@@ -352,7 +352,7 @@ if __name__ == "__main__":
             entry_predicate =\
                 construct_predicates(entry_types,
                                      construct_key_entry_predicate,
-                                     'entry_type', any, args)
+                                     'bibtype', any, args)
 
         if args.fields:
             field_predicate = construct_predicates(args.fields,
