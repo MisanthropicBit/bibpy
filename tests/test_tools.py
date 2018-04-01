@@ -21,8 +21,6 @@ def test_key_grammar():
         ('key', (None, 'SomeKey'))
     assert bibpy.parser.parse_query('^SomeKey', 'bibkey') ==\
         ('key', ('^', 'SomeKey'))
-    assert bibpy.parser.parse_query('~SomeKey', 'bibkey') ==\
-        ('key', ('~', 'SomeKey'))
 
 
 def test_entry_grammar():
@@ -30,8 +28,6 @@ def test_entry_grammar():
         ('bibtype', (None, 'article'))
     assert bibpy.parser.parse_query('^book', 'bibtype') ==\
         ('bibtype', ('^', 'book'))
-    assert bibpy.parser.parse_query('~conference', 'bibtype') ==\
-        ('bibtype', ('~', 'conference'))
 
 
 # NOTE: We also test the numeric grammar here as it is part of the field query
