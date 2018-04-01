@@ -35,34 +35,26 @@ setup.py install` from the `bibpy` directory.
 # Quickstart
 
 ```python
-import bibpy
-import re
-
-# Read a bib file
-entries, strings, preambles, comment_entries, comments =\
-    bibpy.read_file("references.bib")
-
-# Print number of entries
-print len(entries)
-# Print the author of the first entry
-print entries[0].author
-# Print all entries after year 2010
-print [entry for entry in entries if entry.year > 2010]
-# Print all unique authors
-print set([entry.author for entry in entries])
-# Print all entries where the key contains 'david'
-print [entry for entry in entries
-       if re.search('david', entry.key, re.I)]
-# Check that the first entry has the correct
-# fields for its type according to biblatex
-print entries[0].valid('biblatex')
-# For example 'article' or 'inproceedings'
-print entries[0].entry_type
-# Print the available aliases for this entry's type
-print entries[0].aliases('bibtex')
-
-# Write out the entries to "references.bib" as biblatex.
-bibpy.write_file("references.bib", entries, 'biblatex')
+>>> import bibpy
+>>> result = bibpy.read_file('references.bib')  # Read a bib file
+>>> entries = result.entries
+>>> print len(entries)
+6
+>>> print entries[0].author
+'D. J. Power'
+>>> print entries[0].bibkey
+'2006_power'
+>>> print entries[0].bibtype
+'online'
+>>> print entries[0].valid('bibtex')
+True  # Entry is a valid bibtex entry
+>>> print entries[0].valid('biblatex')
+False  # But is not a valid biblatex entry (missing field 'date' or 'year')
+>>> print entries[0].aliases('bibtex')
+[]
+>>> print entries[0].aliases('biblatex')
+['electronic', 'www']
+>>> bibpy.write_file('references.bib', entries)
 ```
 
 See the [`examples`](/examples) folder for more usage examples or read the
