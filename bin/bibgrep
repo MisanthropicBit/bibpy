@@ -11,7 +11,7 @@ To get all articles where the author contains 'Johnson' and the article is from
 The entry and field arguments take strings in a special mini-language format.
 For entries, the (informal) format is:
 
-"[!][~]<entry_type>"
+"[^][~]<entry_type>"
 
 where <entry_type> is 'article', 'inproceedings' etc. The exclamation mark
 denotes negation, and the tilde denotes approximate matches where the text must
@@ -19,8 +19,8 @@ contain the <entry_type>. For example, '~ceed' would match 'proceedings',
 'inproceedings' and 'mvproceedings' entries. The format for fields is slightly
 more involved:
 
-"[!]<field_name>(=|~)<field_value>"
-"[!]<field_name>(<|>|<=|>=|=)<field_numeric_value>"
+"[^]<field_name>(=|~)<field_value>"
+"[^]<field_name>(<|>|<=|>=|=)<field_numeric_value>"
 
 All punctuation have the same meaning as for entries. The second format applies
 only to fields with numeric values, e.g.:
@@ -60,7 +60,6 @@ __license__ = 'MIT'
 
 # TODO: How to combine predicates with '&&' and '||'?
 # TODO: Enable negation of ranges, intervals etc.
-# TODO: How to circumvent bash's history substitution syntax? ('!') => Use '^'
 # TODO: Write full grammar and stick to it
 
 _DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
