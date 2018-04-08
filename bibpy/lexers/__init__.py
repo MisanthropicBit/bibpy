@@ -60,7 +60,7 @@ def lex_name(string):
     """Return a generator of bib(la)tex name tokens."""
     name_lexer = NameLexer()
 
-    return [token.name for token in name_lexer.lex(string)], name_lexer.commas
+    return [token.value for token in name_lexer.lex(string)], name_lexer.commas
 
 
 def lex_generic_query(query):
