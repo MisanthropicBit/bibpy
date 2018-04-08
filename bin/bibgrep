@@ -56,8 +56,7 @@ __license__ = 'MIT'
 # TODO: Enable negation of ranges, intervals etc.
 # TODO: Write full grammar and stick to it
 
-_DESCRIPTION = """Filter bib entries that satisfy user-defined predicates on
-entry types and fields."""
+_DESCRIPTION = """Grep bib(la)tex files satisfying user-defined predicates."""
 
 _NAME_TO_OPERATOR = {
     '<':  operator.lt,
