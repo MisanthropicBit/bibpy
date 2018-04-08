@@ -8,38 +8,32 @@ To get all articles where the author contains 'Johnson' and the article is from
 
 >>> bibgrep --entry="article" --field="author~Johnson" --field="year>=2010"
 
-The entry and field arguments take strings in a special mini-language format.
-For entries, the (informal) format is:
+The key, entry and field arguments take strings in a mini query language. For
+keys and entries, the format is:
 
+"[^][~]<key>"
 "[^][~]<entry_type>"
 
-where <entry_type> is 'article', 'inproceedings' etc. The exclamation mark
-denotes negation, and the tilde denotes approximate matches where the text must
-contain the <entry_type>. For example, '~ceed' would match 'proceedings',
-'inproceedings' and 'mvproceedings' entries. The format for fields is slightly
-more involved:
+where <key> is something like 'Johnson2002' and <entry_type> is 'article',
+'inproceedings' etc. The caret denotes negation, and the tilde denotes
+approximate matches instead of exact. For example, '~ceed' would match the
+'proceedings', 'inproceedings' and 'mvproceedings' entries. The language for
+fields is slightly more involved:
 
-"[^]<field_name>(=|~)<field_value>"
-"[^]<field_name>(<|>|<=|>=|=)<field_numeric_value>"
+Field occurrence: "[^]<field_name>"
+Field values    : "[^]<field_name>(=|~)<value>"
+Field range     : "[^]<field_name>(<|>|<=|>=|=)<numeric_value>"
+Field range     : "[^]<numeric_value>(<|<=)<field_name>(<|<=)<numeric_value>"
+Field range     : "[^]<field_name>=<numeric_value>-<numeric_value>"
 
-All punctuation have the same meaning as for entries. The second format applies
-only to fields with numeric values, e.g.:
+All punctuation has the same meaning as for keys and entries. Here are some
+example queries:
 
->>> bibgrep --field="year>=2001" --field="10<volume<=50"
-
-which selects all entries from 2001 and forward as well as fields with a volume
-number in the range ]0;50].
-
-Informal grammars for queries:
-    key_grammar := [^][~] key
-    entry_query := [^][~] entry_type
-
-    interval    := [^] field_name = integer - integer
-    comparison  := [^] field_name (<= | < | >= | >) integer
-    range       := [^] integer (<= | <) field_name (<= | <) integer
-    numeric     := interval | comparison | range
-    field       := [^] field_name | ([^] field_name , field_occ)
-    field_query := numeric | field
+>>> bibgrep --field="publisher"
+>>> bibgrep --field="^note"
+>>> bibgrep --field="author=D. A. Johnson" --field="title~concurrency"
+>>> bibgrep --field="year>=2001" --field="^10<volume<=50"
+>>> bibgrep --field="year=2000-2018"
 
 """
 
