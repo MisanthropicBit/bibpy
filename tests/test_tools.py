@@ -8,10 +8,10 @@ import pytest
 
 
 def test_version_format():
-    assert bibpy.tools.version_format().format('0.1.0') == '%(prog)s v0.1.0'
+    assert bibpy.tools.format_version('0.1.0') == '%(prog)s v0.1.0'
 
     program_name = dict(prog='tool_name')
-    assert (bibpy.tools.version_format() % program_name).format('2.3') ==\
+    assert bibpy.tools.format_version('2.3') % program_name ==\
         'tool_name v2.3'
 
 
