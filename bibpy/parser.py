@@ -467,13 +467,15 @@ def make_query_result(query_type):
 
 def key_query_parser():
     """Return a parser for key queries."""
-    return (parser.maybe(token_type('not')) + token_type('name') +
+    return (parser.maybe(token_type('not') | token_type('approx')) +
+            token_type('name') +
             parser.skip(parser.finished)) >> make_query_result('key')
 
 
 def entry_query_parser():
     """Return a parser for name queries."""
-    return (parser.maybe(token_type('not')) + token_type('name') +
+    return (parser.maybe(token_type('not') | token_type('approx')) +
+            token_type('name') +
             parser.skip(parser.finished)) >> make_query_result('bibtype')
 
 
