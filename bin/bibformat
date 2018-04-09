@@ -19,12 +19,10 @@ formats."""
 
 
 if __name__ == '__main__':
-    version_format = bibpy.tools.version_format()
-
     parser = argparse.ArgumentParser(prog='bibformat',
                                      description=_DESCRIPTION)
     parser.add_argument('-v', '--version', action='version',
-                        version='%(prog)s v' + __version__)
+                        version=bibpy.tools.format_version(__version__))
     parser.add_argument('-e', '--export', choices=['xml', 'json'], default='',
                         help='Export bib entries to a desired format')
     parser.add_argument('-r', '--inherit-crossreferences', action='store_true',

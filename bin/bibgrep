@@ -291,7 +291,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(prog='bibgrep', description=_DESCRIPTION)
     parser.add_argument('-v', '--version', action='version',
-                        version=version_format.format(__version__))
+                        version=bibpy.tools.format_version(__version__))
     parser.add_argument('-e', '--entry', action='append',
                         help='Print the entries for the matching entry type')
     parser.add_argument('-k', '--key', action='append', dest='keys',

@@ -3,9 +3,9 @@
 """A collection of functionality for the tools in bin/."""
 
 
-def version_format():
-    """Return the version format used by bibpy's accompanying tools."""
-    return '%(prog)s v{0}'
+def format_version(version):
+    """Format a version number used by bibpy's accompanying tools."""
+    return '%(prog)s v{0}'.format(version)
 
 
 def always_true(value):

@@ -15,6 +15,7 @@ entries:
 
 import argparse
 import bibpy
+import bibpy.tools
 import collections
 import sys
 
@@ -42,10 +43,10 @@ def print_stats(stats, print_percentages):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(prog='bibstats')
+    parser = argparse.ArgumentParser()
 
     parser.add_argument('-v', '--version', action='version',
-                        version='%(prog)s v' + __version__)
+                        version=bibpy.tools.format_version(__version__))
     parser.add_argument('-c', '--count', action='store_true',
                         help='Print only a total count of all entries')
     parser.add_argument('--porcelain', action='store_true',
