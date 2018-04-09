@@ -10,7 +10,7 @@ except ImportError:
     from urllib2 import Request, urlopen
 
 
-def retrieve(doi, source='https://doi.org/{0}', raw=False, **options):
+def retrieve(doi, source='https://doi.org/{0}', raw=False, **options):  # pragma: no cover
     """Download a bibtex file specified by a digital object identifier.
 
     The source is a URL containing a single format specifier which is where the
