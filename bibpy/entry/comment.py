@@ -12,19 +12,15 @@ class Comment(base.BaseEntry):
         """Create a comment entry with a single value."""
         self._value = value
 
-    def format(self, indent='    ', singleline=True, braces=True, **kwargs):
+    def format(self, indent='    ', braces=True, **kwargs):
         """Format an return the comment entry as a string.
 
-        If 'singleline' is True, put the entry on a single line
         If 'braces' is True, surround the entry by braces, else parentheses
 
         """
-        return "@comment{0}{1}{2}{3}{4}"\
-            .format('{' if braces else '(',
-                    "" if singleline else "\n" + indent,
-                    self.value,
-                    "" if singleline else "\n",
-                    '}' if braces else ')')
+        return "@comment{0}{1}{2}".format('{' if braces else '(',
+                                          self.value,
+                                          '}' if braces else ')')
 
     @property
     def bibtype(self):

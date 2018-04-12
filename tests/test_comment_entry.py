@@ -20,13 +20,9 @@ def test_formatting(test_entries):
     assert entry.format() == "@comment{This is a comment}"
     assert entry.format(braces=False) == "@comment(This is a comment)"
     assert entry.format(indent='') == "@comment{This is a comment}"
-    assert entry.format(singleline=False) == """@comment{
-    This is a comment
-}"""
-    assert entry.format(singleline=False, indent='', braces=False) ==\
-        """@comment(
-This is a comment
-)"""
+    assert entry.format() == """@comment{This is a comment}"""
+    assert entry.format(indent='', braces=False) ==\
+        "@comment(This is a comment)"
 
 
 def test_properties(test_entries):
