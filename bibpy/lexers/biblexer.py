@@ -162,12 +162,13 @@ class BibLexer(BaseLexer):
     def lex_entry(self):
         self.brace_level = 0
         bibtype = self.expect('name')
+        entry_type = bibtype.value.lower()
 
-        if bibtype.value == 'comment':
+        if entry_type == 'comment':
             self.bibtype = 'comment'
-        elif bibtype.value == 'string':
+        elif entry_type == 'string':
             self.bibtype = 'string'
-        elif bibtype.value == 'preamble':
+        elif entry_type == 'preamble':
             self.bibtype = 'preamble'
         else:
             self.bibtype = 'entry'
