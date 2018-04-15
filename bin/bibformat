@@ -5,17 +5,41 @@
 
 import argparse
 import bibpy
-import bibpy.formats
 import bibpy.tools
-import itertools
+import collections
 import sys
 
 __author__ = 'Alexander Asp Bock'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-_DESCRIPTION = """Format bib entries to look pretty and export them to other
-formats."""
+_DESCRIPTION = "Format and prettify bib entries."
+
+
+def process_file(path, args):
+    """Process a single bib file."""
+    # Iterate the files given on the command line
+    results = bibpy.read_file(path, format='relaxed')
+
+    if args.inherit_crossreferences:
+        bibpy.inherit_crossrefs(results.entries)
+
+    if args.inherit_xdata:
+        bibpy.inherit_xdata(results.entries)
+
+    if args.expand_string_vars:
+        # Expand string variables after crossref and xdata inheritance
+        bibpy.expand_strings(results.entries, results.strings)
+
+    if args.order:
+        if args.order.lower() == 'true':
+            args.order = True
+        else:
+            # TODO: Use o.strip() instead
+            args.order = [order for order in
+                          [e.strip() for e in args.order.split(',')]]
+
+    return [entry for entry in results.all]
 
 
 if __name__ == '__main__':
@@ -23,73 +47,43 @@ if __name__ == '__main__':
                                      description=_DESCRIPTION)
     parser.add_argument('-v', '--version', action='version',
                         version=bibpy.tools.format_version(__version__))
-    parser.add_argument('-e', '--export', choices=['xml', 'json'], default='',
-                        help='Export bib entries to a desired format')
-    parser.add_argument('-r', '--inherit-crossreferences', action='store_true',
+    parser.add_argument('-c', '--inherit-crossreferences', action='store_true',
                         help='Inherit all crossreference fields')
     parser.add_argument('-x', '--inherit-xdata', action='store_true',
                         help='Inherit all xdata fields')
     parser.add_argument('-t', '--expand-string-vars', action='store_true',
                         help='Expand all string variables')
     parser.add_argument('-a', '--align', action='store_true',
-                        help='Align the equal signs of all fields. Ignored '
-                             'for xml and json.')
+                        help='Align the equal signs of all fields.')
     parser.add_argument('-i', '--indent', type=str, default=' ' * 4,
                         help='The indentation for all fields.')
+    parser.add_argument('-r', '--recursive', action='store_true',
+                        help='Recursively search subdirectories listed')
     parser.add_argument('-s', '--surround', type=str, default='{}',
                         help='The two opening and closing characters '
                              'surrounding field values. Default is \'{}\'')
     parser.add_argument('-o', '--order', type=str, default=False,
                         help='The order in which fields are output. Fields '
                              'not in this list are output last in an '
-                             'unspecified order. Currently ignored by xml and '
-                             'json export.')
+                             'unspecified order.')
     parser.add_argument('-g', '--group', action='store_true',
                         help='Group entries by type.')
 
     args, rest = parser.parse_known_args()
 
-    if not rest:
-        rest = [sys.stdin]
+    entries = bibpy.tools.read_files('bibformat', rest, process_file, args)
 
-    # Iterate the files given on the command line
-    for filename in rest:
-        results = bibpy.read_file(filename, format='relaxed')
+    if args.group:
+        groups = collections.defaultdict(list)
 
-        if args.inherit_crossreferences:
-            bibpy.inherit_crossrefs(results.entries)
+        for entry in entries:
+            groups[entry.bibtype].append(entry)
 
-        if args.inherit_xdata:
-            bibpy.inherit_xdata(results.entries)
+        entries = [entry for group in groups for entry in groups[group]]
 
-        if args.expand_string_vars:
-            # Expand string variables after crossref and xdata inheritance
-            bibpy.expand_strings(results.entries, results.strings)
+    format_options = {f: getattr(args, f)
+                      for f in ['align', 'indent', 'order', 'surround']}
 
-        if args.order:
-            if args.order.lower() == 'true':
-                args.order = True
-            else:
-                # TODO: Use o.strip() instead
-                args.order = [order for order in
-                              [e.strip() for e in args.order.split(',')]]
+    print(bibpy.write_string(entries, **format_options))
 
-        if args.group:
-            entries = itertools.groupby(results.all,
-                                        key=lambda e: e.bibtype)
-        else:
-            entries = results.all
-
-        format_options = dict([(f, getattr(args, f))
-                               for f in ['align', 'indent', 'order']])
-
-        if args.export.lower() == 'xml':
-            writer = bibpy.formats.xml.write_xml
-        elif args.export.lower() == 'json':
-            writer = bibpy.formats.json.write_json
-        elif args.export.lower() == 'yaml':
-            writer = bibpy.formats.yaml.write_yaml
-        else:
-            writer = bibpy.write_string
-
-        print(writer(entries, **format_options))
+    bibpy.tools.close_output_handles()

@@ -24,6 +24,11 @@ __version__ = '0.1.0'
 __license__ = 'MIT'
 
 
+def process_file(path, args):
+    """Process a single bib file."""
+    return bibpy.read_file(path).entries
+
+
 def header(titles, spacing=20, underline='-'):
     """Return a title header as a string."""
     header = ' '.join([('{0:<' + str(spacing) + '}').format(title, spacing)
@@ -59,17 +64,11 @@ if __name__ == '__main__':
                              "of number of occurrences")
     parser.add_argument('-t', '--top', type=int, default=None,
                         help='Display only the top N occurrences.')
+    parser.add_argument('-r', '--recursive', action='store_true',
+                        help='Recursively search subdirectories listed')
 
     args, rest = parser.parse_known_args()
-    all_entries = []
-
-    if not rest:
-        # Assume stdin if no files given
-        all_entries = bibpy.read_file(sys.stdin, 'relaxed').entries
-    else:
-        for file in rest:
-            entries = bibpy.read_file(file, 'relaxed').entries
-            all_entries += entries
+    all_entries = bibpy.tools.read_files('bibstats', rest, process_file, args)
 
     types = collections.Counter([entry.bibtype for entry in all_entries])
     total = sum(types.values())
@@ -90,3 +89,5 @@ if __name__ == '__main__':
             print_stats(stats, args.percentages)
 
             print('\nTotal entries: {0}'.format(total))
+
+    bibpy.tools.close_output_handles()

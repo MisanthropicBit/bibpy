@@ -68,7 +68,7 @@ _NAME_TO_OPERATOR = {
 
 
 class BibgrepError(Exception):
-    """Exception class for bibgrep-specific errors."""
+    """Exception class for errors specific to bibgrep."""
 
     pass
 
@@ -123,10 +123,10 @@ def field_occurrence_predicate(tokens):
     return _field_occurrence
 
 
-def negate(f):
-    """Return a new function that negates the boolean result of f."""
+def negate(func):
+    """Return a new function that negates the boolean result of func."""
     def _negate(entry):
-        return not f(entry)
+        return not func(entry)
 
     return _negate
 
@@ -221,7 +221,7 @@ def construct_key_entry_predicate(name, key, tokens, args):
     else:
         f = exact_field_predicate(key, tokens[1], args)
 
-    if '!' in prefix_op:
+    if '^' in prefix_op:
         f = negate(f)
 
     return f
@@ -262,7 +262,7 @@ def construct_field_predicate(name, key, tokens, args):
 
 def construct_predicates(values, predicate_func, key,
                          pred_combiner, args):
-    """Return a list of predicates on entries ."""
+    """Return a list of predicates on entries."""
     # Parse and compose all predicates on values given on the command line
     predicates = []
 
@@ -286,9 +286,17 @@ def unique_entries(entries):
     return [k for k, _ in itertools.groupby(entries)]
 
 
-if __name__ == "__main__":
-    version_format = bibpy.tools.version_format()
+def process_file(source, unique, predicates):
+    """Process a single bib file."""
+    entries = bibpy.read_file(source).entries
 
+    if unique:
+        entries = unique_entries(entries)
+
+    return filter_entries(entries, *predicates)
+
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='bibgrep', description=_DESCRIPTION)
     parser.add_argument('-v', '--version', action='version',
                         version=bibpy.tools.format_version(__version__))
@@ -365,13 +373,10 @@ if __name__ == "__main__":
 
     try:
         if not rest:
-            entries = bibpy.read_file(sys.stdin).entries
-
-            if args.unique:
-                entries = unique_entries(entries)
-
-            filtered_entries = filter_entries(entries, entry_predicate,
-                                              key_predicate, field_predicate)
+            filtered_entries = process_file(sys.stdin, args.unique,
+                                            [entry_predicate,
+                                             key_predicate,
+                                             field_predicate])
 
             if args.count:
                 num_entries = len(list(filtered_entries))
@@ -381,15 +386,12 @@ if __name__ == "__main__":
             for filename in iter_files(rest, '*.bib', args.recursive):
                 # NOTE: Use scanFile if it ever gets into pyparsing to lazily
                 # read and filter the bib source(s)
-                entries = bibpy.read_file(filename).entries
+                filtered_entries +=\
+                    list(process_file(filename, args.unique,
+                                      [entry_predicate,
+                                       key_predicate,
+                                       field_predicate]))
 
-                if args.unique:
-                    entries = unique_entries(entries)
-
-                filtered_entries += list(filter_entries(entries,
-                                                        entry_predicate,
-                                                        key_predicate,
-                                                        field_predicate))
                 if args.count:
                     if args.no_filenames:
                         total_count += len(filtered_entries)
@@ -415,13 +417,4 @@ if __name__ == "__main__":
         # Write all filtered entries to sys.stdout
         print(bibpy.write_string(filtered_entries))
 
-    # Ensure we close stdout and stderr when piping
-    try:
-        sys.stdout.close()
-    except:
-        pass
-
-    try:
-        sys.stderr.close()
-    except:
-        pass
+    bibpy.tools.close_output_handles()
