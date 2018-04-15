@@ -41,6 +41,15 @@ def test_single_preamble_entry():
     assert preambles[0].value == contents
 
 
+def test_single_capitalized_preamble_entry():
+    contents = "$1$ LaTeX code $\sqrt{2}"
+    s = "@Preamble( " + contents + " )"
+    preambles = bibpy.read_string(s, 'bibtex').preambles
+
+    assert type(preambles[0]) is bibpy.entry.Preamble
+    assert preambles[0].value == contents
+
+
 def test_single_entry():
     s = "@article{example_key,author={McLovin'}," +\
         "title={Hawaiian Organ Donation}}"
