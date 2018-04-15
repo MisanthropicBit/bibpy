@@ -1,15 +1,11 @@
-Set up PYTHONPATH
-
-    $ PYTHONPATH="$TESTDIR/../.." && export PYTHONPATH
-
 Test version number
 
-    $ $TESTDIR/../../bin/bibformat --version
+    $ bibformat --version
     bibformat v0.1.0
 
 Test alphabetic ordering
 
-    $ $TESTDIR/../../bin/bibformat --order=true $TESTDIR/../data/all_bibpy_entry_types.bib
+    $ bibformat --order=true $TESTDIR/../data/all_bibpy_entry_types.bib
     @unpublished{unpubkey,
         author = {Somebody McPerson},
         title = {How To Parse BibTex},
@@ -20,11 +16,13 @@ Test alphabetic ordering
     
     @preamble{\textbf{\latex}}
     
-    @comment{Anything is possible with comments!}
+    @comment{
+        Anything is possible with comments!
+    }
 
 Test specific ordering
 
-    $ $TESTDIR/../../bin/bibformat --order=year,author,title $TESTDIR/../data/all_bibpy_entry_types.bib
+    $ bibformat --order=year,author,title $TESTDIR/../data/all_bibpy_entry_types.bib
     @unpublished{unpubkey,
         year = {2011},
         author = {Somebody McPerson},
@@ -35,11 +33,13 @@ Test specific ordering
     
     @preamble{\textbf{\latex}}
     
-    @comment{Anything is possible with comments!}
+    @comment{
+        Anything is possible with comments!
+    }
 
 Test ordering with align
 
-    $ $TESTDIR/../../bin/bibformat --order=title,author,year --align $TESTDIR/../data/all_bibpy_entry_types.bib
+    $ bibformat --order=title,author,year --align $TESTDIR/../data/all_bibpy_entry_types.bib
     @unpublished{unpubkey,
         title  = {How To Parse BibTex},
         author = {Somebody McPerson},
@@ -50,12 +50,134 @@ Test ordering with align
     
     @preamble{\textbf{\latex}}
     
-    @comment{Anything is possible with comments!}
+    @comment{
+        Anything is possible with comments!
+    }
 
-Verify json output
+Test xdata inheritance
 
-    $ echo $($TESTDIR/../../bin/bibformat --export=json $TESTDIR/../data/small1.bib) | python -m json.tool > /dev/null
+    $ bibformat --inherit-xdata $TESTDIR/../data/xdata_inheritance.bib
+    @xdata{macmillan:name,
+        publisher = {Macmillan}
+    }
+    
+    @xdata{macmillan:place,
+        location = {New York and London}
+    }
+    
+    @xdata{macmillan,
+        xdata = {macmillan:name, macmillan:place},
+        publisher = {Macmillan},
+        location = {New York and London}
+    }
+    
+    @book{key,
+        author = {Author},
+        title = {Title},
+        date = {2016-11-29},
+        xdata = {macmillan},
+        publisher = {Macmillan},
+        location = {New York and London}
+    }
 
-Verify xml output
+Test string expansion
 
-    $ echo $($TESTDIR/../../bin/bibformat --export=xml $TESTDIR/../data/small1.bib) | python -m xml.dom.minidom > /dev/null
+    $ bibformat --expand-string-vars $TESTDIR/../data/string_variables.bib
+    @conference{key,
+        title = {March Report}
+    }
+    
+    @article{key,
+        author = {Charles Xavier},
+        title = {Merciless Animals}
+    }
+    
+    @book{key,
+        author = {Andre Cook},
+        title = {b}
+    }
+    
+    @techreport{key,
+        institution = {This should expand multiple variables}
+    }
+    
+    @article{no_expand,
+        author = {Regular Author},
+        title = {Regular Title}
+    }
+    
+    @string{month = "March"}
+    
+    @string{var = "less"}
+    
+    @string{last_name = "Cook"}
+    
+    @string{var1 = "should"}
+    
+    @string{var2 = "multiple"}
+
+Test indentation
+
+    $ bibformat --indent='____' $TESTDIR/../data/all_bibpy_entry_types.bib
+    @unpublished{unpubkey,
+    ____author = {Somebody McPerson},
+    ____title = {How To Parse BibTex},
+    ____year = {2011}
+    }
+    
+    @string{variable = "value"}
+    
+    @preamble{\textbf{\latex}}
+    
+    @comment{
+        Anything is possible with comments!
+    }
+
+Test surrounding characters
+
+    $ bibformat --surround=@@ $TESTDIR/../data/all_bibpy_entry_types.bib
+    @unpublished{unpubkey,
+        author = @Somebody McPerson@,
+        title = @How To Parse BibTex@,
+        year = @2011@
+    }
+    
+    @string{variable = "value"}
+    
+    @preamble{\textbf{\latex}}
+    
+    @comment{
+        Anything is possible with comments!
+    }
+
+Test grouping
+
+    $ bibformat --group $TESTDIR/../data/{all_entry_types,crossreferences}.bib
+    @inbook{key1,
+        crossref = {key2},
+        title = {Title},
+        author = {Author},
+        pages = {5--25}
+    }
+    
+    @article{test1,
+        author = {ksjbgr},
+        title = {kj srgr},
+        journaltitle = {kj srgr},
+        year = {2016}
+    }
+    
+    @book{test2,
+        author = {ksjbgr},
+        title = {kj srgr},
+        year = {2016}
+    }
+    
+    @book{key2,
+        subtitle = {Booksubtitle},
+        title = {Booktitle},
+        author = {Author2},
+        date = {1995},
+        publisher = {Publisher},
+        location = {Location}
+    }

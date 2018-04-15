@@ -1,15 +1,11 @@
-Set up PYTHONPATH
-
-    $ PYTHONPATH="$TESTDIR/../.." && export PYTHONPATH
-
 Test version number
 
-    $ $TESTDIR/../../bin/bibstats --version
+    $ bibstats --version
     bibstats v0.1.0
 
 Test output
 
-    $ $TESTDIR/../../bin/bibstats --sort-entries $TESTDIR/../data/graphs.bib
+    $ bibstats --sort-entries $TESTDIR/../data/graphs.bib
     Entry                Count               
     -----------------------------------------
     article              881
@@ -29,7 +25,7 @@ Test output
 
 Test output with percentages
 
-    $ $TESTDIR/../../bin/bibstats --percentages --sort-entries $TESTDIR/../data/graphs.bib
+    $ bibstats --percentages --sort-entries $TESTDIR/../data/graphs.bib
     Entry                Count               
     -----------------------------------------
     article              881 (60.38%)
@@ -49,19 +45,19 @@ Test output with percentages
 
 Test output with count
 
-    $ $TESTDIR/../../bin/bibstats --count $TESTDIR/../data/small1.bib
+    $ bibstats --count $TESTDIR/../data/small1.bib
     4
 
 Test porcelain output
 
-    $ $TESTDIR/../../bin/bibstats --porcelain --sort-entries $TESTDIR/../data/small1.bib
+    $ bibstats --porcelain --sort-entries $TESTDIR/../data/small1.bib
     article              2
     book                 1
     inproceedings        1
 
 Test --top option
 
-    $ $TESTDIR/../../bin/bibstats --top=3 --sort-entries $TESTDIR/../data/small1.bib
+    $ bibstats --top=3 --sort-entries $TESTDIR/../data/small1.bib
     Entry                Count               
     -----------------------------------------
     article              2
