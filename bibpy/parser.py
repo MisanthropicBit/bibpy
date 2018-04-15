@@ -232,7 +232,7 @@ def base_parser(validate_field, validate_entry):
 
     # @article etc.
     entry = skip('entry') + valid_entry + skip('lbrace') +\
-        token_type('name') + skip('comma') +\
+        (token_type('name') | token_type('number')) + skip('comma') +\
         parser.maybe(delimited_list(field, 'comma')) +\
         parser.maybe(skip('comma')) +\
         skip('rbrace')\
