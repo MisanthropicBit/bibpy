@@ -282,10 +282,10 @@ def relaxed_parser():
     regex = u('[\w\-:\.]+')
 
     def validate_field(field):
-        return re.match(regex, field, re.UNICODE)
+        return re.match(regex, field.strip().lower(), re.UNICODE)
 
     def validate_entry(entry):
-        return re.match(regex, entry, re.UNICODE)
+        return re.match(regex, entry.strip().lower(), re.UNICODE)
 
     return base_parser(validate_field, validate_entry)
 
