@@ -2,6 +2,7 @@
 *.py[oc]
 *.sw[op]
 *.tasks
+*.log
 .Python
 MANIFEST
 bib.py
@@ -17,3 +18,5 @@ crossref_tests/
 docs/
 htmlcov/
 grammar.txt
+xml_tests/
+venv/
