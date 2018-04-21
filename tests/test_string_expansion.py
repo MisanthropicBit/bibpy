@@ -110,3 +110,71 @@ def test_duplicate_string_variables(test_entries):
         bibpy.unexpand_strings(entries, strings, ignore_duplicates=False)
 
     bibpy.unexpand_strings(entries, strings, ignore_duplicates=True)
+
+
+def test_real_world_example():
+    result = bibpy.read_file('tests/data/tame_the_beast.bib')
+
+    bibpy.expand_strings(result.entries, result.strings)
+
+    assert result.entries[0].bibtype == 'book'
+    assert result.entries[0].bibkey == 'companion'
+    assert result.strings[0].variable == 'AW'
+    assert result.strings[0].value == 'Addison-Wesley'
+
+    assert result.entries[0].author ==\
+        ' and  and '
+    assert result.entries[0].title == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].booktitle == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].year == '1993'
+    assert result.entries[0].publisher == 'Addison-Wesley'
+    assert result.entries[0].month == 'December'
+    assert result.entries[0].isbn == '0-201-54199-8'
+    assert result.entries[0].library == 'Yes'
+
+
+def test_partial_real_world_example():
+    result = bibpy.read_file('tests/data/tame_the_beast.bib')
+
+    s1 = bibpy.entry.String('goossens', 'Goossens, Michel')
+    s3 = bibpy.entry.String('samarin', 'Samarin, Alexander')
+    bibpy.expand_strings(result.entries, result.strings + [s1, s3])
+
+    assert result.entries[0].bibtype == 'book'
+    assert result.entries[0].bibkey == 'companion'
+    assert result.strings[0].variable == 'AW'
+    assert result.strings[0].value == 'Addison-Wesley'
+
+    assert result.entries[0].author ==\
+        'Goossens, Michel and  and Samarin, Alexander'
+    assert result.entries[0].title == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].booktitle == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].year == '1993'
+    assert result.entries[0].publisher == 'Addison-Wesley'
+    assert result.entries[0].month == 'December'
+    assert result.entries[0].isbn == '0-201-54199-8'
+    assert result.entries[0].library == 'Yes'
+
+
+def test_full_real_world_example():
+    result = bibpy.read_file('tests/data/tame_the_beast.bib')
+
+    s1 = bibpy.entry.String('goossens', 'Goossens, Michel')
+    s2 = bibpy.entry.String('mittelbach', 'Mittelbach, Franck')
+    s3 = bibpy.entry.String('samarin', 'Samarin, Alexander')
+    bibpy.expand_strings(result.entries, result.strings + [s1, s2, s3])
+
+    assert result.entries[0].bibtype == 'book'
+    assert result.entries[0].bibkey == 'companion'
+    assert result.strings[0].variable == 'AW'
+    assert result.strings[0].value == 'Addison-Wesley'
+
+    assert result.entries[0].author ==\
+        'Goossens, Michel and Mittelbach, Franck and Samarin, Alexander'
+    assert result.entries[0].title == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].booktitle == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].year == '1993'
+    assert result.entries[0].publisher == 'Addison-Wesley'
+    assert result.entries[0].month == 'December'
+    assert result.entries[0].isbn == '0-201-54199-8'
+    assert result.entries[0].library == 'Yes'

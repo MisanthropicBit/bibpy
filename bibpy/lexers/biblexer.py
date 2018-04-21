@@ -40,12 +40,12 @@ class BibLexer(BaseLexer):
             ('equals', (u('\s*(=)\s*'), None)),
             ('comma',  (u(','), None)),
             ('number', (u('-?(0|([1-9][0-9]*))'), None)),
-            ('name',   (u(r"\s*[\w\-:?'\.]+\s*"), None)),
+            ('name',   (u(r"[ ]*[\w\-:?'\.]+[ ]*"), None)),
             ('entry',  (u('@'), self.found_entry)),
             ('string', (u('"[^"]+"'), self.lex_string)),
             ('lparen', (u('\('), self.lex_lparen)),
             ('rparen', (u('\)'), self.lex_rparen)),
-            ('concat', (u('#'), None)),
+            ('concat', (u('[ ]*#[ ]*'), None)),
             ('space',  (u('[ \t\r\n]+'), None)),
         ])
 

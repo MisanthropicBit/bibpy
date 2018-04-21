@@ -32,8 +32,7 @@ def skip(s):
 def simple_entry(content, matcher, producer):
     return skip('entry') + if_token_type('name', matcher) +\
         (enclosed('lbrace', 'rbrace', content) |
-         enclosed('lparen', 'rparen', content)) >>\
-        producer
+         enclosed('lparen', 'rparen', content)) >> producer
 
 
 def make_string(token):
@@ -162,7 +161,12 @@ def join_string_expr(delimiter):
         if len(tokens) == 1:
             return tokens[0].strip('"')
         else:
-            return delimiter.join(tokens)
+            result = [tokens[0]]
+
+            for token in tokens[1:]:
+                result.extend(token)
+
+            return ''.join(result)
 
     return _join_string_expr
 
@@ -171,6 +175,11 @@ def delimited_list(element, separator):
     """Create a parser of a list of delimited tokens."""
     return element + parser.many(parser.skip(token_type(separator)) + element)\
         >> make_list
+
+
+def full_delimited_list(element, separator):
+    """Create a parser of a list of delimited tokens, keeping delimiters."""
+    return element + parser.many(token_type(separator) + element) >> make_list
 
 
 def base_parser(validate_field, validate_entry):
@@ -198,10 +207,10 @@ def base_parser(validate_field, validate_entry):
 
     # String expressions, e.g. '"This " # var # " that"'
     string_expr =\
-        delimited_list(
+        full_delimited_list(
             parser.some(lambda x: x.type == 'string') >> make_string |
-            parser.some(lambda x: x.type == 'name') >> make_variable,
-            'concat') >> join_string_expr(' # ')
+            parser.some(lambda x: x.type == 'name') >> token_value,
+            'concat') >> join_string_expr('')
 
     # The value of a field
     value = braced_expr | integer | string_expr | variable
@@ -356,22 +365,8 @@ def parse_string_expr(expr):
     if not expr:
         return expr
 
-    # TODO: Test '"test #" # var'
-    string_expr =\
-        delimited_list(
-            parser.some(lambda x: x.type == 'string') >> make_unquoted_string |
-            parser.some(lambda x: x.type == 'name') >> token_value,
-            'concat')
-
     try:
-        tokens = bibpy.lexers.lex_string_expr(expr)
-
-        if 'concat' not in (token.type for token in tokens):
-            # Expression did not include any variable concatenations, so just
-            # return it
-            return expr
-        else:
-            return string_expr.parse(tokens)
+        return bibpy.lexers.lex_string_expr(expr)
     except parser.NoParseError:
         return expr
 

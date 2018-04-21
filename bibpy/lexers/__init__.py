@@ -1,6 +1,7 @@
 """Various lexer functions used by the funcparserlib parser."""
 
 import funcparserlib.lexer as lexer
+import bibpy
 from bibpy.compat import u
 from bibpy.lexers.biblexer import BibLexer
 from bibpy.lexers.name_lexer import NameLexer
@@ -33,11 +34,16 @@ def lex_string_expr(string):
     tokenizer = lexer.make_tokenizer([
         ('concat', [u('#')]),
         ('string', [u('"[^"]+"')]),
-        ('name',   [u('[A-Za-z_][A-Za-z_0-9\-:?\'\.]*')]),
+        ('name',   [u('[A-Za-z_][A-Za-z_0-9\-:?\'\.\s]*')]),
         ('space',  [u('[ \t\r\n]+')]),
     ])
 
-    return remove_whitespace_tokens(tokenizer(string))
+    try:
+        return remove_whitespace_tokens(tokenizer(string))
+    except lexer.LexerError:
+        # If we fail to lex the string, it is not a valid string expression so
+        # just return it as a token
+        return [bibpy.lexers.base_lexer.Token('string', string)]
 
 
 def lex_braced_expr(string):

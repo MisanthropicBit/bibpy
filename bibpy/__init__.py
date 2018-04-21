@@ -200,9 +200,29 @@ def expand_strings(entries, strings, ignore_duplicates=False):
         for field, value in entry:
             if bibpy.compat.is_string(value):
                 exprs = bibpy.parser.parse_string_expr(value)
-                expanded = "".join([variables.get(expr.strip(), expr)
-                                    for expr in exprs])
-                setattr(entry, field, expanded)
+
+                if len(exprs) == 1:
+                    # If only a single expression is present, we attempt to
+                    # substitute it, otherwise we leave it be
+                    variable = exprs[0].value.strip()
+                    setattr(entry, field, variables.get(variable, variable))
+                elif len(exprs) > 1:
+                    # If more than one expression is present, we attempt to
+                    # substitute where possible and replace a variable with the
+                    # empty string if the variable was not found. Both bibtex
+                    # and biblatex warn about missing variables and perform
+                    # this substitution
+                    expanded = ''
+
+                    for expr in exprs:
+                        if expr.type == 'string':
+                            expanded += expr.value.strip('"')
+                        elif expr.type == 'concat':
+                            pass
+                        else:
+                            expanded += variables.get(expr.value.strip(), '')
+
+                    setattr(entry, field, expanded)
 
 
 def unexpand_strings(entries, strings, ignore_duplicates=False):

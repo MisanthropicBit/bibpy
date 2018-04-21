@@ -1,6 +1,7 @@
 """Test parsing of single entries."""
 
 import bibpy
+from bibpy.lexers.base_lexer import Token
 
 # TODO: Test both parsers
 
@@ -66,6 +67,14 @@ def test_single_entry():
 def test_single_string_expr():
     s = 'var1 # " report on the " # Var_2 # " Conglomerate"'
 
-    assert bibpy.parser.parse_string_expr(s) == ['var1', " report on the ",
-                                                 'Var_2', " Conglomerate"]
+    assert bibpy.parser.parse_string_expr(s) == [
+        Token('name', 'var1 '),
+        Token('concat', '#'),
+        Token('string', '" report on the "'),
+        Token('concat', '#'),
+        Token('name', 'Var_2 '),
+        Token('concat', '#'),
+        Token('string', '" Conglomerate"')
+    ]
+
     assert bibpy.parser.parse_string_expr('') == ''

@@ -224,9 +224,6 @@ class BaseLexer(object):
                 if self.ignore_whitespace and token_type == 'space':
                     break
 
-                if token_type != 'space':
-                    value = value.strip()
-
                 yield handler(value) if handler else\
                     self.make_token(token_type, value)
 
