@@ -204,7 +204,7 @@ def base_parser(validate_field, validate_entry):
             'concat') >> join_string_expr(' # ')
 
     # The value of a field
-    value = braced_expr | integer | variable | string_expr
+    value = braced_expr | integer | string_expr | variable
 
     # Make sure we only parsed valid fields
     valid_field = if_token_type('name', validate_field)
