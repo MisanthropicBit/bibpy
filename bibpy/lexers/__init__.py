@@ -6,6 +6,7 @@ from bibpy.compat import u
 from bibpy.lexers.biblexer import BibLexer
 from bibpy.lexers.name_lexer import NameLexer
 from bibpy.lexers.namelist_lexer import NamelistLexer
+from funcparserlib.lexer import Token
 
 
 def remove_whitespace_tokens(tokens):
@@ -43,7 +44,7 @@ def lex_string_expr(string):
     except lexer.LexerError:
         # If we fail to lex the string, it is not a valid string expression so
         # just return it as a token
-        return [bibpy.lexers.base_lexer.Token('string', string)]
+        return [Token('string', string)]
 
 
 def lex_braced_expr(string):
