@@ -83,7 +83,7 @@ def make_list(tokens):
 
 def make_field(tokens):
     """Make a field from two tokens."""
-    return tokens[0].value.strip(), tokens[1]
+    return tokens[0].value.strip().lower(), tokens[1]
 
 
 def make_string_entry(tokens):
