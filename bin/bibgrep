@@ -53,8 +53,7 @@ __version__ = '0.1.0'
 __license__ = 'MIT'
 
 # TODO: How to combine predicates with '&&' and '||'?
-# TODO: Enable negation of ranges, intervals etc.
-# TODO: Write full grammar and stick to it
+# TODO: Make approximate matches use regexes
 
 _DESCRIPTION = """Grep bib(la)tex files satisfying user-defined predicates."""
 
@@ -93,7 +92,7 @@ def approx_field_predicate(field, value, args):
     flags = re.I if args.ignore_case else 0
 
     def _approx_match(entry):
-        field_value = getattr(entry, field, '')
+        field_value = getattr(entry, field, None)
 
         if field_value is None:
             return False
@@ -146,6 +145,9 @@ def comparison_predicate(field, op_name, value):
     operator = operator_from_string(op_name)
 
     def _comparison_predicate(entry):
+        if not field:
+            return False
+
         attr = getattr(entry, field)
 
         try:
@@ -166,6 +168,9 @@ def interval_predicate(field, lower, upper):
         raise ValueError("Error: Lower bound must be <= upper bound")
 
     def _interval_predicate(entry):
+        if not field:
+            return False
+
         attr = getattr(entry, field)
 
         try:
@@ -233,17 +238,15 @@ def construct_field_predicate(name, key, tokens, args):
     neg = tokens[0] == '^'
 
     if name == 'value':
-        i = 3 if neg else 2
-
-        if tokens[i] == '=':
-            predicate = exact_field_predicate(tokens[i], tokens[-1], args)
-        elif tokens[i] == '~':
-            predicate = approx_field_predicate(tokens[i-1], tokens[-1], args)
+        if tokens[2] == '=':
+            predicate = exact_field_predicate(tokens[1], tokens[-1], args)
+        elif tokens[2] == '~':
+            predicate = approx_field_predicate(tokens[1], tokens[-1], args)
         else:
             raise ValueError("Error: Invalid field operator '" + tokens[i] +
                              "'")
     elif name == 'occurrence':
-        predicate = field_occurrence_predicate(tokens)
+        predicate = field_occurrence_predicate(tokens, args)
     elif name == 'comparison':
         predicate = comparison_predicate(*tokens)
     elif name == 'interval':
@@ -252,8 +255,6 @@ def construct_field_predicate(name, key, tokens, args):
         predicate = range_predicate(*tokens)
     elif name == 'value':
         predicate = comparison_predicate(*tokens)
-    # elif name == 'occurrence':
-    #     predicate = comparison_predicate(*tokens)
     else:
         raise ValueError("Error: Invalid field query syntax")
 
@@ -403,9 +404,7 @@ if __name__ == "__main__":
                                                len(filtered_entries)))
 
                     filtered_entries = []
-    except bibpy.error.ParseException as ex:
-        sys.exit("bibgrep: {0}".format(ex))
-    except BibgrepError as ex:
+    except (IOError, bibpy.error.ParseException, BibgrepError) as ex:
         sys.exit("bibgrep: {0}".format(ex))
     except KeyboardInterrupt:
         sys.exit(1)
