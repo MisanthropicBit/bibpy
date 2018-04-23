@@ -135,7 +135,7 @@ def operator_from_string(op_name):
     op = _NAME_TO_OPERATOR.get(op_name, None)
 
     if op is None:
-        raise ValueError("Error: Invalid operator '" + op_name + "'")
+        raise BibgrepError("Invalid operator '" + op_name + "'")
 
     return op
 
@@ -165,7 +165,7 @@ def interval_predicate(field, lower, upper):
     iupper = int(upper)
 
     if ilower > iupper:
-        raise ValueError("Error: Lower bound must be <= upper bound")
+        raise BibgrepError("Lower bound must be <= upper bound")
 
     def _interval_predicate(entry):
         if not field:
@@ -192,7 +192,7 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
     iupper = int(upper)
 
     if ilower > iupper:
-        raise ValueError("Error: Lower bound must be <= upper bound")
+        raise BibgrepError("Lower bound must be <= upper bound")
 
     operator1 = operator_from_string(op_name1)
     operator2 = operator_from_string(op_name2)
@@ -218,8 +218,7 @@ def construct_key_entry_predicate(name, key, tokens, args):
     prefix_op = tokens[0] if tokens[0] else ''
 
     if prefix_op and not set(prefix_op).issubset(set('^~')):
-        raise ValueError("Error: Invalid field operator(s) '" + tokens[0] +
-                         "'")
+        raise BibgrepError("Invalid field operator(s) '" + tokens[0] + "'")
 
     if '~' in prefix_op:
         f = approx_field_predicate(key, tokens[1], args)
@@ -243,8 +242,7 @@ def construct_field_predicate(name, key, tokens, args):
         elif tokens[2] == '~':
             predicate = approx_field_predicate(tokens[1], tokens[-1], args)
         else:
-            raise ValueError("Error: Invalid field operator '" + tokens[i] +
-                             "'")
+            raise BibgrepError("Invalid field operator '" + tokens[1] + "'")
     elif name == 'occurrence':
         predicate = field_occurrence_predicate(tokens, args)
     elif name == 'comparison':
@@ -256,7 +254,7 @@ def construct_field_predicate(name, key, tokens, args):
     elif name == 'value':
         predicate = comparison_predicate(*tokens)
     else:
-        raise ValueError("Error: Invalid field query syntax")
+        raise BibgrepError("Invalid field query syntax")
 
     return negate(predicate) if neg else predicate
 
@@ -360,8 +358,8 @@ if __name__ == "__main__":
                                                    construct_field_predicate,
                                                    'field',
                                                    any, args)
-    except (ValueError, bibpy.error.ParseException) as e:
-        sys.exit(str(e))
+    except (BibgrepError, bibpy.error.ParseException) as ex:
+        sys.exit("{0}".format(ex))
 
     if not args.keys and not args.entry and not args.fields:
         # If no constraints are defined, all entries pass
