@@ -272,11 +272,10 @@ def construct_predicates(values, predicate_func, key,
     return bibpy.tools.compose_predicates(predicates, pred_combiner)
 
 
-def filter_entries(entries, entry_predicate, key_predicate, field_predicate):
+def filter_entries(entries, predicates):
     """Filter entries based on predicates on entry type, key and fields."""
     for entry in entries:
-        if key_predicate(entry) or entry_predicate(entry) or\
-                field_predicate(entry):
+        if any(pred(entry) for pred in predicates):
             yield entry
 
 
@@ -292,7 +291,7 @@ def process_file(source, unique, predicates):
     if unique:
         entries = unique_entries(entries)
 
-    return filter_entries(entries, *predicates)
+    return filter_entries(entries, predicates)
 
 
 if __name__ == "__main__":
@@ -369,13 +368,11 @@ if __name__ == "__main__":
 
     filtered_entries = []
     total_count = 0
+    predicates = [entry_predicate, key_predicate, field_predicate]
 
     try:
         if not rest:
-            filtered_entries = process_file(sys.stdin, args.unique,
-                                            [entry_predicate,
-                                             key_predicate,
-                                             field_predicate])
+            filtered_entries = process_file(sys.stdin, args.unique, predicates)
 
             if args.count:
                 num_entries = len(list(filtered_entries))
@@ -386,10 +383,7 @@ if __name__ == "__main__":
                 # NOTE: Use scanFile if it ever gets into pyparsing to lazily
                 # read and filter the bib source(s)
                 filtered_entries +=\
-                    list(process_file(filename, args.unique,
-                                      [entry_predicate,
-                                       key_predicate,
-                                       field_predicate]))
+                    list(process_file(filename, args.unique, predicates))
 
                 if args.count:
                     if args.no_filenames:
