@@ -246,13 +246,13 @@ def construct_field_predicate(name, key, tokens, args):
     elif name == 'occurrence':
         predicate = field_occurrence_predicate(tokens, args)
     elif name == 'comparison':
-        predicate = comparison_predicate(*tokens)
+        predicate = comparison_predicate(*tokens[1:])
     elif name == 'interval':
-        predicate = interval_predicate(tokens[1], tokens[2], tokens[3])
+        predicate = interval_predicate(*tokens[1:])
     elif name == 'range':
-        predicate = range_predicate(*tokens)
+        predicate = range_predicate(*tokens[1:])
     elif name == 'value':
-        predicate = comparison_predicate(*tokens)
+        predicate = comparison_predicate(*tokens[1:])
     else:
         raise BibgrepError("Invalid field query syntax")
 
