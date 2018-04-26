@@ -41,7 +41,6 @@ import argparse
 import bibpy
 import bibpy.parser
 import bibpy.tools
-import fnmatch
 import itertools
 import operator
 import re
@@ -70,21 +69,6 @@ class BibgrepError(Exception):
     """Exception class for errors specific to bibgrep."""
 
     pass
-
-
-def iter_files(names, pattern, recursive):
-    """Yield all files matching a specific file pattern in a directory."""
-    for name in names:
-        if os.path.isdir(name):
-            if not recursive:
-                sys.exit("bibgrep: '{0}' is a directory, use [-r, --recursive]"
-                         " to recurse into directories".format(name))
-            else:
-                for root, dirs, files in os.walk(name):
-                    for filename in fnmatch.filter(files, pattern):
-                        yield os.path.join(root, filename)
-        else:
-            yield name
 
 
 def approx_field_predicate(field, value, args):
@@ -379,7 +363,9 @@ if __name__ == "__main__":
                 total_count += num_entries
                 filtered_entries = []
         else:
-            for filename in iter_files(rest, '*.bib', args.recursive):
+            bib_files = bibpy.tools.iter_files(rest, '*.bib', args.recursive)
+
+            for filename in bib_files:
                 # NOTE: Use scanFile if it ever gets into pyparsing to lazily
                 # read and filter the bib source(s)
                 filtered_entries +=\
