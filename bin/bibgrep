@@ -45,6 +45,7 @@ import itertools
 import operator
 import re
 import os
+import signal
 import sys
 
 __author__ = 'Alexander Asp Bock'
@@ -63,6 +64,15 @@ _NAME_TO_OPERATOR = {
     '>=': operator.ge,
     '=':  operator.eq
 }
+
+
+def sigterm_handler():
+    """Handle SIGTERM signal."""
+    sys.exit('bibgrep: Caught SIGTERM')
+
+
+# Set up a signal handler for SIGTERM
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 
 class BibgrepError(Exception):
