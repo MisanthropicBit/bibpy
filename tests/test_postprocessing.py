@@ -101,9 +101,15 @@ def test_postprocess_keywords():
         ['java', 'c++', 'haskell', 'python']
 
 
-@pytest.mark.randomize(s=str, str_attrs=('digits',), ncalls=100)
+@pytest.mark.skip
+# @pytest.mark.randomize(s=str, str_attrs=('digits',), ncalls=100)
 def test_postprocess_int(s):
     assert postprocess_int('month', '2010') == 2010
+
+
+def test_postprocess_int():
+    assert postprocess_int('month', '2010') == 2010
+    assert postprocess_int('month', 'abc') == 'abc'
 
 
 def test_postprocess_int_fail():

@@ -4,5 +4,4 @@ cram==0.7
 funcparserlib==0.3.6
 pep257==0.7.0
 pytest>=2.9
-pytest-quickcheck
 vcrpy==1.11.1
