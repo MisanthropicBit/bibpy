@@ -1,8 +1,8 @@
-coverage
-coveralls
-cram
-funcparserlib
-pep257
+coverage==4.5.1
+coveralls==1.3.0
+cram==0.7
+funcparserlib==0.3.6
+pep257==0.7.0
 pytest>=2.9
 pytest-quickcheck
-vcrpy
+vcrpy==1.11.1
