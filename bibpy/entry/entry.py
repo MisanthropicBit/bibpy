@@ -25,8 +25,9 @@ class Entry(base.BaseEntry):
         """Create a bib entry with a type, key and fields.
 
         Pass an iterable of name/value pairs denoting fields to keep the order.
+
         Using keyword arguments are not guaranteed to keep the same ordering
-        until Python 3.6 (also see PEP 468).
+        until Python 3.6 (see PEP 468).
 
         """
         # We use an ordered dict here to maintain the same order as the fields
