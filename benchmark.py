@@ -9,6 +9,11 @@ import time
 import sys
 
 
+_RED = '31;1'
+_GREEN = '32;1'
+_LATIN1_ENCODED_FILES = ('cp1252.bib', 'iso-8859-1.bib')
+
+
 def time_stamp():
     """Attempt to return a portable, precise timer."""
     if sys.version_info >= (3, 3):
@@ -30,7 +35,39 @@ def iter_files(names, pattern):
 
 def color_string(color_number, text):
     """Return the text with color codes for the given color."""
-    return "\x1b[{0};1m{1}\x1b[0m".format(color_number, text)
+    return '\x1b[{0};1m{1}\x1b[0m'.format(color_number, text)
+
+
+def human_readable_size(byte_size):
+    """Convert a number of bytes to a human-readable string."""
+    i = 0
+    suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+
+    while byte_size >= 1024 and i < len(suffixes) - 1:
+        byte_size /= 1024.
+        i += 1
+
+    size = ('{0:.2f}'.format(byte_size)).rstrip('0').rstrip('.')
+
+    return '{0} {1}'.format(size, suffixes[i])
+
+
+def plot(xs, ys):
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError:
+        print('Package matplotlib is not installed and required for plotting')
+        return False
+
+    xpos = range(len(xs))
+    plt.bar(xpos, ys)
+    plt.xlabel('Reference files')
+    plt.ylabel('Time (seconds)')
+    plt.xticks(xpos, xs, rotation=90)
+    plt.subplots_adjust(top=0.95, bottom=0.6)
+    plt.show()
+
+    return True
 
 
 if __name__ == '__main__':
@@ -48,38 +85,62 @@ if __name__ == '__main__':
 
     args, rest = parser.parse_known_args()
 
-    if args.plot:
-        sys.exit('--plot option not yet supported')
+    if args.color:
+        if platform.system().lower().startswith('win'):
+            sys.exit('--color option not supported on windows')
+        elif args.plot:
+            sys.stderr.write('WARNING: --color option does make sense with '
+                             '--plot\n')
 
-    if args.color and platform.system().lower().startswith('win'):
-        sys.exit('--color option not supported on windows')
+    # Filename, # of entries, file size (bytes), time, status message
+    column_format = '{0:<40} {1:<20} {2:<20} {3:<20} {4:<20}'
 
-    # Filename, # of entries, file size (bytes?), time, status message
-    column_format = "{0:<40} {1:<20} {2:<20} {3:<20} {4:<20}"
+    benchmarks = []
+    sys.stderr.write('Benchmarking...\n')
 
-    print(column_format.format("FILENAME", "ENTRIES", "FILE SIZE", "TIME",
-                               "ERRORS?"))
-
-    for filename in iter_files(rest, '*.bib'):
-        temp = os.path.basename(filename)
-        file_size = os.stat(filename).st_size
+    for path in iter_files(rest, '*.bib'):
+        filename = os.path.basename(path)
+        file_size = os.stat(path).st_size
         total_time = 0
 
         for r in range(args.runs):
             try:
+                encoding = 'utf-8'
+
+                if filename in _LATIN1_ENCODED_FILES:
+                    encoding = 'latin1'
+
                 start = time_stamp()
-                results = bibpy.read_file(filename, format='relaxed')
+                results = bibpy.read_file(path, format='relaxed',
+                                          encoding=encoding)
                 end = time_stamp()
-
                 total_time += end - start
-            except bibpy.error.ParseException:
-                error = color_string(31, "ERROR") if args.color else "ERROR"
-                print(column_format.format(filename, "-", file_size, "-",
-                                           error))
-                break
+            except bibpy.error.ParseException as ex:
+                error = color_string(_RED, 'ERROR') if args.color else 'ERROR'
 
-            ok = color_string(32, "OK") if args.color else "OK"
+                if not args.plot:
+                    benchmarks.append((filename, 0.0, file_size, 0.00, error))
 
-            print(column_format.format(temp, len(results.all), file_size,
-                                       float(total_time) / float(args.runs),
-                                       ok))
+                continue
+
+        ok = color_string(_GREEN, 'OK') if args.color else 'OK'
+        benchmarks.append((
+            filename,
+            len(results.all),
+            human_readable_size(file_size),
+            '{0:.2f}'.format(float(total_time) / float(args.runs)),
+            ok
+        ))
+
+    sys.stderr.write('Done...\n')
+    benchmarks.sort()
+
+    if args.plot:
+        plot([bm[0] for bm in benchmarks], [float(bm[3]) for bm in benchmarks])
+    else:
+        print(column_format.format('FILENAME', 'ENTRIES', 'FILE SIZE', 'TIME',
+                                   'ERRORS?'))
+
+        for path, num_results, file_size, avg_time, status in benchmarks:
+            print(column_format.format(path, num_results, file_size, avg_time,
+                                       status))
