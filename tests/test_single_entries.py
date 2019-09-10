@@ -5,7 +5,7 @@ import bibpy
 
 def test_single_comment():
     s = "This is a comment"
-    comments = bibpy.read_string(s, 'bibtex').comments
+    comments = bibpy.read_string(s, 'bibtex', ignore_comments=False).comments
 
     assert comments[0] == s
 

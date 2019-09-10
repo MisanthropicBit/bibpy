@@ -7,7 +7,7 @@ import pytest
 @pytest.fixture
 def test_entries():
     return bibpy.read_file('tests/data/all_bibpy_entry_types.bib',
-                           'relaxed')
+                           ignore_comments=False)
 
 
 def test_entries_properties(test_entries):

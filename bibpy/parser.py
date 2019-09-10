@@ -312,7 +312,7 @@ def date_parser():
         parser.skip(parser.finished) >> make_date
 
 
-def parse(string, format):
+def parse(string, format, ignore_comments=True):
     """Parse string using a given reference format."""
     grammar = grammar_from_format(format)
 
@@ -332,7 +332,7 @@ def parse(string, format):
             elif et:
                 entries.append(result)
             else:
-                if not re.match('^\s*$', result):
+                if not ignore_comments and not re.match('^\s*$', result):
                     comments.append(result)
 
         return bibpy.entries.Entries(entries, strings, preambles,
@@ -341,11 +341,11 @@ def parse(string, format):
         raise bibpy.error.ParseException(bibpy.compat.u(str(e)))
 
 
-def parse_file(source, format):
+def parse_file(source, format, ignore_comments=True):
     """Parse a file using a given reference format."""
     try:
         with source:
-            return parse(source.read(), format)
+            return parse(source.read(), format, ignore_comments)
     except parser.NoParseError as e:
         raise bibpy.error.ParseException(str(e))
 

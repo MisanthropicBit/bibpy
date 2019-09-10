@@ -59,12 +59,12 @@ def read_string(string, format='relaxed', postprocess=False,
         * xdata                                   List of keys
 
     """
-    return _read_common(bibpy.parser.parse(string, format), format,
-                        postprocess, remove_braces, split_names)
+    return _read_common(bibpy.parser.parse(string, format, ignore_comments),
+                        format, postprocess, remove_braces, split_names)
 
 
 def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
-              remove_braces=False, split_names=False):
+              remove_braces=False, ignore_comments=True, split_names=False):
     """Read a file containing references in a given format.
 
     The 'source' argument can either be a file handle or a filename. Files are
@@ -100,8 +100,8 @@ def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
     fh = (io.open(source, encoding=encoding)
           if bibpy.compat.is_string(source) else source)
 
-    return _read_common(bibpy.parser.parse_file(fh, format), format,
-                        postprocess, remove_braces, split_names)
+    return _read_common(bibpy.parser.parse_file(fh, format, ignore_comments),
+                        format, postprocess, remove_braces, split_names)
 
 
 def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,

@@ -27,8 +27,8 @@ def test_reading_empty():
 
 def test_reading_relaxed():
     results = bibpy.read_file('tests/data/bibtex_missing_requirements.bib',
-                              format='relaxed')
-    print(results.comments)
+                              format='relaxed', ignore_comments=False)
+
     assert len(results.entries) == 12
     assert len(results.strings) == 0
     assert len(results.comment_entries) == 0
