@@ -3,6 +3,7 @@
 *.sw[op]
 *.tasks
 *.log
+*.egg-info/
 .Python
 MANIFEST
 bib.py
@@ -11,6 +12,7 @@ testbibpy.py
 .cache/
 .coverage
 .tox/
+.pytest_cache/
 __pycache__/
 backup/
 build/
@@ -20,3 +22,6 @@ htmlcov/
 grammar.txt
 xml_tests/
 venv/
+framework37/
+venv*/
+fixtures/
