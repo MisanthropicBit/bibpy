@@ -109,12 +109,30 @@ def make_preamble_entry(tokens):
     return bibpy.entry.Preamble(value)
 
 
+def get_duplicates(iterable):
+    """Find and return any duplicates in the iterable."""
+    duplicates = {}
+
+    for i in iterable:
+        duplicates.setdefault(i, 0)
+        duplicates[i] += 1
+
+    return [d for d in duplicates if duplicates[d] > 1]
+
+
 def make_entry(tokens):
     """Make a bib entry from a list of parsed tokens."""
     bibtype = tokens[0].lower()
     bibkey = tokens[1]
     fields = tokens[2] if tokens[2] is not None else []
     fields = [(f.lower(), v) for f, v in fields]
+
+    duplicates = get_duplicates([f[0] for f in fields])
+
+    if duplicates:
+        msg = "Duplicate field(s) '{0}' in entry '{1}' with type '{2}'"\
+            .format(', '.join(duplicates), bibkey, bibtype)
+        raise bibpy.error.ParseException(msg)
 
     return bibpy.entry.Entry(bibtype, bibkey, fields=fields)
 
