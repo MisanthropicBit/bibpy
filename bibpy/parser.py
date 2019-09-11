@@ -111,12 +111,12 @@ def make_preamble_entry(tokens):
 
 def make_entry(tokens):
     """Make a bib entry from a list of parsed tokens."""
-    bibtype = tokens[0]
+    bibtype = tokens[0].lower()
     bibkey = tokens[1]
     fields = tokens[2] if tokens[2] is not None else []
+    fields = [(f.lower(), v) for f, v in fields]
 
-    return bibpy.entry.Entry(bibtype.lower(), bibkey,
-                             fields=[(f.lower(), v) for f, v in fields])
+    return bibpy.entry.Entry(bibtype, bibkey, fields=fields)
 
 
 def make_date(tokens):
