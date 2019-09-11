@@ -417,7 +417,7 @@ def parse_name(name):
     if not name:
         return bibpy.name.Name()
 
-    first, prefix, last, suffix = u'', u'', u'', u''
+    first, prefix, last, suffix = u(''), u(''), u(''), u('')
     tokens, commas = bibpy.lexers.lex_name(name)
     stripped_tokens = [[token.value for token in part] for part in tokens]
 
@@ -432,11 +432,11 @@ def parse_name(name):
 
             if pi != (-1, -1):
                 i, j = pi
-                first = " ".join(stripped_tokens[:i])
-                prefix = " ".join(stripped_tokens[i:j])
-                last = " ".join(stripped_tokens[j:])
+                first = u(' ').join(stripped_tokens[:i])
+                prefix = u(' ').join(stripped_tokens[i:j])
+                last = u(' ').join(stripped_tokens[j:])
             else:
-                first = " ".join(stripped_tokens[:-1])
+                first = u(' ').join(stripped_tokens[:-1])
                 last = stripped_tokens[-1]
     elif commas == 1:
         # Assume 'von last, first' format
@@ -444,26 +444,26 @@ def parse_name(name):
 
         if pi != (-1, -1):
             _, j = pi
-            first = " ".join(stripped_tokens[1])
-            prefix = " ".join(stripped_tokens[0][0:j])
-            last = " ".join(stripped_tokens[0][j:])
+            first = u(' ').join(stripped_tokens[1])
+            prefix = u(' ').join(stripped_tokens[0][0:j])
+            last = u(' ').join(stripped_tokens[0][j:])
         else:
-            first = " ".join(stripped_tokens[1])
-            last = " ".join(stripped_tokens[0])
+            first = u(' ').join(stripped_tokens[1])
+            last = u(' ').join(stripped_tokens[0])
     elif commas >= 2:
         # Assume 'von last, jr, first' format
         pi = prefix_indices(tokens[0])
 
         if pi != (-1, -1):
             i, j = pi
-            first = " ".join(stripped_tokens[2])
-            prefix = " ".join(stripped_tokens[0][i:j])
-            last = " ".join(stripped_tokens[0][j:])
-            suffix = " ".join(stripped_tokens[1])
+            first = u(' ').join(stripped_tokens[2])
+            prefix = u(' ').join(stripped_tokens[0][i:j])
+            last = u(' ').join(stripped_tokens[0][j:])
+            suffix = u(' ').join(stripped_tokens[1])
         else:
-            first = " ".join(stripped_tokens[2])
-            last = " ".join(stripped_tokens[0])
-            suffix = " ".join(stripped_tokens[1])
+            first = u(' ').join(stripped_tokens[2])
+            last = u(' ').join(stripped_tokens[0])
+            suffix = u(' ').join(stripped_tokens[1])
 
     return bibpy.name.Name(first, prefix, last, suffix)
 

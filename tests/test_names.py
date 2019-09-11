@@ -108,12 +108,12 @@ def test_zero_comma_names():
     assert name.last == name.family == 'Louis-Albert'
     assert name.suffix == name.junior == ''
 
-    name = name_from_string('Charles Louis Xavier Joseph de la '
-                            'Vall{\’e}e Poussin')
-    assert name.first == name.given == 'Charles Louis Xavier Joseph'
-    assert name.prefix == name.von == 'de la'
-    assert name.last == name.family == 'Vall\’ee Poussin'
-    assert name.suffix == name.junior == ''
+    name = name_from_string(u'Charles Louis Xavier Joseph de la '
+                            u'Vall{\’e}e Poussin')
+    assert name.first == name.given == u'Charles Louis Xavier Joseph'
+    assert name.prefix == name.von == u'de la'
+    assert name.last == name.family == u'Vall\’ee Poussin'
+    assert name.suffix == name.junior == u''
 
     name = name_from_string('John Smith')
     assert name.first == name.given == 'John'
@@ -243,12 +243,12 @@ def test_whitespace_in_names():
     assert name.last == name.family == 'Incubator-Jones'
     assert name.suffix == name.junior == ''
 
-    name = name_from_string('   Charles Louis \nXavier Joseph    de \t   la '
-                            'Vall{\’e}e Poussin \t\r\n')
-    assert name.first == name.given == 'Charles Louis Xavier Joseph'
-    assert name.prefix == name.von == 'de la'
-    assert name.last == name.family == 'Vall\’ee Poussin'
-    assert name.suffix == name.junior == ''
+    name = name_from_string(u'   Charles Louis \nXavier Joseph    de \t   la '
+                            u'Vall{\’e}e Poussin \t\r\n')
+    assert name.first == name.given == u'Charles Louis Xavier Joseph'
+    assert name.prefix == name.von == u'de la'
+    assert name.last == name.family == u'Vall\’ee Poussin'
+    assert name.suffix == name.junior == u''
 
     name = name_from_string('    Catherine \n\n  Crook \r\n  de \tCamp  \t')
     assert name.first == name.given == 'Catherine Crook'
@@ -312,22 +312,21 @@ def test_name_properties():
 
 
 @pytest.mark.skipif(sys.version_info[0] < 3, reason="requires Python 3.x")
-def test_name_repr():
+def test_name_repr_py3():
     name1 = name_from_string(u'Møllenbach, Doermann')
-    name1 = name_from_string('Sterling, Archer')
+    name2 = name_from_string('Sterling, Archer')
 
     assert repr(name1) ==\
         'Name(first=Doermann, prefix=, last=Møllenbach, suffix=)'
 
     assert repr(name2) ==\
-        "Name(first=Archer, prefix=b'', last=Sterling, suffix=b'')"
+        "Name(first=Archer, prefix=, last=Sterling, suffix=)"
 
 
 @pytest.mark.skipif(sys.version_info[0] > 2, reason="Only on Python 2.x")
-def test_name_repr():
-    print(sys.version_info)
+def test_name_repr_py2():
     name1 = name_from_string(u'Møllenbach, Doermann')
-    name2 = name_from_string('Sterling, Archer')
+    name2 = name_from_string(u'Sterling, Archer')
 
     assert repr(name1) ==\
         'Name(first=Doermann, prefix=, last=Møllenbach, suffix=)'
