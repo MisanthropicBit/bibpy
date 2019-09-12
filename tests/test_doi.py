@@ -4,13 +4,31 @@ import bibpy
 import bibpy.doi
 import os
 import pytest
-import vcr
+import sys
+
+
+def vcrpy_supported():
+    """Check if vcrpy is supported by the current python version."""
+    vi = sys.version_info
+
+    return vi[0] == 2 or\
+        vi[0] == 3 and vi[1] not in (0, 1, 2, 3)
+
+
+if vcrpy_supported():
+    import vcr
+
+
+check_vcrpy_support =\
+    pytest.mark.skipif(not vcrpy_supported(),
+                       reason='vcrpy is not supported by this Python version')
 
 not_on_travis = pytest.mark.skipif(os.environ.get('TRAVIS') is not None,
                                    reason='Do not test web requests on Travis')
 
 
 @not_on_travis
+@check_vcrpy_support
 def test_doi():
     with vcr.use_cassette('fixtures/vcr_cassettes/doi.yaml'):
         doi = '10.1145/1015530.1015557'
@@ -33,6 +51,7 @@ def test_doi():
 
 
 @not_on_travis
+@check_vcrpy_support
 def test_doi_postprocess():
     with vcr.use_cassette('fixtures/vcr_cassettes/doi.yaml'):
         doi = '10.1145/1015530.1015557'
@@ -56,6 +75,7 @@ def test_doi_postprocess():
 
 
 @not_on_travis
+@check_vcrpy_support
 def test_doi_raw():
     with vcr.use_cassette('fixtures/vcr_cassettes/doi.yaml'):
         doi = '10.1145/1015530.1015557'
