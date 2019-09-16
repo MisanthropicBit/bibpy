@@ -35,7 +35,7 @@ def iter_files(names, pattern):
 
 def color_string(color_number, text):
     """Return the text with color codes for the given color."""
-    return '\x1b[{0};1m{1}\x1b[0m'.format(color_number, text)
+    return '\x1b[{0}m{1}\x1b[0m'.format(color_number, text)
 
 
 def human_readable_size(byte_size):
