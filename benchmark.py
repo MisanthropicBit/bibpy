@@ -82,12 +82,15 @@ if __name__ == '__main__':
                                                  'different files')
 
     parser.add_argument('-p', '--plot', action='store_true',
-                        help='Create a barplot of benchmarks')
+                        help='Create a barplot of benchmarks. Automatically '
+                             'skips any files that result in an error')
     parser.add_argument('-r', '--runs', type=int, default=1,
                         help='Run benchmarks this many times and report the '
                              ' average')
     parser.add_argument('-c', '--color', action='store_true',
                         help='Use colors to report results')
+    parser.add_argument('-s', '--skip-errors', action='store_true',
+                        help='Skip files that result in errors')
 
     args, rest = parser.parse_known_args()
 
@@ -122,21 +125,22 @@ if __name__ == '__main__':
                 end = time_stamp()
                 total_time += end - start
             except bibpy.error.ParseException as ex:
-                error = color_string(_RED, 'ERROR') if args.color else 'ERROR'
+                if not args.skip_errors and not args.plot:
+                    error = color_string(_RED, 'ERROR')\
+                        if args.color else 'ERROR'
+                    error += ' ({0})'.format(ex)
 
-                if not args.plot:
-                    benchmarks.append((filename, 0.0, file_size, 0.00, error))
-
-                continue
-
-        ok = color_string(_GREEN, 'OK') if args.color else 'OK'
-        benchmarks.append((
-            filename,
-            len(results.all),
-            human_readable_size(file_size),
-            '{0:.2f}'.format(float(total_time) / float(args.runs)),
-            ok
-        ))
+                    benchmarks.append((filename, 0., file_size,
+                                       -1., error))
+            else:
+                ok = color_string(_GREEN, 'OK') if args.color else 'OK'
+                benchmarks.append((
+                    filename,
+                    len(results.all),
+                    human_readable_size(file_size),
+                    '{0:.2f}'.format(float(total_time) / float(args.runs)),
+                    ok
+                ))
 
     sys.stderr.write('Done...\n')
     benchmarks.sort()
