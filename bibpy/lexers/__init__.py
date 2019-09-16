@@ -1,7 +1,6 @@
 """Various lexer functions used by the funcparserlib parser."""
 
 import funcparserlib.lexer as lexer
-import bibpy
 from bibpy.compat import u
 from bibpy.lexers.biblexer import BibLexer
 from bibpy.lexers.name_lexer import NameLexer
