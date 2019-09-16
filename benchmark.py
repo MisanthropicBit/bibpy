@@ -65,6 +65,12 @@ def plot(xs, ys):
     plt.ylabel('Time (seconds)')
     plt.xticks(xpos, xs, rotation=90)
     plt.subplots_adjust(top=0.95, bottom=0.6)
+    plt.ylim(0.0, max(ys) * 1.3)
+
+    for index, value in enumerate(ys):
+        plt.text(index, value + 0.05, '{0:.2f}'.format(value),
+                 ha='center', rotation=90)
+
     plt.show()
 
     return True
