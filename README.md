@@ -8,8 +8,8 @@
 
 _`bibpy` is currently in alpha and will go up on PyPI after beta (also see [TODO.md](TODO.md))_.
 
-Python library for parsing bib(la)tex files and manipulating entries. Tested on
-Python 2.7, 3.3, 3.5, 3.6 and PyPy.
+Python library for parsing bib(la)tex files and manipulating entries. Tested
+with Python 2.7, 3.4, 3.5, 3.6, 3.7 and PyPy.
 
 * [Automatic conversion](/examples/field_conversion.py) of entry fields to and from appropriate Python types
 * [Requirements-checking for entry fields](/examples/requirements_check.py)
