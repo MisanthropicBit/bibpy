@@ -16,7 +16,8 @@ script:
     - virtualenv --version
     - coverage --version
     - cram --version
-    - coverage run --source=bibpy -m pytest --verbose
+    - coverage run --source=bibpy -m pytest
+    - coverage report
 
     - python setup.py install
     - python examples/crossref_expansion.py
