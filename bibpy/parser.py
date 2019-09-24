@@ -88,7 +88,6 @@ def make_field(tokens):
 def make_string_entry(tokens):
     """Make a bib string entry from a list of parsed tokens."""
     bibtype, [var, value] = tokens
-    assert is_string_entry(bibtype.value)
 
     return bibpy.entry.String(var, value.strip('"'))
 
@@ -96,7 +95,6 @@ def make_string_entry(tokens):
 def make_comment_entry(tokens):
     """Make a comment entry from a list of parsed tokens."""
     bibtype, value = tokens
-    assert is_comment_entry(bibtype.value)
 
     return bibpy.entry.Comment(value)
 
@@ -104,7 +102,6 @@ def make_comment_entry(tokens):
 def make_preamble_entry(tokens):
     """Make a preamble entry from a list of parsed tokens."""
     bibtype, value = tokens
-    assert is_preamble_entry(bibtype.value)
 
     return bibpy.entry.Preamble(value)
 
