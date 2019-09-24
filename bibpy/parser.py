@@ -303,7 +303,7 @@ def mixed_parser():
 
 def relaxed_parser():
     """Return a grammar for a relaxed parser."""
-    regex = u('[\w\-:\.]+')
+    regex = u(r'[\w\-:\.]+')
 
     def validate_field(field):
         return re.match(regex, field.strip().lower(), re.UNICODE)
@@ -347,7 +347,7 @@ def parse(string, format, ignore_comments=True):
             elif et:
                 entries.append(result)
             else:
-                if not ignore_comments and not re.match('^\s*$', result):
+                if not ignore_comments and not re.match(r'^\s*$', result):
                     comments.append(result)
 
         return bibpy.entries.Entries(entries, strings, preambles,
