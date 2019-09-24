@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """Run benchmarks on all bib data files."""
 
 import argparse
@@ -12,6 +15,29 @@ import sys
 _RED = '31;1'
 _GREEN = '32;1'
 _LATIN1_ENCODED_FILES = ('cp1252.bib', 'iso-8859-1.bib')
+
+
+class Benchmark(object):
+    """Class for holding benchmark data."""
+
+    def __init__(self, filename, byte_size):
+        """Create benchmark for a file with a given size."""
+        self.filename = filename
+        self.byte_size = byte_size
+        self.num_entries = 0
+        self.data = []
+        self.status = ''
+
+    def average(self):
+        """Return the average runtime for the benchmark."""
+        return sum(self.data) / len(self.data)
+
+    def __lt__(self, other):
+        """Sort benchmarks per filename."""
+        if not isinstance(other, Benchmark):
+            return False
+
+        return self.filename < other.filename
 
 
 def time_stamp():
@@ -52,7 +78,8 @@ def human_readable_size(byte_size):
     return '{0} {1}'.format(size, suffixes[i])
 
 
-def plot(xs, ys):
+def barplot(xs, ys):
+    """Plot data as a barplot with rotated labels."""
     try:
         import matplotlib.pyplot as plt
     except ImportError:
@@ -68,7 +95,9 @@ def plot(xs, ys):
     plt.ylim(0.0, max(ys) * 1.3)
 
     for index, value in enumerate(ys):
-        plt.text(index, value + 0.05, '{0:.2f}'.format(value),
+        fmt = '{0:.4f}' if value < 0.01 else '{0:.2f}'
+
+        plt.text(index, value + 0.05, fmt.format(value),
                  ha='center', rotation=90)
 
     plt.show()
@@ -76,7 +105,41 @@ def plot(xs, ys):
     return True
 
 
-if __name__ == '__main__':
+def benchmark_file(path, args):
+    """Benchmark a single file."""
+    filename = os.path.basename(path)
+    byte_size = os.stat(path).st_size
+    benchmark = Benchmark(filename, human_readable_size(byte_size))
+
+    try:
+        for r in range(args.runs):
+            encoding = 'utf-8'
+
+            if filename in _LATIN1_ENCODED_FILES:
+                encoding = 'latin1'
+
+            start = time_stamp()
+            result = bibpy.read_file(path, format='relaxed', encoding=encoding)
+            end = time_stamp()
+
+            benchmark.num_entries = sum([len(r) for r in result])
+            benchmark.data.append(end - start)
+    except bibpy.error.ParseException as ex:
+        error = color_string(_RED, 'ERROR') if args.color else 'ERROR'
+        error += ' ({0})'.format(ex)
+        benchmark.data.append(0.)
+        benchmark.status = error
+
+        return benchmark, False
+    else:
+        ok = color_string(_GREEN, 'OK') if args.color else 'OK'
+        benchmark.status = ok
+
+    return benchmark, True
+
+
+def parse_args():
+    """Parse commandline arguments."""
     parser = argparse.ArgumentParser(prog='benchmark.py',
                                      description='Benchmark bibpy with '
                                                  'different files')
@@ -101,56 +164,45 @@ if __name__ == '__main__':
             sys.stderr.write('WARNING: --color option does make sense with '
                              '--plot\n')
 
+    if args.skip_errors and args.plot:
+        sys.stderr.write('WARNING: Errors automatically skipped when '
+                         'plotting\n')
+
+    return args, rest
+
+
+if __name__ == '__main__':
+    args, rest = parse_args()
+
     # Filename, # of entries, file size (bytes), time, status message
-    column_format = '{0:<40} {1:<20} {2:<20} {3:<20} {4:<20}'
+    column_format = '{0:<40} {1:<20} {2:<20} {3:<30} {4:<20}'
 
     benchmarks = []
     sys.stderr.write('Benchmarking...\n')
 
     for path in iter_files(rest, '*.bib'):
-        filename = os.path.basename(path)
-        file_size = os.stat(path).st_size
-        total_time = 0
+        benchmark, ok = benchmark_file(path, args)
 
-        for r in range(args.runs):
-            try:
-                encoding = 'utf-8'
+        if not ok and (args.skip_errors or args.plot):
+            continue
 
-                if filename in _LATIN1_ENCODED_FILES:
-                    encoding = 'latin1'
-
-                start = time_stamp()
-                results = bibpy.read_file(path, format='relaxed',
-                                          encoding=encoding)
-                end = time_stamp()
-                total_time += end - start
-            except bibpy.error.ParseException as ex:
-                if not args.skip_errors and not args.plot:
-                    error = color_string(_RED, 'ERROR')\
-                        if args.color else 'ERROR'
-                    error += ' ({0})'.format(ex)
-
-                    benchmarks.append((filename, 0., file_size,
-                                       -1., error))
-            else:
-                ok = color_string(_GREEN, 'OK') if args.color else 'OK'
-                benchmarks.append((
-                    filename,
-                    len(results.all),
-                    human_readable_size(file_size),
-                    '{0:.2f}'.format(float(total_time) / float(args.runs)),
-                    ok
-                ))
+        benchmarks.append(benchmark)
 
     sys.stderr.write('Done...\n')
     benchmarks.sort()
 
     if args.plot:
-        plot([bm[0] for bm in benchmarks], [float(bm[3]) for bm in benchmarks])
+        averages = [bm.average() for bm in benchmarks]
+        barplot([bm.filename for bm in benchmarks], averages)
     else:
         print(column_format.format('FILENAME', 'ENTRIES', 'FILE SIZE', 'TIME',
                                    'ERRORS?'))
 
-        for path, num_results, file_size, avg_time, status in benchmarks:
-            print(column_format.format(path, num_results, file_size, avg_time,
-                                       status))
+        for bm in benchmarks:
+            print(column_format.format(
+                        bm.filename,
+                        bm.num_entries,
+                        bm.byte_size,
+                        bm.average(),
+                        bm.status
+                    ))
