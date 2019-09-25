@@ -153,13 +153,6 @@ Test surrounding characters
 Test grouping
 
     $ bibformat --group $TESTDIR/../data/{all_entry_types,crossreferences}.bib
-    @inbook{key1,
-        crossref = {key2},
-        title = {Title},
-        author = {Author},
-        pages = {5--25}
-    }
-    
     @article{test1,
         author = {ksjbgr},
         title = {kj srgr},
@@ -180,4 +173,11 @@ Test grouping
         date = {1995},
         publisher = {Publisher},
         location = {Location}
+    }
+    
+    @inbook{key1,
+        crossref = {key2},
+        title = {Title},
+        author = {Author},
+        pages = {5--25}
     }
