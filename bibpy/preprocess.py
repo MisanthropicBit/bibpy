@@ -21,8 +21,9 @@ def preprocess_namelist(namelist, **options):
         else:
             processed_namelist.append(name)
 
-    # First make sure that delimiter's are braced properly
-    namelist = [re.sub('(and)', '{\\1}', name) for name in processed_namelist]
+    # First make sure that delimiters are braced properly
+    namelist = [re.sub(r'(\s+)(and)(\s+)', r'\1{\2}\3', name)
+                for name in processed_namelist]
 
     # Then return the delimited list of names
     return (' ' + options.get('namelist_delimiter', 'and') + ' ')\

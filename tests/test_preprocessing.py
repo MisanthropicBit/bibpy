@@ -149,3 +149,7 @@ def test_no_postprocess():
 
     assert next(preprocessed) == ('random_field', 23)
     assert next(preprocessed) == ('nopreprocess', "OK!, OK!, OK!")
+
+
+def test_no_preprocess_of_and_in_names():
+    assert preprocess_namelist(['Alexander Ericson']) == 'Alexander Ericson'
