@@ -67,7 +67,7 @@ if __name__ == '__main__':
                              'not in this list are output last in an '
                              'unspecified order.')
     parser.add_argument('-g', '--group', action='store_true',
-                        help='Group entries by type.')
+                        help='Group entries alphabetically by type.')
 
     args, rest = parser.parse_known_args()
 
@@ -79,7 +79,9 @@ if __name__ == '__main__':
         for entry in entries:
             groups[entry.bibtype].append(entry)
 
-        entries = [entry for group in groups for entry in groups[group]]
+        entries =\
+            sorted([entry for group in groups for entry in groups[group]],
+                   key=lambda e: e.bibtype)
 
     format_options = {f: getattr(args, f)
                       for f in ['align', 'indent', 'order', 'surround']}
