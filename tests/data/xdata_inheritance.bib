@@ -1,0 +1,18 @@
+@xdata{macmillan:name,
+    publisher = {Macmillan}
+}
+
+@xdata{macmillan:place,
+    location = {New York and London}
+}
+
+@xdata{macmillan,
+    xdata = {macmillan:name, macmillan:place}
+}
+
+@book{key,
+    author = {Author},
+    title  = {Title},
+    date   = {2016-11-29},
+    xdata  = {macmillan}
+}
