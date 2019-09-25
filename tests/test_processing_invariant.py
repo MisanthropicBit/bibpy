@@ -36,6 +36,7 @@ def test_processing_invariant(test_string):
     entry = bibpy.read_string(bibpy.write_string([entry]), postprocess=True,
                               remove_braces=True).entries[0]
 
+    assert entry.author == ['James Conway', 'Archer Sterling']
     assert entry.xdata == ['key1', 'key2', 'key3', 'key4', 'key5']
     assert entry.urldate == bibpy.date.DateRange.fromstring('2017-01-14')
     assert entry.keywords == ['parsing', 'computer science', 'databases']
