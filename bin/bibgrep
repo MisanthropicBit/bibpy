@@ -106,9 +106,8 @@ def exact_field_predicate(field, value, args):
     return _exact_match
 
 
-def field_occurrence_predicate(tokens):
-    fields = [str.lower(t) if tokens[0] != '!' else tokens[1:] for t in tokens]
-
+def field_occurrence_predicate(tokens, args):
+    """Return a function that checks for the occurrence of a field."""
     def _field_occurrence(entry):
         return all([hasattr(entry, f) and getattr(entry, f, False)
                     for f in fields])
