@@ -152,7 +152,7 @@ Test surrounding characters
 
 Test grouping
 
-    $ bibformat --group $TESTDIR/../data/{all_entry_types,crossreferences}.bib
+    $ bibformat --group $TESTDIR/../data/all_entry_types.bib $TESTDIR/../data/crossreferences.bib
     @article{test1,
         author = {ksjbgr},
         title = {kj srgr},
