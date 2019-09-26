@@ -16,9 +16,6 @@ script:
     - virtualenv --version
     - coverage --version
     - cram --version
-    - coverage run --source=bibpy -m pytest
-    - coverage report
-
     - python setup.py install
 
     - cram tests/bin/test_bibformat.t
@@ -30,6 +27,9 @@ script:
     - python examples/entry_formatting.py
     - python examples/requirements_check.py
     - python examples/string_expansion.py
+
+    - coverage run --source=bibpy -m pytest
+    - coverage report
 
 after_success:
     - coveralls
