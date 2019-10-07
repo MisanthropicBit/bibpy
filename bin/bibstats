@@ -39,12 +39,12 @@ def header(titles, spacing=20, underline='-'):
 
 def print_stats(stats, print_percentages):
     """Print statistics in a column-aligned format."""
-    for entry_type, count in stats:
+    for bibtype, count in stats:
         if print_percentages:
             print('{0:<20} {1} ({2:.2f}%)'
-                  .format(entry_type, count, count / float(total) * 100.))
+                  .format(bibtype, count, count / float(total) * 100.))
         else:
-            print('{0:<20} {1}'.format(entry_type, count))
+            print('{0:<20} {1}'.format(bibtype, count))
 
 
 if __name__ == '__main__':

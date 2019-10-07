@@ -12,9 +12,9 @@ The key, entry and field arguments take strings in a mini query language. For
 keys and entries, the format is:
 
 "[^][~]<key>"
-"[^][~]<entry_type>"
+"[^][~]<bibtype>"
 
-where <key> is something like 'Johnson2002' and <entry_type> is 'article',
+where <key> is something like 'Johnson2002' and <bibtype> is 'article',
 'inproceedings' etc. The caret denotes negation, and the tilde denotes
 approximate matches instead of exact. For example, '~ceed' would match the
 'proceedings', 'inproceedings' and 'mvproceedings' entries. The language for
@@ -339,10 +339,10 @@ if __name__ == "__main__":
                                                  args)
 
         if args.entry:
-            entry_types = [e for es in args.entry
-                           for e in map(str.strip, es.split(','))]
+            bibtypes = [e for es in args.entry
+                        for e in map(str.strip, es.split(','))]
             entry_predicate =\
-                construct_predicates(entry_types,
+                construct_predicates(bibtypes,
                                      construct_key_entry_predicate,
                                      'bibtype', any, args)
 
