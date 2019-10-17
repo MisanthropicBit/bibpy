@@ -120,7 +120,8 @@ def benchmark_file(path, args):
                 encoding = 'latin1'
 
             start = time_stamp()
-            result = bibpy.read_file(path, format='relaxed', encoding=encoding)
+            result = bibpy.read_file(path, format='relaxed', encoding=encoding,
+                                     postprocess=args.postprocess)
             end = time_stamp()
 
             benchmark.num_entries = sum([len(r) for r in result])
@@ -155,6 +156,8 @@ def parse_args():
                         help='Use colors to report results')
     parser.add_argument('-s', '--skip-errors', action='store_true',
                         help='Skip files that result in errors')
+    parser.add_argument('-o', '--postprocess', action='store_true',
+                        help='Enable entry postprocessing')
 
     args, rest = parser.parse_known_args()
 
