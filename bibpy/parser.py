@@ -6,6 +6,7 @@ import bibpy.entry
 import bibpy.lexers
 from bibpy.compat import u
 import funcparserlib.parser as parser
+import funcparserlib.lexer as lexer
 import re
 
 
@@ -352,8 +353,10 @@ def parse(string, format, ignore_comments=True):
 
         return bibpy.entries.Entries(entries, strings, preambles,
                                      comment_entries, comments)
-    except parser.NoParseError as e:
-        raise bibpy.error.ParseException(bibpy.compat.u(str(e)))
+    except lexer.LexerError as ex:
+        raise bibpy.error.LexerException(bibpy.compat.u(str(ex)))
+    except parser.NoParseError as ex:
+        raise bibpy.error.ParseException(bibpy.compat.u(str(ex)))
 
 
 def parse_file(source, format, ignore_comments=True):
@@ -361,8 +364,10 @@ def parse_file(source, format, ignore_comments=True):
     try:
         with source:
             return parse(source.read(), format, ignore_comments)
-    except parser.NoParseError as e:
-        raise bibpy.error.ParseException(str(e))
+    except lexer.LexerError as ex:
+        raise bibpy.error.LexerException(str(ex))
+    except parser.NoParseError as ex:
+        raise bibpy.error.ParseException(str(ex))
 
 
 def parse_date(datestring):
@@ -371,8 +376,10 @@ def parse_date(datestring):
 
     try:
         return grammar.parse(bibpy.lexers.lex_date(datestring))
-    except parser.NoParseError as e:
-        raise bibpy.error.ParseException(str(e))
+    except lexer.LexerError as ex:
+        raise bibpy.error.LexerException(str(ex))
+    except parser.NoParseError as ex:
+        raise bibpy.error.ParseException(str(ex))
 
 
 def parse_string_expr(expr):
@@ -382,7 +389,7 @@ def parse_string_expr(expr):
 
     try:
         return bibpy.lexers.lex_string_expr(expr)
-    except parser.NoParseError:
+    except (lexer.LexerError, parser.NoParseError):
         return expr
 
 
@@ -562,10 +569,10 @@ def parse_query(query, query_type):
         tokens = bibpy.lexers.lex_generic_query(query)
 
         return _query_grammars[query_type].parse(tokens)
-    except parser.NoParseError as e:
-        raise bibpy.error.ParseException("Error: One or more constraints "
-                                         "failed to parse at column {0}"
-                                         .format(e.state.pos))
+    except (lexer.LexerError, parser.NoParseError) as ex:
+        raise bibpy.error.ParseException('Error: One or more constraints '
+                                         'failed to parse at column {0}'
+                                         .format(ex.state.pos))
 
 
 ##################################################################

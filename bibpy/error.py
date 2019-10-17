@@ -3,6 +3,12 @@
 """bibpy errors."""
 
 
+class LexerException(Exception):
+    """Raised on a lexer error."""
+
+    pass
+
+
 class ParseException(Exception):
     """Raised on errors in parsing."""
 
