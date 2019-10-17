@@ -5,6 +5,7 @@
 
 import argparse
 import bibpy
+from bibpy.error import LexerException, ParseException
 import fnmatch
 import platform
 import os
@@ -124,7 +125,7 @@ def benchmark_file(path, args):
 
             benchmark.num_entries = sum([len(r) for r in result])
             benchmark.data.append(end - start)
-    except bibpy.error.ParseException as ex:
+    except (LexerException, ParseException) as ex:
         error = color_string(_RED, 'ERROR') if args.color else 'ERROR'
         error += ' ({0})'.format(ex)
         benchmark.data.append(0.)
