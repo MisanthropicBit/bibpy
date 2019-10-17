@@ -194,7 +194,6 @@ def postprocess(entry, fields, **options):
             if field in fields and field in postprocess_functions:
                 value = postprocess_functions[field](
                     field, value,
-                    remove_braces=remove_braces,
                     split_names=split_names
                 )
 
