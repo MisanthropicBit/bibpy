@@ -361,13 +361,8 @@ def parse(string, format, ignore_comments=True):
 
 def parse_file(source, format, ignore_comments=True):
     """Parse a file using a given reference format."""
-    try:
-        with source:
-            return parse(source.read(), format, ignore_comments)
-    except lexer.LexerError as ex:
-        raise bibpy.error.LexerException(str(ex))
-    except parser.NoParseError as ex:
-        raise bibpy.error.ParseException(str(ex))
+    with source:
+        return parse(source.read(), format, ignore_comments)
 
 
 def parse_date(datestring):
