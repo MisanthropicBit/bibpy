@@ -1,2 +1,4 @@
 include README.md
-include tests
+recursive-include tests *.py
+recursive-include tests/bin *.t
+recursive-include tests/data *.bib
