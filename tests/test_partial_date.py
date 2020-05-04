@@ -23,7 +23,7 @@ def test_incorrect_input():
         PartialDate(2017, 11, 32)
 
 
-@pytest.mark.skipif(sys.version_info[0] != 2, reason="requires python 2")
+@pytest.mark.skipif(sys.version_info[0] != 2, reason="Requires Python 2.x")
 def test_properties_py2():
     pd1 = PartialDate(2017, 11, 29)
     pd2 = PartialDate()
@@ -32,7 +32,7 @@ def test_properties_py2():
     assert not bool(pd2)
 
 
-@pytest.mark.skipif(sys.version_info[0] != 3, reason="requires python 3")
+@pytest.mark.skipif(sys.version_info[0] != 3, reason="Requires Python 3.x")
 def test_properties_py3():
     pd1 = PartialDate(2017, 11, 29)
     pd2 = PartialDate()
