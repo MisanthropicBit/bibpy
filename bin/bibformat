@@ -13,7 +13,7 @@ __author__ = 'Alexander Asp Bock'
 __version__ = '0.1.0'
 __license__ = 'MIT'
 
-_DESCRIPTION = "Format and prettify bib entries."
+_DESCRIPTION = "Format and prettify bib entries. Ignores comments."
 
 
 def process_file(path, args):
