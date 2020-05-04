@@ -9,8 +9,10 @@ MANIFEST
 bib.py
 coverage.sh
 testbibpy.py
+.DS_Store
 .cache/
 .coverage
+.mypy_cache/
 .tox/
 .pytest_cache/
 __pycache__/
