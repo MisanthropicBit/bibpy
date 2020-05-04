@@ -192,7 +192,7 @@ def range_predicate(lower, op_name1, field, op_name2, upper):
     operator2 = operator_from_string(op_name2)
 
     def _range_predicate(entry):
-        attr = getattr(entry, field)
+        attr = getattr(entry, field.lower())
 
         try:
             if attr:
