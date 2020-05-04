@@ -6,12 +6,6 @@ Test version number
 Test alphabetic ordering
 
     $ bibformat --order=true $TESTDIR/../data/all_bibpy_entry_types.bib
-    @unpublished{unpubkey,
-        author = {Somebody McPerson},
-        title = {How To Parse BibTex},
-        year = {2011}
-    }
-    
     @string{variable = "value"}
     
     @preamble{\textbf{\latex}}
@@ -19,10 +13,24 @@ Test alphabetic ordering
     @comment{
         Anything is possible with comments!
     }
+    
+    @unpublished{unpubkey,
+        author = {Somebody McPerson},
+        title = {How To Parse BibTex},
+        year = {2011}
+    }
 
 Test specific ordering
 
     $ bibformat --order=year,author,title $TESTDIR/../data/all_bibpy_entry_types.bib
+    @string{variable = "value"}
+    
+    @preamble{\textbf{\latex}}
+    
+    @comment{
+        Anything is possible with comments!
+    }
+    
     @unpublished{unpubkey,
         year = {2011},
         author = {Somebody McPerson},
@@ -92,6 +100,16 @@ Test xdata inheritance
 Test string expansion
 
     $ bibformat --expand-string-vars $TESTDIR/../data/string_variables.bib
+    @string{month = "March"}
+    
+    @string{var = "less"}
+    
+    @string{last_name = "Cook"}
+    
+    @string{var1 = "should"}
+    
+    @string{var2 = "multiple"}
+    
     @conference{key,
         title = {March Report}
     }
@@ -114,49 +132,39 @@ Test string expansion
         author = {Regular Author},
         title = {Regular Title}
     }
-    
-    @string{month = "March"}
-    
-    @string{var = "less"}
-    
-    @string{last_name = "Cook"}
-    
-    @string{var1 = "should"}
-    
-    @string{var2 = "multiple"}
 
 Test indentation
 
     $ bibformat --indent='____' $TESTDIR/../data/all_bibpy_entry_types.bib
+    @string{variable = "value"}
+    
+    @preamble{\textbf{\latex}}
+    
+    @comment{
+        Anything is possible with comments!
+    }
+    
     @unpublished{unpubkey,
     ____author = {Somebody McPerson},
     ____title = {How To Parse BibTex},
     ____year = {2011}
     }
-    
-    @string{variable = "value"}
-    
-    @preamble{\textbf{\latex}}
-    
-    @comment{
-        Anything is possible with comments!
-    }
 
 Test surrounding characters
 
     $ bibformat --surround=@@ $TESTDIR/../data/all_bibpy_entry_types.bib
-    @unpublished{unpubkey,
-        author = @Somebody McPerson@,
-        title = @How To Parse BibTex@,
-        year = @2011@
-    }
-    
     @string{variable = "value"}
     
     @preamble{\textbf{\latex}}
     
     @comment{
         Anything is possible with comments!
+    }
+    
+    @unpublished{unpubkey,
+        author = @Somebody McPerson@,
+        title = @How To Parse BibTex@,
+        year = @2011@
     }
 
 Test grouping
