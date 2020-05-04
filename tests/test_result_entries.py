@@ -29,5 +29,5 @@ def test_entries_properties(test_entries):
     assert test_entries.strings[0] == string_entry
 
     assert len(test_entries.all) == 4
-    assert test_entries.all == [entry, string_entry, preamble_entry,
-                                comment_entry]
+    assert test_entries.all == [string_entry, preamble_entry,
+                                comment_entry, entry]

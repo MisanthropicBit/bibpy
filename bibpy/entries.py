@@ -115,5 +115,5 @@ class Entries(_Entries):
     @property
     def all(self):
         """Return all entries (excluding comments) as a list."""
-        return self.entries + self.strings + self.preambles +\
-            self.comment_entries
+        return self.strings + self.preambles +\
+            self.comment_entries + self.entries
