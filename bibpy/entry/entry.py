@@ -53,7 +53,6 @@ class Entry(base.BaseEntry):
         if not self.fields:
             return entry_start + "}"
 
-        i = max(map(len, self.fields)) if align else 1
         fields = []
 
         if order:
@@ -78,9 +77,11 @@ class Entry(base.BaseEntry):
             for field, value in preprocess(self, self.fields, **kwargs):
                 fields.append((field, value))
 
+        mx = max(len(field) for field in self.fields)
+
         formatted_fields =\
             [u("{0}{1}{2} = {3}{4}{5}")
-             .format(indent, field, ' ' * (i - len(field)),
+             .format(indent, field, (' ' * (mx - len(field)) if align else ''),
                      surround[0], value, surround[1])
              for field, value in fields]
 

@@ -28,30 +28,39 @@ Test specific ordering
         author = {Somebody McPerson},
         title = {How To Parse BibTex}
     }
-    
+
+Test ordering without align
+
+    $ bibformat --order=title,author,year $TESTDIR/../data/all_bibpy_entry_types.bib
     @string{variable = "value"}
     
     @preamble{\textbf{\latex}}
     
     @comment{
         Anything is possible with comments!
+    }
+    
+    @unpublished{unpubkey,
+        title = {How To Parse BibTex},
+        author = {Somebody McPerson},
+        year = {2011}
     }
 
 Test ordering with align
 
     $ bibformat --order=title,author,year --align $TESTDIR/../data/all_bibpy_entry_types.bib
-    @unpublished{unpubkey,
-        title  = {How To Parse BibTex},
-        author = {Somebody McPerson},
-        year   = {2011}
-    }
-    
     @string{variable = "value"}
     
     @preamble{\textbf{\latex}}
     
     @comment{
         Anything is possible with comments!
+    }
+    
+    @unpublished{unpubkey,
+        title  = {How To Parse BibTex},
+        author = {Somebody McPerson},
+        year   = {2011}
     }
 
 Test xdata inheritance
