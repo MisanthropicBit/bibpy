@@ -151,6 +151,7 @@ biblatex_requirements = {
         frozenset(),
         []
     )}
+
 mixed_requirements = {}  # Possible?
 
 # Set aliases for requirements

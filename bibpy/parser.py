@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
+
 """Parsing functions using the funcparserlib library."""
 
-import bibpy.compat
 import bibpy.date
 import bibpy.entry
 import bibpy.lexers
-from bibpy.compat import u
 import funcparserlib.parser as parser
 import funcparserlib.lexer as lexer
 import re
@@ -294,7 +294,7 @@ def mixed_parser():
 
 def relaxed_parser():
     """Return a grammar for a relaxed parser."""
-    regex = u(r'[\w\-:\.]+')
+    regex = r'[\w\-:\.]+'
 
     def validate_field(field):
         return re.match(regex, field.strip().lower(), re.UNICODE)
@@ -344,9 +344,9 @@ def parse(string, format, ignore_comments=True):
         return bibpy.entries.Entries(entries, strings, preambles,
                                      comment_entries, comments)
     except lexer.LexerError as ex:
-        raise bibpy.error.LexerException(bibpy.compat.u(str(ex)))
+        raise bibpy.error.LexerException(str(ex))
     except parser.NoParseError as ex:
-        raise bibpy.error.ParseException(bibpy.compat.u(str(ex)))
+        raise bibpy.error.ParseException(str(ex))
 
 
 def parse_file(source, format, ignore_comments=True):
@@ -406,7 +406,7 @@ def parse_name(name):
     if not name:
         return bibpy.name.Name()
 
-    first, prefix, last, suffix = u(''), u(''), u(''), u('')
+    first, prefix, last, suffix = '', '', '', ''
     tokens, commas = bibpy.lexers.lex_name(name)
     stripped_tokens = [[token.value for token in part] for part in tokens]
 
@@ -421,11 +421,11 @@ def parse_name(name):
 
             if pi != (-1, -1):
                 i, j = pi
-                first = u(' ').join(stripped_tokens[:i])
-                prefix = u(' ').join(stripped_tokens[i:j])
-                last = u(' ').join(stripped_tokens[j:])
+                first = ' '.join(stripped_tokens[:i])
+                prefix = ' '.join(stripped_tokens[i:j])
+                last = ' '.join(stripped_tokens[j:])
             else:
-                first = u(' ').join(stripped_tokens[:-1])
+                first = ' '.join(stripped_tokens[:-1])
                 last = stripped_tokens[-1]
     elif commas == 1:
         # Assume 'von last, first' format
@@ -433,26 +433,26 @@ def parse_name(name):
 
         if pi != (-1, -1):
             _, j = pi
-            first = u(' ').join(stripped_tokens[1])
-            prefix = u(' ').join(stripped_tokens[0][0:j])
-            last = u(' ').join(stripped_tokens[0][j:])
+            first = ' '.join(stripped_tokens[1])
+            prefix = ' '.join(stripped_tokens[0][0:j])
+            last = ' '.join(stripped_tokens[0][j:])
         else:
-            first = u(' ').join(stripped_tokens[1])
-            last = u(' ').join(stripped_tokens[0])
+            first = ' '.join(stripped_tokens[1])
+            last = ' '.join(stripped_tokens[0])
     elif commas >= 2:
         # Assume 'von last, jr, first' format
         pi = prefix_indices(tokens[0])
 
         if pi != (-1, -1):
             i, j = pi
-            first = u(' ').join(stripped_tokens[2])
-            prefix = u(' ').join(stripped_tokens[0][i:j])
-            last = u(' ').join(stripped_tokens[0][j:])
-            suffix = u(' ').join(stripped_tokens[1])
+            first = ' '.join(stripped_tokens[2])
+            prefix = ' '.join(stripped_tokens[0][i:j])
+            last = ' '.join(stripped_tokens[0][j:])
+            suffix = ' '.join(stripped_tokens[1])
         else:
-            first = u(' ').join(stripped_tokens[2])
-            last = u(' ').join(stripped_tokens[0])
-            suffix = u(' ').join(stripped_tokens[1])
+            first = ' '.join(stripped_tokens[2])
+            last = ' '.join(stripped_tokens[0])
+            suffix = ' '.join(stripped_tokens[1])
 
     return bibpy.name.Name(first, prefix, last, suffix)
 

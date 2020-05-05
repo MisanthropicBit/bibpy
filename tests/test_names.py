@@ -109,12 +109,12 @@ def test_zero_comma_names():
     assert name.last == name.family == 'Louis-Albert'
     assert name.suffix == name.junior == ''
 
-    name = name_from_string(u'Charles Louis Xavier Joseph de la '
-                            u'Vall{\’e}e Poussin')
-    assert name.first == name.given == u'Charles Louis Xavier Joseph'
-    assert name.prefix == name.von == u'de la'
-    assert name.last == name.family == u'Vall\’ee Poussin'
-    assert name.suffix == name.junior == u''
+    name = name_from_string('Charles Louis Xavier Joseph de la '
+                            r'Vall{\’e}e Poussin')
+    assert name.first == name.given == 'Charles Louis Xavier Joseph'
+    assert name.prefix == name.von == 'de la'
+    assert name.last == name.family == r'Vall\’ee Poussin'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('John Smith')
     assert name.first == name.given == 'John'
@@ -244,12 +244,13 @@ def test_whitespace_in_names():
     assert name.last == name.family == 'Incubator-Jones'
     assert name.suffix == name.junior == ''
 
-    name = name_from_string(u'   Charles Louis \nXavier Joseph    de \t   la '
-                            u'Vall{\’e}e Poussin \t\r\n')
-    assert name.first == name.given == u'Charles Louis Xavier Joseph'
-    assert name.prefix == name.von == u'de la'
-    assert name.last == name.family == u'Vall\’ee Poussin'
-    assert name.suffix == name.junior == u''
+    name = name_from_string('   Charles Louis \nXavier Joseph    de \t   la '
+                            r'Vall{\’e}e Poussin '
+                            '\t\r\n')
+    assert name.first == name.given == 'Charles Louis Xavier Joseph'
+    assert name.prefix == name.von == 'de la'
+    assert name.last == name.family == r'Vall\’ee Poussin'
+    assert name.suffix == name.junior == ''
 
     name = name_from_string('    Catherine \n\n  Crook \r\n  de \tCamp  \t')
     assert name.first == name.given == 'Catherine Crook'
@@ -259,26 +260,26 @@ def test_whitespace_in_names():
 
 
 def test_name_formatting():
-    name1 = name_from_string(u'Møllenbach, Doermann')
+    name1 = name_from_string('Møllenbach, Doermann')
     name2 = name_from_string('Sterling, Archer')
     name3 = name_from_string('Doe, Jr., John')
     name4 = name_from_string('von der Doe, Jr., John')
 
-    assert name1.format(style='first-last') == u'Doermann Møllenbach'
+    assert name1.format(style='first-last') == 'Doermann Møllenbach'
     assert name2.format(style='first-last') == 'Archer Sterling'
     assert name3.format(style='first-last') == 'John Doe Jr.'
     assert name4.format(style='first-last') == 'John von der Doe Jr.'
-    assert name1.format(style='last-first') == u'Møllenbach, Doermann'
+    assert name1.format(style='last-first') == 'Møllenbach, Doermann'
     assert name2.format(style='last-first') == 'Sterling, Archer'
     assert name3.format(style='last-first') == 'Doe, Jr., John'
     assert name4.format(style='last-first') == 'von der Doe, Jr., John'
 
-    assert name1.format(style='first-last', initials=True) == u'D. Møllenbach'
+    assert name1.format(style='first-last', initials=True) == 'D. Møllenbach'
     assert name2.format(style='first-last', initials=True) == 'A. Sterling'
     assert name3.format(style='first-last', initials=True) == 'J. Doe Jr.'
     assert name4.format(style='first-last', initials=True) ==\
         'J. von der Doe Jr.'
-    assert name1.format(style='last-first', initials=True) == u'Møllenbach, D.'
+    assert name1.format(style='last-first', initials=True) == 'Møllenbach, D.'
     assert name2.format(style='last-first', initials=True) == 'Sterling, A.'
     assert name3.format(style='last-first', initials=True) == 'Doe, Jr., J.'
     assert name4.format(style='last-first', initials=True) ==\
@@ -290,11 +291,11 @@ def test_name_formatting():
 
 def test_name_properties():
     name1 = name_from_string('Doermann')
-    name2 = name_from_string(u'Møllenbach, Doermann')
+    name2 = name_from_string('Møllenbach, Doermann')
     name3 = name_from_string('Sterling, Archer')
-    name4 = name_from_string(u'de la Møllenbach, Doermann')
+    name4 = name_from_string('de la Møllenbach, Doermann')
     name5 = name_from_string('von der Doe, Jr., John')
-    name6 = name_from_string(u'Møllenbach, Doermann')
+    name6 = name_from_string('Møllenbach, Doermann')
 
     assert len(name1) == 1
     assert len(name2) == 2
@@ -312,9 +313,8 @@ def test_name_properties():
     assert str(name2) == 'Doermann Møllenbach'
 
 
-@pytest.mark.skipif(sys.version_info[0] < 3, reason="requires Python 3.x")
-def test_name_repr_py3():
-    name1 = name_from_string(u'Møllenbach, Doermann')
+def test_name_repr():
+    name1 = name_from_string('Møllenbach, Doermann')
     name2 = name_from_string('Sterling, Archer')
 
     assert repr(name1) ==\
@@ -322,19 +322,3 @@ def test_name_repr_py3():
 
     assert repr(name2) ==\
         "Name(first=Archer, prefix=, last=Sterling, suffix=)"
-
-
-@pytest.mark.skipif(sys.version_info[0] > 2, reason="Only on Python 2.x")
-def test_name_repr_py2():
-    name1 = name_from_string(u'Møllenbach, Doermann')
-    name2 = name_from_string(u'Sterling, Archer')
-
-    assert repr(name1) ==\
-        'Name(first=Doermann, prefix=, last=Møllenbach, suffix=)'
-
-    assert repr(name2) == 'Name(first=Archer, prefix=, last=Sterling, suffix=)'
-
-
-def test_discover_unbalanced_braces():
-    with pytest.raises(LexerError):
-        name_from_string('Sterling, }Archer')

@@ -3,11 +3,7 @@
 """Tools for downloading bibtex files from digital object identifiers."""
 
 import bibpy
-
-try:
-    from urllib.request import Request, urlopen
-except ImportError:
-    from urllib2 import Request, urlopen
+from urllib.request import Request, urlopen
 
 
 def retrieve(doi, source='https://doi.org/{0}', raw=False, **options):

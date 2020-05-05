@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Special date class for handling biblatex date ranges."""
 
 import bibpy.parser
@@ -5,7 +7,7 @@ import bibpy.parser
 __all__ = ('DateRange', 'PartialDate')
 
 
-class PartialDate(object):
+class PartialDate:
     """Light-weight class for representing partial dates."""
 
     def __init__(self, year=None, month=None, day=None):
@@ -33,17 +35,12 @@ class PartialDate(object):
         return isinstance(other, PartialDate) and self.year == other.year\
             and self.month == other.month and self.day == other.day
 
-    def __nonzero__(self):
-        # Python 2.x
-        return any(e is not None for e in [self.year, self.month, self.day])
-
     def __bool__(self):
-        # Python 3.x
-        return self.__nonzero__()
+        return any(e is not None for e in [self.year, self.month, self.day])
 
 
 # NOTE: Implement comparison operators? How?
-class DateRange(object):
+class DateRange:
     """Wrapper class around biblatex date ranges."""
 
     def __init__(self, start, end, open):

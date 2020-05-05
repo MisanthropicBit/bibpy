@@ -36,7 +36,7 @@ class RequiredFieldError(Exception):
 
             s += "{0}".format(", ".join("/".join(e) for e in optional))
 
-        super(RequiredFieldError, self).__init__(s)
+        super().__init__(s)
         self.entry = entry
         self.required = required
         self.optional = optional

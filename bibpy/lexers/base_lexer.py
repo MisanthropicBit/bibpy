@@ -24,7 +24,7 @@ class LexerError(ValueError):
                        self.msg)
 
 
-class BaseLexer(object):
+class BaseLexer:
     """Base class for all lexers in bibpy."""
 
     def __init__(self):
@@ -125,9 +125,9 @@ class BaseLexer(object):
     def until(self, token):
         """Scan until a particular token is found."""
         if token == 'braces':
-            pattern = re.compile('{|}')
+            pattern = re.compile(r'{|}')
         elif token == 'parens':
-            pattern = re.compile('\(|\)')
+            pattern = re.compile(r'\(|\)')
         else:
             pattern, _ = self.patterns[token]
 

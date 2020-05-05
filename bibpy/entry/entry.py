@@ -2,7 +2,6 @@
 
 """Class representing single entries in a bib(la)tex file."""
 
-from bibpy.compat import u
 from bibpy.entry.base import BaseEntry
 from bibpy.preprocess import preprocess
 import bibpy.entries
@@ -84,7 +83,7 @@ class Entry(BaseEntry):
         mx = max(len(field) for field in self.fields)
 
         formatted_fields =\
-            [u("{0}{1}{2} = {3}{4}{5}")
+            ["{0}{1}{2} = {3}{4}{5}"
              .format(indent, field, (' ' * (mx - len(field)) if align else ''),
                      surround[0], value, surround[1])
              for field, value in fields]
@@ -188,7 +187,7 @@ class Entry(BaseEntry):
         return item in self.fields
 
     def __setattr__(self, name, value):
-        super(Entry, self).__setattr__(name, value)
+        super().__setattr__(name, value)
 
         if not name.startswith('_') and name not in Entry._locked_fields:
             if value is None or value == '':

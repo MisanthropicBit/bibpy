@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """biblatex reference mappings (crossref, xref and xdata fields)."""
 
 _BOOK_COMMON_MAPPING = [

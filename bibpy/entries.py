@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """All valid bib(la)tex entry types.
 
 As of the Biblatex package documentation version 3.2 (27/12/2015)

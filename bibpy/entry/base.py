@@ -2,11 +2,8 @@
 
 """Base class for all types of entries."""
 
-import bibpy.compat
 
-
-@bibpy.compat.unicode_compatibility
-class BaseEntry(object):
+class BaseEntry:
     """Base class for all types of entries."""
 
     def format(self, **options):

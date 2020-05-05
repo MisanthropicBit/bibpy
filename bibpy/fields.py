@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """All valid bib(la)tex fields.
 
 Bibtex (08/02/1988)
