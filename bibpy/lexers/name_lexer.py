@@ -2,7 +2,6 @@
 
 """Custom bib(la)tex lexer for names."""
 
-from bibpy.compat import u
 from bibpy.lexers.base_lexer import BaseLexer
 
 
@@ -14,19 +13,18 @@ class NameLexer(BaseLexer):
     """
 
     def __init__(self):
-        super(NameLexer, self).__init__()
+        super().__init__()
         self.reset('')
         self.mode = 'normal'
         self._modes = {
             'normal': self.lex_name,
         }
 
-        self._compile_regexes([('ws_or_braces',
-                                (u('\s+|{|}|,'), None))])
+        self._compile_regexes([('ws_or_braces', (r'\s+|{|}|,', None))])
 
     def reset(self, string):
         """Reset the internal state of the lexer."""
-        super(NameLexer, self).reset(string)
+        super().reset(string)
         self._commas = 0
 
     @property

@@ -8,7 +8,6 @@ parentheses instead of braces for string, preamble and comment entries, e.g.
 
 """
 
-from bibpy.compat import u
 from bibpy.lexers.base_lexer import BaseLexer
 
 
@@ -22,7 +21,7 @@ class BibLexer(BaseLexer):
     """
 
     def __init__(self):
-        super(BibLexer, self).__init__()
+        super().__init__()
         self.reset('')
         self.mode = 'comment'
 
@@ -35,23 +34,23 @@ class BibLexer(BaseLexer):
         }
 
         self._compile_regexes([
-            ('lbrace', (u('{'), self.lex_lbrace)),
-            ('rbrace', (u('}'), self.lex_rbrace)),
-            ('equals', (u('\s*(=)\s*'), None)),
-            ('comma',  (u(','), None)),
-            ('number', (u('-?(0|([1-9][0-9]*))'), None)),
-            ('name',   (u(r"[ ]*[\w\-:?'\.]+[ ]*"), None)),
-            ('entry',  (u('@'), self.found_entry)),
-            ('string', (u('"[^"]+"'), self.lex_string)),
-            ('lparen', (u('\('), self.lex_lparen)),
-            ('rparen', (u('\)'), self.lex_rparen)),
-            ('concat', (u('[ ]*#[ ]*'), None)),
-            ('space',  (u('[ \t\r\n]+'), None)),
+            ('lbrace', (r'{', self.lex_lbrace)),
+            ('rbrace', (r'}', self.lex_rbrace)),
+            ('equals', (r'\s*(=)\s*', None)),
+            ('comma',  (r',', None)),
+            ('number', (r'-?(0|([1-9][0-9]*))', None)),
+            ('name',   (r"[ ]*[\w\-:?'\.]+[ ]*", None)),
+            ('entry',  (r'@', self.found_entry)),
+            ('string', (r'"[^"]+"', self.lex_string)),
+            ('lparen', (r'\(', self.lex_lparen)),
+            ('rparen', (r'\)', self.lex_rparen)),
+            ('concat', (r'[ ]*#[ ]*', None)),
+            ('space',  (r'[ \t\r\n]+', None)),
         ])
 
     def reset(self, string):
         """Reset the internal state of the lexer."""
-        super(BibLexer, self).reset(string)
+        super().reset(string)
         self.in_entry = False
 
     def found_entry(self, value):

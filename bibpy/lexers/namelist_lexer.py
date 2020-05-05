@@ -2,7 +2,6 @@
 
 """Lexer for splitting names on zero brace-level 'and'."""
 
-from bibpy.compat import u
 from bibpy.lexers.base_lexer import BaseLexer
 
 
@@ -10,19 +9,19 @@ class NamelistLexer(BaseLexer):
     """Lexer for splitting names on zero brace-level 'and'."""
 
     def __init__(self):
-        super(NamelistLexer, self).__init__()
+        super().__init__()
         self.reset('')
         self.mode = 'normal'
         self._modes = {
             'normal': self.lex_namelist,
         }
 
-        self._compile_regexes([('braces',    (u('{|}'), None)),
-                               ('delimiter', (u('\\band\\b'), None))])
+        self._compile_regexes([('braces',    (r'{|}', None)),
+                               ('delimiter', (r'\band\b', None))])
 
     def reset(self, string):
         """Reset the internal state of the lexer."""
-        super(NamelistLexer, self).reset(string)
+        super().reset(string)
 
     def lex_namelist(self):
         """Lex a list of names, preserving braces for later name parsing."""

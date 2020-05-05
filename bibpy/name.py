@@ -2,15 +2,13 @@
 
 """Class for names split into its components (given name, family name etc.)."""
 
-import bibpy.compat
 import bibpy.lexers
 import sys
 
-__all__ = frozenset(['Name'])
+__all__ = (['Name'])
 
 
-@bibpy.compat.unicode_compatibility
-class Name(object):
+class Name:
     """Class containing the individual components of a name."""
 
     _lexer = bibpy.lexers.NameLexer()

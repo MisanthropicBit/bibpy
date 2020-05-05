@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
+
 """Test the bibpy.date.PartialDate class."""
 
 from bibpy.date import PartialDate
 import pytest
-import sys
 
 
 def test_creation():
@@ -23,16 +24,6 @@ def test_incorrect_input():
         PartialDate(2017, 11, 32)
 
 
-@pytest.mark.skipif(sys.version_info[0] != 2, reason="Requires Python 2.x")
-def test_properties_py2():
-    pd1 = PartialDate(2017, 11, 29)
-    pd2 = PartialDate()
-
-    assert bool(pd1)
-    assert not bool(pd2)
-
-
-@pytest.mark.skipif(sys.version_info[0] != 3, reason="Requires Python 3.x")
 def test_properties_py3():
     pd1 = PartialDate(2017, 11, 29)
     pd2 = PartialDate()

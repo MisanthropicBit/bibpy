@@ -1,6 +1,6 @@
-coverage==4.5.1
-coveralls==1.3.0
-cram==0.7
-pep257==0.7.0
-funcparserlib==0.3.6
-pytest>=2.9
+coverage>=5.1
+coveralls>=2.0.0
+cram>=0.7
+pydocstyle
+funcparserlib>=0.3.6
+pytest>4.6

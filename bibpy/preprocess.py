@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Conversion functions for pre- and postprocessing of bib(la)tex fields."""
 
 import bibpy.name

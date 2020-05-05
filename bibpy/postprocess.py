@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
+
 """Conversion functions for pre- and postprocessing of bib(la)tex fields."""
 
-import bibpy.compat
+import bibpy
 import bibpy.date
 import bibpy.error
 import bibpy.lexers
@@ -25,7 +27,7 @@ _SPLIT_NAMES = frozenset([
 
 def postprocess_braces(value, **options):
     """Remove any braces from a string value."""
-    if bibpy.compat.is_string(value):
+    if bibpy.is_string(value):
         return "".join([e for e in bibpy.parser.parse_braced_expr(value)
                         if e not in '{}'])
 
@@ -49,7 +51,7 @@ def postprocess_namelist(field, names, **options):
 
 def postprocess_name(field, author, **options):
     """Attempts to split an author name into first, middle and last name."""
-    if author and bibpy.compat.is_string(author):
+    if author and bibpy.is_string(author):
         return bibpy.name.Name.fromstring(author)
     else:
         return author
@@ -115,7 +117,7 @@ def postprocess_keylist(field, keylist, **options):
 
 def postprocess_pages(field, pages, **options):
     """Convert a page range to a 2-element tuple."""
-    values = re.split('\-+', pages)
+    values = re.split(r'\-+', pages)
 
     if len(values) == 2:
         try:

@@ -2,7 +2,6 @@
 
 """bibpy: Bib(la)tex parser and tools."""
 
-import bibpy.compat
 import bibpy.parser
 import bibpy.postprocess
 import bibpy.references
@@ -25,6 +24,11 @@ __all__ = ('read_string',
            'uninherit_crossrefs',
            'inherit_xdata',
            'uninherit_xdata')
+
+
+def is_string(s):
+    """Check if the argument is a string."""
+    return isinstance(s, str)
 
 
 def read_string(string, format='relaxed', postprocess=False,
@@ -97,8 +101,7 @@ def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
         * xdata                                   List of keys
 
     """
-    fh = (io.open(source, encoding=encoding)
-          if bibpy.compat.is_string(source) else source)
+    fh = io.open(source, encoding=encoding) if is_string(source) else source
 
     return _read_common(bibpy.parser.parse_file(fh, format, ignore_comments),
                         format, postprocess, remove_braces, split_names)
@@ -135,7 +138,7 @@ def write_file(source, entries, encoding='utf-8', **format_options):
     The list of formatting options are the same as those for Entry.format.
 
     """
-    if bibpy.compat.is_string(source):
+    if is_string(source):
         source = io.open(source, 'w', encoding=encoding)
 
     with source as fh:
@@ -198,7 +201,7 @@ def expand_strings(entries, strings, ignore_duplicates=False):
 
     for entry in entries:
         for field, value in entry:
-            if bibpy.compat.is_string(value):
+            if is_string(value):
                 exprs = bibpy.parser.parse_string_expr(value)
 
                 if len(exprs) == 1:
@@ -250,7 +253,7 @@ def unexpand_strings(entries, strings, ignore_duplicates=False):
 
     for entry in entries:
         for field, value in entry:
-            if bibpy.compat.is_string(value):
+            if is_string(value):
                 temp = re.split(value_regex, value)
 
                 if len(temp) > 1:
