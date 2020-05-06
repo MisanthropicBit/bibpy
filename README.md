@@ -1,6 +1,7 @@
 # bibpy v0.1.0-alpha
 
 [![Build status](https://travis-ci.org/MisanthropicBit/bibpy.svg?branch=master)](https://travis-ci.org/github/MisanthropicBit/bibpy)
+![Read the Docs](https://img.shields.io/readthedocs/bibpy)
 [![Coverage Status](https://coveralls.io/repos/github/MisanthropicBit/bibpy/badge.svg?branch=master)](https://coveralls.io/github/MisanthropicBit/bibpy?branch=master)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/MisanthropicBit/bibpy/blob/master/LICENSE)
 [![PyPI version](https://badge.fury.io/py/bibpy.svg)](https://badge.fury.io/py/bibpy)
