@@ -2,12 +2,13 @@ Tutorial
 ========
 
 This tutorial is meant to give a quick overview of all the features of bibpy.
-You can also refer to the `examples </examples>`_.
+You can also refer to the `examples
+<https://github.com/MisanthropicBit/bibpy/tree/master/examples>`_.
 
 Table of Contents
 -----------------
 
-* `Reading and Writing Strings and Files`_
+* `Reading and Writing`_
 * `Manipulating Reference Data`_
 * `Requirements Checking`_
 * `Post- and Preprocessing Fields`_
@@ -15,36 +16,35 @@ Table of Contents
 * `Crossreferences and xdata Inheritance`_
 * `bibpy Tools`_
 
-Reading and writing strings and files
--------------------------------------
+Reading and writing
+-------------------
 
-You can read reference data from a string or from a file. bibpy supports four
-different reference formats:
-
-* **bibtex:** Treat data as bibtex. Raise error on non-conformity.
-* **biblatex:** Treat data as biblatex. Raise error on non-conformity.
-* **mixed:** Treat data as a mixture of bibtex and biblatex. Raise errors on non-conformity.
-* **relaxed:** Relax parsing rules. All types of entries and fields are allowed.
-
-For example if you read a file containing an :code:`@online` entry as bibtex, bibpy
-would raise an error since this entry type only exists in biblatex. Therefore,
-the relaxed format is typically recommended when parsing third party bib
-files. For the remainder of this tutorial and elsewhere, we collectively refer
-to any kind of file with bibliography entries as 'bib'. Below is an example of
-reading data from a string and a file.
+You can read reference data from a string or from a file.
 
 .. code:: bash
 
     >>> import bibpy
-    >>> entries = bibpy.read_string('@article{key, title = {Title}, author = {Author}}', 'bibtex')[0]
-    >>> entries = bibpy.read_file('references.bib', 'relaxed')[0]
+    >>> result1 = bibpy.read_string('@article{key, title = {Title}, author = {Author}}')
+    >>> result2 = bibpy.read_file('references.bib')
 
-Both functions return a `collections.namedtuple
-<https://docs.python.org/3.8/library/collections.html#collections.namedtuple>`_
-of five elements (notice the index at the end of the functions): The entries
-(:code:`@conference` etc.), strings (:code:`@string`), preambles
-(:code:`@preamble`), comment entries (:code:`@comment`) and finally all comments in
-the source (which exist outside of entries).
+Both functions return an :py:func:`bibpy.entries.Entries` class containing all
+bibliographic entries (:code:`@conference` etc.), strings (:code:`@string`),
+preambles (:code:`@preamble`), comment entries (:code:`@comment`) and finally
+all comments in the source (which exist outside of entries).
+
+By default, :py:func:`bibpy.read_string` and :py:func:`bibpy.read_file` read
+data in the :code:`relaxed` mode (via the :code:`format` parameter) but
+supports four different reference formats:
+
+* **bibtex:** Treat data as bibtex. Raise error on non-conformity.
+* **biblatex:** Treat data as biblatex. Raise error on non-conformity.
+* **mixed:** Treat data as a mixture of bibtex and biblatex. Raise error on non-conformity.
+* **relaxed:** Relax parsing rules. All types of entries and fields are allowed.
+
+For example if you read a file containing an :code:`@online` entry as bibtex,
+bibpy would raise an error since this entry type only exists in biblatex.
+Therefore, the relaxed format is typically recommended when parsing third party
+bib files.
 
 Writing bib entries is straight-forward and you do not have to supply a
 reference format as the entries are simply written with the data they contain.
@@ -52,22 +52,21 @@ reference format as the entries are simply written with the data they contain.
 .. code:: bash
 
     # Assume we still have the entries from the previous example loaded here
-    >>> bibpy.write_string(entries)
-    >>> bibpy.write_file('references.bib', entries)
+    >>> bibpy.write_string(result1.entries)
+    >>> bibpy.write_file('new-references.bib', result2.entries)
 
-Both functions take a lot of formatting options to e.g. align the equal signs
-of fields in entries, or sort fields alphabetically or using a user-defined,
-partial order. Try running the `formatting example
+Both functions take a lot of formatting options for e.g. alignment of the equal
+signs of fields in entries, sorting fields alphabetically or using a
+user-defined, partial order. Try running the `formatting example
 <https://github.com/MisanthropicBit/bibpy/examples/formatting.py>`_ to see the
-effects of all the options. There is also the :code:`bibformat` tool which we
-defer until a later section.
+effects of all the options.
 
 Manipulating reference data
 ---------------------------
 
-bibpy has been designed for ease of use so most manipulation of reference data
-should come relatively easy. For this section, we assume that we have loaded
-the following data into the variable :code:`entries`:
+bibpy has been designed so manipulating reference data is easy. For this
+section, we assume that we have loaded the following data into the variable
+:code:`entries`:
 
 .. code:: bibtex
 
@@ -90,11 +89,11 @@ We can iterate the fields and values of the first entry.
 .. code:: python
 
     for field, value in entries[0]:
-        print field, value
+        print('{0} = {1}'.format(field, value))
 
 All bibtex/biblatex fields are already accessible as properties of the entry
 objects and the entries themselves support a range of sensible dict-like
-operations.
+operations. Entry fields that are not present in an entry return :code:`None`.
 
 .. code:: python
 
@@ -117,6 +116,8 @@ operations.
     2001-07-19/
     >>> entry.invalid
     None
+    >>> entry.institution
+    'Office of Information Management {and} Communications'
     >>> 'institution' in entry
     True
     >>> 'volume' in entry
@@ -148,14 +149,12 @@ operations.
     ['author', 'title', 'year', 'month', 'message']
     >>> entry.clear()  # Clear all fields (set to None)
 
-Entry fields that were not present when parsing return `None`.
-
 Requirements Checking
 ---------------------
 
 Both bibtex and biblatex have requirements per entry that are usually not
-enforced but are needed for proper formatting. Luckily, bibpy can also check
-this for you. Consider the entries below.
+enforced but are needed for proper formatting and bibpy can also check this for
+you. Consider the entries below.
 
 .. code:: bibtex
 
@@ -187,15 +186,18 @@ Is this valid biblatex?
 
 The :py:func:`bibpy.requirements.check` function returns a 2-tuple. The first
 element is a set of all missing required fields, the second element is a list
-of sets of fields where only one of the fields are required. For example, many
+of sets of fields where only one of the fields are required. For example, some
 bibtex entries need either an :code:`author` field or an :code:`editor` field.
+No requirements are violated by the first entry since biblatex requires either
+a :code:`year` or :code:`date` field and the former is provided.
 
 Alternatively, you can call the :py:func:`bibpy.entry.entry.Entry.validate`
-method on an entry to validate an exisiting entry.
+method on an entry to validate an exisiting entry which throws a
+:py:func:`bibpy.error.RequiredFieldError` if any violations are found.
 
 .. code:: python
 
-    >>> entry.validate('biblatex')
+    >>> entries[1].validate('biblatex')
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
     bibpy.error.RequiredFieldError: Entry 'key4' (type 'article') is missing required field(s): author
@@ -205,55 +207,54 @@ that would be returned from :py:func:`bibpy.requirements.check`. There is also
 a :py:func:`bibpy.entry.entry.Entry.valid` method that returns :code:`True` or
 :code:`False` instead of raising an exception.
 
-Finally, :py:func:`bibpy.requirements.collect` finds and aggregates all fields
-for a list of entries, grouping each entry with the fields information. Entries
-that conform are not included in the result.
+Finally, :py:func:`bibpy.requirements.collect` finds and aggregates all
+requirement violations for a list of entries, grouped by entry. Entries that
+conform are not included in the result.
 
 .. code:: python
 
     >>> from bibpy.requirements import collect
     >>> collect(entries, 'bibtex')
-    [(entry, (set([...]), [...])), (...), ...]
+    [(entry, (<set of required fields>, [...])), ...]
 
 Post- and Preprocessing Fields
 ------------------------------
 
-You may have noticed in the previous section that values are returned as
-(utf-8) strings by default. You can supply :code:`postprocess=True` to the
-:code:`read_*` methods to convert a subset of the standard bibtex/biblatex
-fields' values to meaningful python types. Accessing the fields of the entries
+You may have noticed in the `Manipulating Reference Data`_ section that values
+are returned as strings by default. You can supply :code:`postprocess=True` to
+the :code:`read_*` methods to convert a subset of the standard bibtex/biblatex
+fields' values to meaningful python types.  Accessing the fields of the entries
 from the previous section would now return the following instead.
 
 .. code:: python
 
-    >>> entries = bibpy.read_file('references.bib', 'biblatex', postprocess=True)[0]
-    >>> entries[0].author
-    ['James Conway', 'Archer Sterling']
-    >>> entries[0].year
-    2010
-    >>> type(entries[0].year)
-    <type 'int'>
-    >>> entries[0].month
+    >>> entries = bibpy.read_file('references.bib', 'biblatex', postprocess=True).entries
+    >>> entry = entries[0]
+    >>> entry.author
+    ['James Conway', 'Archer Sterling']  # Author names have been split
+    >>> entry.year, type(entry.year)  # Year is now an int
+    2010, <type 'int'>
+    >>> entry.month  # Month has a proper name
     'April'
-    >>> entries[0].institution
+    >>> entry.institution  # Institutions are split but not on '{and}'
     ['Office of Information Management and Communications']
-    >>> entries[0].date
+    >>> entry.date  # Dates are converted to an object
     bibpy.date.DateRange(2001-07-19/)
-    >>> entries[0].start
+    >>> entry.date.start
     datetime.date(2001, 7, 19)
-    >>> entries[0].end
+    >>> entry.end
     None
-    >>> entries[0].open // True if an open-ended date range
+    >>> entry.open // True if an open-ended date range
     True
 
 For name lists, 'and' is the default delimiter. bibpy does not split on
-delimiters enclosed in braces, but removes them afterwards (see the
-'institution' field). A biblatex date is converted to a special
-:code:`DateRange` object since they can both refer to single dates and the time
-period between two dates. In this case, it refers to an open-ended date (hence
-the '/' at the end) starting on the 19th of July, 2001. When writing entries,
-its postprocessed fields are automatically converted back to their
-pre-postprocessed counterparts.
+delimiters enclosed in braces, but removes them afterwards (the 'institution'
+field was not split on 'and' because it was braced). A biblatex date is
+converted to a special :py:func:`bibpy.date.DateRange` object since they can
+both refer to single dates and the time period between two dates. In this case,
+it refers to an open-ended date (hence the '/' at the end) starting on the 19th
+of July 2001. When writing entries, its postprocessed fields are automatically
+converted back to their pre-postprocessed counterparts.
 
 If you need to postprocess fields manually (for example, you need to postprocess
 a subset of fields only when a condition is met), you can use the postprocessing
@@ -286,8 +287,9 @@ Some reference files contain string variables like these:
     }
 
 Each string entry contains a single variable name and a value for that
-variable.  By using :code:`bibpy.expand_strings` on the entries after reading,
-the article entry will be as though it was:
+variable.  By using :py:func:`bibpy.expand_strings` on the entries after
+reading, the article entry will be as though it had been as follows in the file
+instead.
 
 .. code:: bibtex
 
@@ -309,11 +311,12 @@ Let's try and load the entry interactively.
     >>> entries[0].title
     '"Jake" # var1'
 
-As you can see, we can also undo the string variable expansion using
-:code:`bibpy.unexpand_strings`. Both functions report duplicate variable names
-by default which would make unexpansion impossible for entries that use the
-duplicates. The unexpansion might also unexpand unrelated text that happens to
-be the same as that of a variable. There is currently no way to avoid this.
+We can also undo the string variable expansion using
+:py:func:`bibpy.unexpand_strings`. Both functions raise errors if they find
+duplicate variable names by default which would make unexpansion impossible for
+entries that use the duplicates. The unexpansion might also unexpand unrelated
+text that happens to be the same as that of a variable. There is currently no
+way to avoid this.
 
 Crossreferences and xdata Inheritance
 -------------------------------------
@@ -341,9 +344,9 @@ reference to another entry. Imagine we have the following two fields in a file.
         location  = {Location}
     }
 
-Reading in the file with bibpy and then using :code:`bibpy.inherit_crossrefs`,
-the :code:`inbook` entry can inherit the appropriate fields from the
-:code:`book` entry (done in-place).
+Reading in the file with bibpy and then using
+:py:func:`bibpy.inherit_crossrefs`, the :code:`inbook` entry can inherit the
+appropriate fields from the :code:`book` entry (done in-place).
 
 .. code:: python
 
@@ -374,13 +377,13 @@ ordering of the fields may vary).
         location  = {Location}
     }
 
-You can uninherit the fields again with :code:`bibpy.uninherit_crossrefs`. You
-can also inherit and uninherit :code:`xdata` fields. The difference is that
+You can uninherit the fields again with :py:func:`bibpy.uninherit_crossrefs`.
+You can also inherit and uninherit :code:`xdata` fields. The difference is that
 while :code:`crossref` fields follow specific rules about which fields are
 inherited and what their names become, :code:`xdata` simply pulls in the fields
 from the ancestor and can optionally be made to overwrite existing fields with
-the same names. If the :code:`postprocess` option is :code:`True` when reading
-(see [this section](#processing)), :code:`xdata` fields are converted from a
+the same names. If :code:`postprocess=True` when reading (see `Post- and
+Preprocessing Fields`_), :code:`xdata` fields are converted from a
 comma-separated string to a list of keys.
 
 bibpy Tools
@@ -391,28 +394,34 @@ bibpy comes with three command line tools which we discuss in turn.
 bibformat
 ^^^^^^^^^
 
-`bibformat` can be used to align `=` signs, order fields and export to different
-formats. Run `bibformat --help` for full details. Below is an example of
-exporting some entries to xml.
+The bibformat tool can be used to align equal signs :code:`=`, expand string
+variables and reorder fields. Run :code:`bibformat --help` for full details.
+Below is an example of reordering fields (ordering the :code:`author` and
+:code:`title` fields before other fields in all entries, the rest are
+arbitrarily ordered), aligning equal signs and surrounding field values with
+double-quotes instead of braces.
 
-```bash
-$ bibformat --order='author,title' --export=xml > entries.xml
-```
+.. code:: bash
 
-Runinng this command orders the `author` and `title` fields first in all entries
-(the rest are arbitrarily ordered) and exports the entries to xml.
+    $ bibformat --order='author,title' --align --surround='""'
+    @article{key4,
+        author = "Archer Sterling",
+        title  = "A Practical Guide To Getting Ants",
+        year   = "1995",
+        month  = "3"
+    }
 
 bibstats
 ^^^^^^^^
 
-:code:`bibstats` displays statistics about bib entries. Run :code:`bibstats
+The bibstats tool displays statistics about bib entries. Run :code:`bibstats
 --help` for full details. Below is an example of querying a bib source.
 
 .. code:: bash
 
-    $ bibstats --count source.bib
+    $ bibstats --count source1.bib
     Found 4 entries
-    $ bibstats --top=3 source.bib  # Display the top 3 occurring entries
+    $ bibstats --top=3 source2.bib  # Display the top 3 occurring entries
     Entry                Count
     -----------------------------------------
     article              881 (60.38%)
@@ -424,33 +433,35 @@ bibstats
 bibgrep
 ^^^^^^^
 
-:code:`bibgrep` is similar to the grep command but filters entries instead of
+The bibgrep tool is similar to the grep command but filters entries instead of
 lines.
 
 .. code:: bash
 
     $ bibgrep --entry="article" --field="author~hughes" --ignore-case
 
-The command selects entries that are either :code:`@article` entries or have "hughes"
-(case-insensitive) somewhere in their :code:`author` field. The approximation operator
-'~' also works with regular expressions.
+The above invocation selects entries that are either :code:`@article` entries
+or have "hughes" (case-insensitive) somewhere in their :code:`author` field.
+The approximation operator :code:`~` also works with regular expressions.
 
 .. code:: bash
 
-    $ bibgrep --field="author~M.+tt" tests/data/small1.bib
+    $ bibgrep --field="author~M.+tt" some.bib
 
-We can also combine :code:`bibgrep` with the other tools.
+Alternatively, one can use :code:`=` to require exact matches. We can also
+combine :code:`bibgrep` with the other tools. Here we also specify inclusive
+ranges for years and a lower bound for volume fields.
 
 .. code:: bash
 
-    $ bibgrep --entry="conference" | bibformat --indent=4 --export=json > conferences.json
+    $ bibgrep --entry="conference" | bibformat --indent=4 > conferences.json
     $ bibgrep --field="year=1900-2000" --field="volume>=10" | bibstats --top=5
 
-The first command selects all :code:`@conference` entries and exports them to
-json with an indentation of 4 spaces. The second command selects all entries
-that have a year field in the inclusive range [1900; 2000] **or** a volume
-field of 10 or more, then prints out the statistics for the top 5 occurring
-entries that satisfy those predicates.
+The first command selects all :code:`@conference` entries and bibformat indents
+them by 4 spaces. The second command selects all entries that have a year field
+in the inclusive range [1900; 2000] **or** a volume field of 10 or more, then
+prints out the statistics for the top 5 occurring entries that satisfy those
+predicates.
 
 Selecting entries that satisfy all constraints can be done by piping multiple
 invocations of :code:`bibgrep`.
