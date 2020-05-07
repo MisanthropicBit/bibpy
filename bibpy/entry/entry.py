@@ -212,7 +212,7 @@ class Entry(base.BaseEntry):
         return "Entry(type={0}, key={1})".format(self.bibtype, self.bibkey)
 
 
-def autoproperty(name, getter=True, setter=True, prefix='_'):
+def autoproperty(name, getter=True, setter=True, prefix='_', doc=''):
     """Autogenerate a property."""
     attribute = prefix + name
 
@@ -222,11 +222,18 @@ def autoproperty(name, getter=True, setter=True, prefix='_'):
     def _setter(self, value):
         setattr(self, attribute, value)
 
+    # Do not add a dot to multi-line docstrings
+    if not ('\n' in doc or '\r\n' in doc) and not doc.endswith('.'):
+        doc += '.'
+
     return property(_getter if getter else None,
-                    _setter if setter else None)
+                    _setter if setter else None,
+                    doc=doc)
 
 
 # Programmatically set all internal field attributes for the Entry class
 for field in bibpy.fields.all:
+    doc = bibpy.fields.docstrings[field]
+
     setattr(Entry, "_" + field, None)
-    setattr(Entry, field, autoproperty(field, True, True))
+    setattr(Entry, field, autoproperty(field, True, True, doc=doc))
