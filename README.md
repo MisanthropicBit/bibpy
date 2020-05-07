@@ -20,7 +20,7 @@ with Python 2.7, 3.4, 3.5, 3.6, 3.7 and PyPy.
 * Accompanying [tools](#tools)
 
 Take a look at the [quickstart example](#quickstart) for basic usage, or the
-more complete [tutorial](TUTORIAL.md).
+more complete [tutorial](https://bibpy.readthedocs.io/en/latest/tutorial.html).
 
 # Installation
 
