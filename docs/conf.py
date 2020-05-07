@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'bibpy'
 copyright = '2020, Alexander Asp Bock'
 author = 'Alexander Asp Bock'
+master_doc = 'index'
 
 # The full version, including alpha/beta/rc tags
 release = '0.1.0-alpha'
