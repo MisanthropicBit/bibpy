@@ -58,8 +58,8 @@ reference format as the entries are simply written with the data they contain.
 Both functions take a lot of formatting options for e.g. alignment of the equal
 signs of fields in entries, sorting fields alphabetically or using a
 user-defined, partial order. Try running the `formatting example
-<https://github.com/MisanthropicBit/bibpy/examples/formatting.py>`_ to see the
-effects of all the options.
+<https://github.com/MisanthropicBit/bibpy/blob/master/examples/formatting.py>`_
+to see the effects of all the options.
 
 Manipulating reference data
 ---------------------------
