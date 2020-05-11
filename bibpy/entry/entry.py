@@ -47,6 +47,10 @@ class Entry(BaseEntry):
         'indent' controls the amount of indentation inside an entry.
         'order' is a list of the order of a subset of fields.
 
+        Additional kwargs are formatting options passed on to the preprocessing
+        function that converts Python types into bibliographic data for
+        writing.
+
         """
         entry_start = "@" + self.bibtype + "{" + self.bibkey + ",\n"
 
