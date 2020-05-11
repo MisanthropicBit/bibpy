@@ -112,7 +112,9 @@ def postprocess_keylist(field, keylist, **options):
     if not keylist:
         return []
 
-    return list(filter(None, [key.strip() for key in keylist.split(',')]))
+    stripped_keys = [key.strip() for key in keylist.split(',')]
+
+    return [key for key in stripped_keys if key]
 
 
 def postprocess_pages(field, pages, **options):
