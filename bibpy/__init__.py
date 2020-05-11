@@ -254,13 +254,14 @@ def unexpand_strings(entries, strings, ignore_duplicates=False):
     for entry in entries:
         for field, value in entry:
             if is_string(value):
-                temp = re.split(value_regex, value)
+                split_on_values = re.split(value_regex, value)
 
-                if len(temp) > 1:
+                if len(split_on_values) > 1:
+                    filtered = [sv for sv in split_on_values if sv]
+
                     value =\
                         " # ".join(['"' + v + '"' if v not in values
-                                    else values[v]
-                                    for v in filter(None, temp)])
+                                    else values[v] for v in filtered])
 
                 setattr(entry, field, value)
 
