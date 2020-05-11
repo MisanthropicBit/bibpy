@@ -33,6 +33,7 @@ bibpy
    :hidden:
 
    tutorial
+   faq
    changelog
 
 bibpy allows you to parse bib(la)tex files and easily manipulate bibliographic
