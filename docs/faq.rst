@@ -6,12 +6,12 @@ FAQ
 In bibtex and biblatex, there are already :code:`key` and a :code:`type`
 fields. Per the bibtex documentation, the :code:`key` field is:
 
-    Used for alphabetizing, cross referencing, and creating a label when the
-    “author” information (described in Section 4) is missing.
+    *Used for alphabetizing, cross referencing, and creating a label when the
+    “author” information (described in Section 4) is missing.*
 
 and the :code:`type` field is:
 
-    The type of a technical report—for example, “Research Note”.
+    *The type of a technical report—for example, “Research Note”.*
 
 **Q: Why are there no conversion functions from and to JSON, XML etc.?**
 
