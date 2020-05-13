@@ -21,7 +21,7 @@ html_static_path = ['images']
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.linkcode',
+    'sphinx.ext.viewcode',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -62,10 +62,3 @@ html_sidebars = {
         'donate.html',
     ]
 }
-
-# -- Options for linkcode extension ----------------------------------------
-
-
-def linkcode_resolve(domain, info):
-    """Resolve links to github source code."""
-    return None
