@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Custom bib(la)tex lexer for funcparserlib.
-
-Port of the lexer from bibtex-ruby with a few changes. This lexer also supports
-parentheses instead of braces for string, preamble and comment entries, e.g.
-@string(var = 1) and generates tokens rather returning a list.
-
-"""
+"""Custom bib(la)tex lexer for names."""
 
 from bibpy.compat import u
 from bibpy.lexers.base_lexer import BaseLexer
