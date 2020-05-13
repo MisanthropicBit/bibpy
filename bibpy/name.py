@@ -3,7 +3,6 @@
 """Class for names split into its components (given name, family name etc.)."""
 
 import bibpy.lexers
-import sys
 
 __all__ = (['Name'])
 
@@ -122,11 +121,5 @@ class Name:
         return self.format()
 
     def __repr__(self):
-        fmt = 'Name(first={0}, prefix={1}, last={2}, suffix={3})'
-
-        # repr(x) is expected to return a byte-string in python 2 but a unicode
-        # string in python 3
-        if sys.version_info[0] > 2:
-            return fmt.format(*self.parts)
-        else:
-            return fmt.format(*[p.encode('utf-8') for p in self.parts])
+        return 'Name(first={0}, prefix={1}, last={2}, suffix={3})'\
+            .format(*self.parts)
