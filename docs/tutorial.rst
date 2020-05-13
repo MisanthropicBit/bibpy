@@ -248,7 +248,7 @@ from the previous section would now return the following instead.
     True
 
 For name lists, 'and' is the default delimiter. bibpy does not split on
-delimiters enclosed in braces, but removes them afterwards (the 'institution'
+delimiters enclosed in braces, but removes them afterwards (the :code:`institution`
 field was not split on 'and' because it was braced). A biblatex date is
 converted to a special :py:func:`bibpy.date.DateRange` object since they can
 both refer to single dates and the time period between two dates. In this case,
