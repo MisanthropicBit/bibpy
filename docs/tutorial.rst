@@ -134,13 +134,13 @@ operations. Entry fields that are not present in an entry return :code:`None`.
     ['electronic', 'www']
     >>> entry.valid('biblatex')  # Does the entry contain all required fields according to biblatex?
     True
-    >>> entry.fields  # Get a list of the active fields of the entry
+    >>> entry.fields  # Get a list of the active (non-None) fields of the entry
     ['author', 'title', 'year', 'month', 'institution', 'message']
     >>> entry.extra_fields  # Get a list of any additional non-bibtex/biblatex fields
     ['message']
     >>> len(entry)  # Number of active fields in the entry
     6
-    >>> entry.keys()  # Same as fields
+    >>> entry.keys()  # Same as fields property (see below)
     ['author', 'title', 'year', 'month', 'institution', 'message']
     >>> entry.values()
     ['James Conway and Archer Sterling', '1337 Hacker', '2010', '4', 'Office of Information Management {and} Communications']
