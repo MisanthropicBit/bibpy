@@ -41,16 +41,6 @@ def make_string(token):
     return token.value.strip()
 
 
-def make_unquoted_string(token):
-    """Remove double-quotes around a string and make a token."""
-    return token.value.strip('"')
-
-
-def make_variable(token):
-    """Make a variable from a token."""
-    return token.value.strip()
-
-
 def flatten(lst):
     """Flatten a list of an arbitrary depth."""
     for e in lst:
