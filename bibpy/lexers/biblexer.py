@@ -60,9 +60,6 @@ class BibLexer(BaseLexer):
 
         return self.make_token('entry', value)
 
-    def lex_string(self, value):
-        return self.make_token('string', value)
-
     def lex_lbrace(self, value):
         self.brace_level += 1
 
