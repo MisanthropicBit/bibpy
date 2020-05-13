@@ -4,7 +4,9 @@
 
 import bibpy.parser
 import bibpy.tools
+from io import StringIO
 import pytest
+from contextlib import redirect_stdout, redirect_stderr
 
 
 def test_version_format():
@@ -74,3 +76,28 @@ def test_predicate_composition():
     assert not pred2(1)
     assert not pred3(1)
     assert pred4(1)
+
+
+def test_iter_files():
+    assert set(bibpy.tools.iter_files(['bin'], 'bib*', True)) ==\
+        set(['bin/bibstats', 'bin/bibgrep', 'bin/bibformat'])
+
+    assert set(bibpy.tools.iter_files(['bin/bibstats'], 'bib*', False)) ==\
+        set(['bin/bibstats'])
+
+    with pytest.raises(SystemExit):
+        list(bibpy.tools.iter_files(['bin'], 'bib*', False))
+
+
+def test_close_output_handles():
+    sio1 = StringIO()
+    sio2 = StringIO()
+
+    with redirect_stdout(sio1) as stdout, redirect_stderr(sio2) as stderr:
+        assert not stdout.closed
+        assert not stderr.closed
+
+        bibpy.tools.close_output_handles()
+
+        assert stdout.closed
+        assert stderr.closed

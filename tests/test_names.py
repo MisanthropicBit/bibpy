@@ -3,6 +3,7 @@
 """Test extraction of parts of names."""
 
 import bibpy.name
+from bibpy.lexers.base_lexer import LexerError
 import pytest
 import sys
 
@@ -332,3 +333,8 @@ def test_name_repr_py2():
         'Name(first=Doermann, prefix=, last=Møllenbach, suffix=)'
 
     assert repr(name2) == 'Name(first=Archer, prefix=, last=Sterling, suffix=)'
+
+
+def test_discover_unbalanced_braces():
+    with pytest.raises(LexerError):
+        name_from_string('Sterling, }Archer')

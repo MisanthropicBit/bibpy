@@ -39,11 +39,8 @@ class NamelistLexer(BaseLexer):
                 if self.brace_level < 0:
                     self.raise_unbalanced()
             elif token == 'and':
-                if self.brace_level > 0:
-                    content += before + token
-                else:
-                    yield (content + before).strip()
-                    content = ''
+                yield (content + before).strip()
+                content = ''
             else:
                 assert token is None
                 yield (content + before).strip()

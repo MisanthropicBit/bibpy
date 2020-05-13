@@ -98,20 +98,21 @@ class BibLexer(BaseLexer):
 
     def lex_parens(self):
         paren_level = 1
+        content = ''
 
         while True:
             before, token = self.until('parens')
 
             if token == '(':
                 paren_level += 1
-                yield self.make_token('content', before)
-                yield self.make_token('lparen', token)
+                content += before + token
             elif token == ')':
                 paren_level -= 1
-                yield self.make_token('content', before)
-                yield self.make_token('rparen', token)
+                content += before
 
                 if paren_level == 0:
+                    yield self.make_token('content', content)
+                    yield self.make_token('rparen', token)
                     self.mode = 'bib'
                     break
 
@@ -142,8 +143,6 @@ class BibLexer(BaseLexer):
                     yield self.make_token('rbrace', token)
                     self.mode = 'bib'
                     break
-                elif self.brace_level < 0:
-                    self.raise_unbalanced()
                 else:
                     content += token
 

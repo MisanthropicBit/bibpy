@@ -153,3 +153,13 @@ def test_no_postprocess():
 
 def test_no_preprocess_of_and_in_names():
     assert preprocess_namelist(['Alexander Ericson']) == 'Alexander Ericson'
+
+
+def test_preprocess_skip_none_values():
+    entry = bibpy.entry.Entry('techreport', 'ula22',
+                              **{'author': None})
+
+    preprocessed = preprocess(entry, ['author'])
+
+    # None fields should be skipped by preprocessing and be left unchanged
+    assert next(preprocessed, 'no changes') == 'no changes'

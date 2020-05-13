@@ -3,6 +3,7 @@
 """Test the bib lexer."""
 
 import bibpy
+from bibpy.lexers.base_lexer import LexerError
 from bibpy.lexers.biblexer import BibLexer
 from bibpy.lexers.namelist_lexer import NamelistLexer
 import pytest
@@ -23,6 +24,12 @@ def test_lex_entry_with_fields():
          'name', 'equals', 'lbrace', 'content', 'rbrace', 'rbrace']
 
 
+def test_lex_string_field():
+    assert token_types(BibLexer().lex('@entry{key,author = "bib"}')) ==\
+        ['entry', 'name', 'lbrace', 'name', 'comma', 'name', 'equals',
+         'string', 'rbrace']
+
+
 def test_lex_string_entry():
     assert token_types(BibLexer().lex('@string{variable = value }')) ==\
         ['entry', 'name', 'lbrace', 'name', 'equals', 'name', 'rbrace']
@@ -36,6 +43,9 @@ def test_lex_preamble_entry():
         ['entry', 'name', 'lbrace', 'content', 'rbrace']
 
     assert token_types(BibLexer().lex('@preamble(Bla bla bla)')) ==\
+        ['entry', 'name', 'lparen', 'content', 'rparen']
+
+    assert token_types(BibLexer().lex('@preamble((nested parentheses))')) ==\
         ['entry', 'name', 'lparen', 'content', 'rparen']
 
 
@@ -79,7 +89,13 @@ def test_namelist_lexer():
     assert list(NamelistLexer().lex(test4)) ==\
         ['L. {Sunil Chandran} {and } C. R. Subramanian']
 
+    with pytest.raises(LexerError):
+        list(NamelistLexer().lex('T. Ohtsuki and H. Mori and T. Kas}hiwabara'))
+
 
 def test_lexer_fail():
-    with pytest.raises(bibpy.lexers.base_lexer.LexerError):
+    with pytest.raises(LexerError):
         list(BibLexer().lex('@entry!{key,author} ={bib}}'))
+
+    with pytest.raises(LexerError):
+        list(BibLexer().lex('@entrykey,author} = {bib}}'))
