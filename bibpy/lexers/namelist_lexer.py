@@ -34,10 +34,11 @@ class NamelistLexer(BaseLexer):
                 content += before + token
             elif token == '}':
                 self.brace_level -= 1
-                content += before + token
 
                 if self.brace_level < 0:
                     self.raise_unbalanced()
+
+                content += before + token
             elif token == 'and':
                 yield (content + before).strip()
                 content = ''
