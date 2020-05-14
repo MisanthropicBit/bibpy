@@ -18,9 +18,6 @@ Python library for parsing bib(la)tex files and manipulating entries.
 * [Crossreference and xdata inheritance](/examples/crossref_expansion.py)
 * Accompanying [tools](#tools)
 
-Take a look at the [quickstart example](#quickstart) for basic usage, or the
-more complete [tutorial](https://bibpy.readthedocs.io/en/latest/tutorial.html).
-
 # Installation
 
 Use pip:
@@ -28,9 +25,6 @@ Use pip:
 ```bash
 pip install bibpy
 ```
-
-Or `git clone https://github.com/MisanthropicBit/bibpy` and then run `python
-setup.py install` from the `bibpy` directory.
 
 <a name="quickstart"></a>
 # Quickstart
@@ -59,7 +53,7 @@ False  # But is not a valid biblatex entry (missing field 'date' or 'year')
 ```
 
 See the [`examples`](/examples) folder for more usage examples or read the
-[tutorial](TUTORIAL.md).
+[tutorial](https://bibpy.readthedocs.io/en/latest/tutorial.html).
 
 ## Tools
 
@@ -71,4 +65,4 @@ runnable scripts.
 * `bibstats` : Display statistics about bib files
 
 All three tools are described in more detail in the
-[tutorial](TUTORIAL.md/#tools).
+[tutorial](https://bibpy.readthedocs.io/en/latest/tutorial.html#bibpy-tools).
