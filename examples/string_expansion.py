@@ -17,7 +17,8 @@ def print_entries(entries):
 
 if __name__ == '__main__':
     filename = get_path_for('../tests/data/string_variables.bib')
-    entries, strings = bibpy.read_file(filename, format='relaxed')[:2]
+    result = bibpy.read_file(filename, format='relaxed')
+    entries, strings = result.entries, result.strings
 
     print("* String entries:")
     print_entries(strings)
