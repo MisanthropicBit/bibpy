@@ -2,7 +2,6 @@
 
 """bibpy: Bib(la)tex parser and tools."""
 
-from bibpy.entries import Entries
 import bibpy.parser
 import bibpy.postprocess
 import bibpy.references
