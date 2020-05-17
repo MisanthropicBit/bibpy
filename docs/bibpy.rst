@@ -22,7 +22,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   bibpy.compat
    bibpy.date
    bibpy.entries
    bibpy.error
