@@ -3,7 +3,7 @@
 from __future__ import with_statement
 
 import os
-import distutils.core
+from setuptools import setup
 
 
 def get_version(filename):
@@ -13,19 +13,35 @@ def get_version(filename):
                 return line.split('=')[-1].strip()[1:-1]
 
 
-distutils.core.setup(
+setup(
     name='bibpy',
     version=get_version(os.path.join('bibpy', '__init__.py')),
     author='Alexander Asp Bock',
     author_email='albo.developer@gmail.com',
     platforms='All',
+    python_requires='>=3.5',
+    install_requires=['funcparserlib>=0.3.6'],
+    tests_require=[
+        'coverage>=5.1',
+        'coveralls>=2.0.0',
+        'cram>=0.7',
+        'pydocstyle',
+        'pytest>4.6',
+        'vcrpy>=4.0.2',
+    ],
     description=('Bib(la)tex parsing and useful tools'),
     license='BSD 3-Clause License',
     keywords='bibpy, bibtex, biblatex, parser',
-    url='https://github.com/MisanthropicBit/bibpy',
+    url='https://bibpy.readthedocs.io/en/latest/',
     packages=['bibpy', 'bibpy.entry', 'bibpy.lexers', 'bibpy.doi'],
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     scripts=['bin/bibgrep', 'bin/bibformat', 'bin/bibstats'],
+    project_urls={
+        'Issue Tracker': 'https://github.com/MisanthropicBit/bibpy/issues',
+        'Documentation': 'https://bibpy.readthedocs.io/en/latest/',
+        'Source': 'https://github.com/MisanthropicBit/bibpy',
+    },
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -37,6 +53,7 @@ distutils.core.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ]
 )
