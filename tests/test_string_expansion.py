@@ -7,7 +7,9 @@ import pytest
 
 @pytest.fixture
 def test_entries():
-    return bibpy.read_file('tests/data/string_variables.bib', 'bibtex')[:2]
+    result = bibpy.read_file('tests/data/string_variables.bib', 'bibtex')
+
+    return result.entries, result.strings
 
 
 def test_string_expand_start(test_entries):

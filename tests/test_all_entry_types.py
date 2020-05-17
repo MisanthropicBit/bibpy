@@ -7,7 +7,7 @@ filename = "tests/data/simple_1.bib"
 
 def test_all_entry_types_bibtex():
     """Ensure that all bitex entry types can be parsed."""
-    entry = bibpy.read_file(filename, 'bibtex')[0][0]
+    entry = bibpy.read_file(filename, 'bibtex').entries[0]
 
     assert entry.author == "James Conway and Archer Sterling"
     assert entry.title == "1337 Hacker"
@@ -19,7 +19,7 @@ def test_all_entry_types_bibtex():
 
 def test_all_entry_types_biblatex():
     """Ensure that all biblatex entry types can be parsed."""
-    entry = bibpy.read_file(filename, 'biblatex')[0][0]
+    entry = bibpy.read_file(filename, 'biblatex').entries[0]
 
     assert entry.author == "James Conway and Archer Sterling"
     assert entry.title == "1337 Hacker"

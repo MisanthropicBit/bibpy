@@ -13,7 +13,7 @@ def test_entries():
 
 
 def test_write_string(test_entries):
-    assert bibpy.write_string('') == ''
+    assert bibpy.write_string([]) == ''
 
     assert bibpy.write_string(test_entries) == """@article{key1,
     author = {Dave}

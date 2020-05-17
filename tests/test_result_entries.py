@@ -28,6 +28,10 @@ def test_entries_properties(test_entries):
     assert test_entries.preambles[0] == preamble_entry
     assert test_entries.strings[0] == string_entry
 
-    assert len(test_entries.all) == 4
-    assert test_entries.all == [string_entry, preamble_entry,
-                                comment_entry, entry]
+    assert len(test_entries.all_entries) == 4
+    assert len(test_entries.all) == 5
+    print(test_entries.all_entries)
+    assert test_entries.all_entries == [[string_entry], [preamble_entry],
+                                        [comment_entry], [entry]]
+    assert test_entries.all == [[string_entry], [preamble_entry],
+                                [comment_entry], [entry], [comment]]

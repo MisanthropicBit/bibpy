@@ -38,9 +38,9 @@ def test_bibtex_requirements():
 
 
 def test_biblatex_requirements():
-    entries, _, _, _, _ =\
+    _, _, _, entries =\
         bibpy.read_file('tests/data/biblatex_missing_requirements.bib',
-                        'biblatex')
+                        'biblatex').all_entries
 
     expected_fields = [
         # article
@@ -78,13 +78,11 @@ def test_biblatex_requirements():
         assert bibpy.requirements.check(entry, 'biblatex') ==\
             (required, either)
 
-    assert bibpy.requirements.check(entry, 'relaxed') == (set(), [])
+        assert bibpy.requirements.check(entry, 'relaxed') == (set(), [])
 
 
 def test_collecting():
-    entries, _, _, _, _ =\
-        bibpy.read_file('tests/data/valid_bibtex.bib',
-                        'bibtex')
+    entries = bibpy.read_file('tests/data/valid_bibtex.bib', 'bibtex').entries
 
     assert bibpy.requirements.collect(entries, 'bibtex') ==\
         [(entries[11], (set(['title', 'year']), []))]

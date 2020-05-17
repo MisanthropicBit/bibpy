@@ -39,7 +39,7 @@ def process_file(path, args):
             args.order = [order for order in
                           [e.strip() for e in args.order.split(',')]]
 
-    return [entry for entry in results.all]
+    return results
 
 
 if __name__ == '__main__':

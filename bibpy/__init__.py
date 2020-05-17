@@ -2,6 +2,7 @@
 
 """bibpy: Bib(la)tex parser and tools."""
 
+from bibpy.entries import Entries
 import bibpy.parser
 import bibpy.postprocess
 import bibpy.references
@@ -125,7 +126,8 @@ def _read_common(parsed_tokens, format, postprocess=False, remove_braces=False,
 def write_string(entries, **format_options):
     """Write a list of entries as a string.
 
-    The list of formatting options are the same as those for Entry.format.
+    Accepts either a bibpy.Entries object or a list of bibpy.Entry objects. The
+    list of formatting options are the same as those for Entry.format.
 
     """
     return (os.linesep * 2).join(entry.format(**format_options)
