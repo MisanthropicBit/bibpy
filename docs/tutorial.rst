@@ -52,12 +52,14 @@ reference format as the entries are simply written with the data they contain.
 .. code:: bash
 
     # Assume we still have the entries from the previous example loaded here
-    >>> bibpy.write_string(result1.entries)
+    >>> bibpy.write_string(result1)
     >>> bibpy.write_file('new-references.bib', result2.entries)
 
-Both functions take a lot of formatting options for e.g. alignment of the equal
-signs of fields in entries, sorting fields alphabetically or using a
-user-defined, partial order. Try running the `formatting example
+You can pass both the :py:func:`bibpy.entries.Entries` object or a list of
+entries to the write functions. Both functions take a lot of formatting options
+for e.g. alignment of the equal signs of fields in entries, sorting fields
+alphabetically or using a user-defined, partial order. Try running the
+`formatting example
 <https://github.com/MisanthropicBit/bibpy/blob/master/examples/formatting.py>`_
 to see the effects of all the options.
 
@@ -301,7 +303,8 @@ Let's try and load the entry interactively.
 
 .. code:: python
 
-    >>> entries, strings = bibpy.read_file('references.bib', 'mixed', strings=True)[:2]
+    >>> result = bibpy.read_file('references.bib', 'mixed')
+    >>> entries, strings = result.entries, result.strings
     >>> entries[0].title
     '"Jake" # var1'
     >>> bibpy.expand_strings(entries, strings)  # Done in-place
