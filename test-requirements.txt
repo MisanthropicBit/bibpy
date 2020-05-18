@@ -1,0 +1,6 @@
+coverage>=5.1
+coveralls>=2.0.0
+cram>=0.7
+pydocstyle
+pytest>4.6
+vcrpy>=4.0.2
