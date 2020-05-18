@@ -1,5 +1,5 @@
-bibpy
-=====
+**bibpy**
+=========
 
 .. image:: https://img.shields.io/pypi/v/bibpy
    :alt: PyPI
@@ -7,15 +7,15 @@ bibpy
 
 .. image:: https://travis-ci.org/MisanthropicBit/bibpy.svg?branch=master
    :alt: Build status
-   :target: https://travis-ci.org/MisanthropicBit/bibpy.svg?branch=master
+   :target: https://travis-ci.org/github/MisanthropicBit/bibpy
 
 .. image:: https://img.shields.io/readthedocs/bibpy
    :alt: Docs build status
-   :target: https://img.shields.io/readthedocs/bibpy
+   :target: https://readthedocs.org/projects/bibpy/
 
 .. image:: https://coveralls.io/repos/github/MisanthropicBit/bibpy/badge.svg?branch=master
    :alt: Coverage percentage
-   :target: https://coveralls.io/repos/github/MisanthropicBit/bibpy/badge.svg?branch=master
+   :target: https://coveralls.io/github/MisanthropicBit/bibpy?branch=master
 
 .. image:: https://img.shields.io/github/license/MisanthropicBit/bibpy.svg
    :alt: License
