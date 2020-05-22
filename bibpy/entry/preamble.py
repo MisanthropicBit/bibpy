@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-"""Class representing a preamble in a bibtex file."""
+"""Class representing a preamble entry in a bib file."""
 
-from bibpy.entry import base
+from bibpy.entry.base import BaseEntry
 
 
-class Preamble(base.BaseEntry):
-    """Represents a preamble in a bibtex file."""
+class Preamble(BaseEntry):
+    """A preamble entry in a bib file."""
 
     def __init__(self, value):
         """Create a preamble with a single value."""
@@ -15,16 +15,22 @@ class Preamble(base.BaseEntry):
     def format(self, indent='    ', singleline=True, braces=True, **kwargs):
         """Format an return the preamble as a string.
 
-        If 'singleline' is True, put the entry on a single line
-        If 'braces' is True, surround the entry by braces, else parentheses
+        If singleline is True, put the entry on a single line. The contents of
+        the preamble is indented by the indent argument if singleline is True.
+
+        If braces is True, surround the entry by braces, else parentheses.
+
+        The kwargs are ignored for this entry type as there is no additional
+        formatting.
 
         """
-        return "@preamble{0}{1}{2}{3}{4}"\
-            .format('{' if braces else '(',
-                    "" if singleline else "\n" + indent,
-                    self.value,
-                    "" if singleline else "\n",
-                    '}' if braces else ')')
+        return self.format_auxiliary_entry(
+            'preamble',
+            self.value,
+            indent,
+            singleline,
+            braces,
+        )
 
     @property
     def bibtype(self):
@@ -49,6 +55,10 @@ class Preamble(base.BaseEntry):
     def value(self):
         """Return the value of the variable of the preamble."""
         return self._value
+
+    @value.setter
+    def value(self, new_value):
+        self._value = new_value
 
     def aliases(self, format):
         """Return any aliases of this entry."""

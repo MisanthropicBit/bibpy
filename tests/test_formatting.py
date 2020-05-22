@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test entry formatting and printing."""
 
 import bibpy
@@ -22,7 +24,7 @@ def test_formatting(test_entries):
 }"""
 
     assert test_entries[1].format(align=True, indent='    ', order=[]) ==\
-        """@conference{lol,
+        """@conference{anything,
     author = {k}
 }"""
 

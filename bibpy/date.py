@@ -11,6 +11,7 @@ class PartialDate:
     """Light-weight class for representing partial dates."""
 
     def __init__(self, year=None, month=None, day=None):
+        """Initialise with a optional year, month and day."""
         self.year = year if year is None else int(year)
         self.month = month if month is None else int(month)
         self.day = day if day is None else int(day)
@@ -44,16 +45,27 @@ class DateRange:
     """Wrapper class around biblatex date ranges."""
 
     def __init__(self, start, end, open):
-        """Create a date range with a start and/or end date."""
+        """Create a date range with a start and/or end date.
+
+        The start and end should be (year, month, day) tuples where elements
+        can be omitted from the end, e.g. (year) and (year, month) are also
+        valid.
+
+        """
         self._start = PartialDate(*start)
         self._end = PartialDate(*end)
         self._open = open
 
-    @staticmethod
-    def fromstring(string):
+    @classmethod
+    def fromstring(cls, string):
         """Parse a date string then return a new DateRange object."""
         # Try to parse the date (ranges)
         return bibpy.parser.parse_date(string)
+
+    @classmethod
+    def empty(cls):
+        """Create an empty DateRange."""
+        return cls((None, ), (None, ), False)
 
     @property
     def start(self):

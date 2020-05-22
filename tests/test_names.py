@@ -3,9 +3,7 @@
 """Test extraction of parts of names."""
 
 import bibpy.name
-from bibpy.lexers.base_lexer import LexerError
 import pytest
-import sys
 
 
 def name_from_string(s):

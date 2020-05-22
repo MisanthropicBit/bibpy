@@ -5,6 +5,8 @@
 import bibpy.date
 import bibpy.entry
 import bibpy.lexers
+from bibpy.name import Name
+from bibpy.tools import always_true
 import funcparserlib.parser as parser
 import funcparserlib.lexer as lexer
 import re
@@ -61,9 +63,9 @@ def make_braced_expr(tokens):
         else:
             result.append(e.value)
 
-    return tokens[0].value +\
-        "".join([getattr(t, 'content', t) for t in result]) +\
-        tokens[2].value
+    contents = ''.join([getattr(token, 'content', token) for token in result])
+
+    return tokens[0].value + contents + tokens[2].value
 
 
 def make_list(tokens):
@@ -163,6 +165,7 @@ def enclosed(start, end, inner):
 
 
 def join_string_expr(delimiter):
+    """Return a function that can join string expressions."""
     def _join_string_expr(tokens):
         if len(tokens) == 1:
             return tokens[0].strip('"')
@@ -192,7 +195,7 @@ def base_parser(validate_field, validate_entry):
     """Return the base parser which all other parsers are based on.
 
     The valid_fields and valid_entries arguments denote the allowable names for
-    this grammar.
+    a grammar.
 
     """
     # Simple expressions
@@ -201,8 +204,7 @@ def base_parser(validate_field, validate_entry):
     variable = name
 
     # Braced expressions e.g. '{braced}'
-    # non_braced = if_token_type('name', lambda v: re.match('[^{}]+', v))
-    non_braced = if_token_type('content', lambda v: True)
+    non_braced = if_token_type('content', always_true)
     braced_expr = parser.forward_decl()
     braced_expr.define(
         (if_token_type('lbrace', lambda v: True) +
@@ -216,7 +218,8 @@ def base_parser(validate_field, validate_entry):
         full_delimited_list(
             parser.some(lambda x: x.type == 'string') >> make_string |
             parser.some(lambda x: x.type == 'name') >> token_value,
-            'concat') >> join_string_expr('')
+            'concat'
+        ) >> join_string_expr('')
 
     # The value of a field
     value = braced_expr | integer | string_expr | variable
@@ -232,29 +235,46 @@ def base_parser(validate_field, validate_entry):
     comment = token_type('comment')
 
     # @string
-    string_entry = simple_entry(assignment, is_string_entry, make_string_entry)
+    string_entry = simple_entry(
+        assignment,
+        is_string_entry,
+        make_string_entry
+    )
 
     # @comment
-    comment_entry = simple_entry(token_type('content'), is_comment_entry,
-                                 make_comment_entry)
+    comment_entry = simple_entry(
+        token_type('content'),
+        is_comment_entry,
+        make_comment_entry
+    )
 
     # @preamble
-    preamble_entry = simple_entry(token_type('content'), is_preamble_entry,
-                                  make_preamble_entry)
+    preamble_entry = simple_entry(
+        token_type('content'),
+        is_preamble_entry,
+        make_preamble_entry
+    )
 
     # Make sure we only parsed valid entries
     valid_entry = if_token_type('name', validate_entry) >> token_value
 
     # @article etc.
-    entry = skip('entry') + valid_entry + skip('lbrace') +\
-        (token_type('name') | token_type('number')) + skip('comma') +\
-        parser.maybe(delimited_list(field, 'comma')) +\
-        parser.maybe(skip('comma')) +\
-        skip('rbrace')\
+    entry = skip('entry')\
+        + valid_entry\
+        + skip('lbrace')\
+        + (token_type('name') | token_type('number')) + skip('comma')\
+        + parser.maybe(delimited_list(field, 'comma'))\
+        + parser.maybe(skip('comma'))\
+        + skip('rbrace')\
         >> make_entry
 
-    return parser.many(string_entry | comment_entry | preamble_entry |
-                       entry | comment) + parser.skip(parser.finished)
+    return parser.many(
+        string_entry
+        | comment_entry
+        | preamble_entry
+        | entry
+        | comment
+    ) + parser.skip(parser.finished)
 
 
 def bibtex_parser():
@@ -263,9 +283,7 @@ def bibtex_parser():
         return field.lower().strip() in bibpy.fields.bibtex
 
     def validate_entry(entry):
-        return entry.lower().strip() in (bibpy.entries.bibtex |
-                                         frozenset(['string', 'comment',
-                                                    'preamble']))
+        return entry.lower().strip() in bibpy.entries.bibtex
 
     return base_parser(validate_field, validate_entry)
 
@@ -297,10 +315,10 @@ def relaxed_parser():
     regex = r'[\w\-:\.]+'
 
     def validate_field(field):
-        return re.match(regex, field.strip().lower(), re.UNICODE)
+        return re.match(regex, field.strip().lower())
 
     def validate_entry(entry):
-        return re.match(regex, entry.strip().lower(), re.UNICODE)
+        return re.match(regex, entry.strip().lower())
 
     return base_parser(validate_field, validate_entry)
 
@@ -314,8 +332,10 @@ def date_parser():
     day = month
     date = year + parser.maybe(dash + month) + parser.maybe(dash + day)
 
-    return date + parser.maybe((forward_slash + date) | forward_slash) +\
-        parser.skip(parser.finished) >> make_date
+    return date\
+        + parser.maybe((forward_slash + date) | forward_slash)\
+        + parser.skip(parser.finished)\
+        >> make_date
 
 
 def parse(string, format, ignore_comments=True):
@@ -326,7 +346,7 @@ def parse(string, format, ignore_comments=True):
         strings, preambles, comment_entries, comments, entries =\
             [], [], [], [], []
 
-        for result in grammar.parse(bibpy.lexers.lex_bib(string)):
+        for result in grammar.parse(list(bibpy.lexers.lex_bib(string))):
             et = getattr(result, 'bibtype', False)
 
             if et == 'string':
@@ -341,8 +361,13 @@ def parse(string, format, ignore_comments=True):
                 if not ignore_comments and not re.match(r'^\s*$', result):
                     comments.append(result)
 
-        return bibpy.entries.Entries(entries, strings, preambles,
-                                     comment_entries, comments)
+        return bibpy.entries.Entries(
+            entries,
+            strings,
+            preambles,
+            comment_entries,
+            comments
+        )
     except lexer.LexerError as ex:
         raise bibpy.error.LexerException(str(ex))
     except parser.NoParseError as ex:
@@ -360,7 +385,7 @@ def parse_date(datestring):
     grammar = grammar_from_format('date')
 
     try:
-        return grammar.parse(bibpy.lexers.lex_date(datestring))
+        return grammar.parse(list(bibpy.lexers.lex_date(datestring)))
     except lexer.LexerError as ex:
         raise bibpy.error.LexerException(str(ex))
     except parser.NoParseError as ex:
@@ -372,10 +397,7 @@ def parse_string_expr(expr):
     if not expr:
         return expr
 
-    try:
-        return bibpy.lexers.lex_string_expr(expr)
-    except (lexer.LexerError, parser.NoParseError):
-        return expr
+    return bibpy.lexers.lex_string_expr(expr)
 
 
 def parse_braced_expr(expr):
@@ -394,6 +416,7 @@ def prefix_indices(parts):
 
     if i != -1:
         j = i + 1
+
         for k in range(i + 1, len(parts) - 1):
             if parts[k].value.islower() and parts[k].type != 'braced':
                 j = k + 1
@@ -404,10 +427,11 @@ def prefix_indices(parts):
 def parse_name(name):
     """Parse a name, such as an author."""
     if not name:
-        return bibpy.name.Name()
+        return Name()
 
     first, prefix, last, suffix = '', '', '', ''
     tokens, commas = bibpy.lexers.lex_name(name)
+    tokens = [token.value for token in tokens]
     stripped_tokens = [[token.value for token in part] for part in tokens]
 
     if commas == 0:
@@ -454,13 +478,14 @@ def parse_name(name):
             last = ' '.join(stripped_tokens[0])
             suffix = ' '.join(stripped_tokens[1])
 
-    return bibpy.name.Name(first, prefix, last, suffix)
+    return Name(first, prefix, last, suffix)
 
 
 ##################################################################
 # Query Grammars
 ##################################################################
 def make_query_result(query_type):
+    """Return a function that creates the result of a query."""
     def _result(tokens):
         return (query_type, tokens)
 
@@ -469,30 +494,23 @@ def make_query_result(query_type):
 
 def key_query_parser():
     """Return a parser for key queries."""
-    return (parser.maybe(token_type('not') | token_type('approx')) +
-            token_type('name') +
-            parser.skip(parser.finished)) >> make_query_result('key')
+    return (
+        parser.maybe(token_type('not') | token_type('approx'))
+        + token_type('name')
+        + parser.skip(parser.finished)
+    ) >> make_query_result('key')
 
 
 def entry_query_parser():
     """Return a parser for name queries."""
-    return (parser.maybe(token_type('not') | token_type('approx')) +
-            token_type('name') +
-            parser.skip(parser.finished)) >> make_query_result('bibtype')
+    return (
+        parser.maybe(token_type('not') | token_type('approx'))
+        + token_type('name')
+        + parser.skip(parser.finished)
+    ) >> make_query_result('bibtype')
 
 
 def field_query_parser():
-    """Return a parser for field queries."""
-    field_value = token_type('not') + token_type('name') +\
-        (token_type('equals') | token_type('approx')) + token_type('any')
-
-    field_occurrence = delimited_list(parser.maybe(token_type('not')) +
-                                      token_type('name'), 'comma')
-
-    return (field_value | field_occurrence) + parser.skip(parser.finished)
-
-
-def numeric_query_parser():
     """Return a parser for numeric queries.
 
     Example queries: '1900-1995' or '>= 1998'
@@ -509,38 +527,49 @@ def numeric_query_parser():
 
     # Simple comparisons
     # NOTE: We put le before lt to parse both
-    comparison = parser.maybe(token_type('not')) + field_name +\
-        (le | lt | ge | gt) + number
+    comparison = parser.maybe(token_type('not'))\
+        + field_name\
+        + (le | lt | ge | gt)\
+        + number
 
     # Values can be given as intervals ('1990-2000')
-    interval = parser.maybe(token_type('not')) + field_name +\
-        skip('equals') + number + skip('dash') + number
+    interval = parser.maybe(token_type('not'))\
+        + field_name\
+        + skip('equals')\
+        + number\
+        + skip('dash')\
+        + number
 
     # Values can be given as ranges ('1990<=year<=2000')
     # NOTE: We put le before lt to parse both
-    range_ = parser.maybe(token_type('not')) + number + (le | lt) +\
-        field_name + (le | lt) + number
+    range_ = parser.maybe(token_type('not'))\
+        + number\
+        + (le | lt)\
+        + field_name\
+        + (le | lt)\
+        + number
 
     # Field value queries ('year=2000' or 'author~Augustus')
-    field_value = parser.maybe(token_type('not')) + field_name +\
-        (eq | approx) + (token_type('name') | token_type('number') |
-                         token_type('any'))
+    field_value = parser.maybe(token_type('not'))\
+        + field_name\
+        + (eq | approx)\
+        + (token_type('name') | token_type('number') | token_type('any'))
 
     # Field occurrence ('publisher' or '^publisher')
     field_occurrence = parser.maybe(token_type('not')) + field_name
 
-    return (interval >> make_query_result('interval') |
-            comparison >> make_query_result('comparison') |
-            range_ >> make_query_result('range') |
-            field_value >> make_query_result('value') |
-            field_occurrence >> make_query_result('occurrence')) +\
-        parser.skip(parser.finished)
+    return (interval >> make_query_result('interval')
+            | comparison >> make_query_result('comparison')
+            | range_ >> make_query_result('range')
+            | field_value >> make_query_result('value')
+            | field_occurrence >> make_query_result('occurrence'))\
+        + parser.skip(parser.finished)
 
 
 _query_grammars = {
     'bibkey':  key_query_parser(),
     'bibtype': entry_query_parser(),
-    'field':   numeric_query_parser()
+    'field':   field_query_parser(),
 }
 
 
@@ -555,9 +584,10 @@ def parse_query(query, query_type):
 
         return _query_grammars[query_type].parse(tokens)
     except (lexer.LexerError, parser.NoParseError) as ex:
-        raise bibpy.error.ParseException('Error: One or more constraints '
-                                         'failed to parse at column {0}'
-                                         .format(ex.state.pos))
+        raise bibpy.error.ParseException(
+            'Error: One or more constraints failed to parse at column {0}'
+            .format(ex.state.pos)
+        )
 
 
 ##################################################################
@@ -576,8 +606,12 @@ _formats = {
 def grammar_from_format(format):
     """Return the grammar correspoding to the given format string."""
     if format not in _formats:
-        raise KeyError("Reference format '" + format + "' does not exist "
-                       "(use any of " + ", ".join(sorted(_formats.keys())) +
-                       ")")
+        raise KeyError(
+            "Reference format '{0}' does not exist (use any of {1})"
+            .format(
+                format,
+                ", ".join(sorted(_formats.keys()))
+            )
+        )
 
     return _formats[format]

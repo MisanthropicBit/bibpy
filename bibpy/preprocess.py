@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""Conversion functions for pre- and postprocessing of bib(la)tex fields."""
+"""Conversion functions for preprocessing of bib(la)tex fields."""
 
 import bibpy.name
 import calendar
+from collections.abc import Iterable
 import re
 
 _MONTHNAME_TO_INT = {v: k for k, v in enumerate(calendar.month_name)}
@@ -11,7 +12,8 @@ _MONTHNAME_TO_INT = {v: k for k, v in enumerate(calendar.month_name)}
 
 def preprocess_namelist(namelist, **options):
     """Convert a list of names to a delimited string."""
-    if type(namelist) is not list:
+    if not isinstance(namelist, Iterable) or isinstance(namelist, str)\
+            or not namelist:
         return namelist
 
     processed_namelist = []
@@ -23,7 +25,7 @@ def preprocess_namelist(namelist, **options):
         else:
             processed_namelist.append(name)
 
-    # First make sure that delimiters are braced properly
+    # First make sure that "delimiters" occurring in names are braced properly
     namelist = [re.sub(r'(\s+)(and)(\s+)', r'\1{\2}\3', name)
                 for name in processed_namelist]
 
@@ -73,49 +75,52 @@ def preprocess_pages(pages, **options):
 
 # A dictionary of fields as keys and the functions that preprocess them as
 # values, e.g. 'year' should be converted to an integer etc.
-preprocess_functions = {'address':       preprocess_namelist,
-                        'afterword':     preprocess_namelist,
-                        'author':        preprocess_namelist,
-                        'bookauthor':    preprocess_namelist,
-                        'chapter':       preprocess_int,
-                        'commentator':   preprocess_namelist,
-                        'date':          preprocess_date,
-                        'edition':       preprocess_int,
-                        'editor':        preprocess_namelist,
-                        'editora':       preprocess_namelist,
-                        'editorb':       preprocess_namelist,
-                        'editorc':       preprocess_namelist,
-                        'eventdate':     preprocess_date,
-                        'foreword':      preprocess_namelist,
-                        'holder':        preprocess_namelist,
-                        'institution':   preprocess_namelist,
-                        'introduction':  preprocess_namelist,
-                        'keywords':      preprocess_keywords,
-                        'language':      preprocess_namelist,
-                        'location':      preprocess_namelist,
-                        'month':         preprocess_month,
-                        'number':        preprocess_int,
-                        'organization':  preprocess_namelist,
-                        'origdate':      preprocess_date,
-                        'origlocation':  preprocess_namelist,
-                        'origpublisher': preprocess_namelist,
-                        'pages':         preprocess_pages,
-                        'part':          preprocess_int,
-                        'publisher':     preprocess_namelist,
-                        'related':       preprocess_keylist,
-                        'school':        preprocess_namelist,
-                        'series':        preprocess_int,
-                        'shortauthor':   preprocess_namelist,
-                        'shorteditor':   preprocess_namelist,
-                        'translator':    preprocess_namelist,
-                        'urldate':       preprocess_date,
-                        'xdata':         preprocess_keylist,
-                        'volume':        preprocess_int,
-                        'year':          preprocess_int}
+preprocess_functions = {
+    'address':       preprocess_namelist,
+    'afterword':     preprocess_namelist,
+    'author':        preprocess_namelist,
+    'bookauthor':    preprocess_namelist,
+    'chapter':       preprocess_int,
+    'commentator':   preprocess_namelist,
+    'date':          preprocess_date,
+    'edition':       preprocess_int,
+    'editor':        preprocess_namelist,
+    'editora':       preprocess_namelist,
+    'editorb':       preprocess_namelist,
+    'editorc':       preprocess_namelist,
+    'eventdate':     preprocess_date,
+    'foreword':      preprocess_namelist,
+    'holder':        preprocess_namelist,
+    'institution':   preprocess_namelist,
+    'introduction':  preprocess_namelist,
+    'keywords':      preprocess_keywords,
+    'language':      preprocess_namelist,
+    'location':      preprocess_namelist,
+    'month':         preprocess_month,
+    'number':        preprocess_int,
+    'organization':  preprocess_namelist,
+    'origdate':      preprocess_date,
+    'origlocation':  preprocess_namelist,
+    'origpublisher': preprocess_namelist,
+    'pages':         preprocess_pages,
+    'pagetotal':     preprocess_int,
+    'part':          preprocess_int,
+    'publisher':     preprocess_namelist,
+    'related':       preprocess_keylist,
+    'school':        preprocess_namelist,
+    'series':        preprocess_int,
+    'shortauthor':   preprocess_namelist,
+    'shorteditor':   preprocess_namelist,
+    'translator':    preprocess_namelist,
+    'urldate':       preprocess_date,
+    'xdata':         preprocess_keylist,
+    'volume':        preprocess_int,
+    'year':          preprocess_int
+}
 
 
 def preprocess(entry, fields, **options):
-    """Preprocess a subset of fields in a list of entries to be written."""
+    """Preprocess a subset of fields in a list of entries to be output."""
     for field in fields:
         value = getattr(entry, field, None)
 

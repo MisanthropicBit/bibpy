@@ -4,13 +4,11 @@
 
 import bibpy.lexers
 
-__all__ = (['Name'])
+__all__ = ('Name', )
 
 
 class Name:
     """Class containing the individual components of a name."""
-
-    _lexer = bibpy.lexers.NameLexer()
 
     def __init__(self, first='', prefix='', last='', suffix=''):
         """Create a name consisting of first, prefix, last and suffix parts."""
@@ -72,7 +70,7 @@ class Name:
     def _initials(self, s):
         """Return the initials for a name part.
 
-        E.g. "Jane Gustav" => "J. G."
+        E.g. "Jane Gustav" => "J. G.".
 
         """
         return ' '.join(e[0] + '.' for e in s.split())
@@ -85,6 +83,9 @@ class Name:
         Consider the name 'John Smith' and its different styled formatings:
             * first-last => 'John Smith'
             * last-first => 'Smith, John'
+
+        If initials is True, convert name to its initials e.g. "Jane Gustav" =>
+        "J. G.".
 
         """
         if style == 'first-last':

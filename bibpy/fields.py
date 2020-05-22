@@ -10,10 +10,9 @@ readable access.
 
 """
 
-# Ignore E501: line too long errors
+# Ignore E501: line too long errors to get docstrings without newlines at weird
+# places
 # flake8: noqa
-
-__all__ = ('all', 'bibtex', 'biblatex')
 
 # Fields common to both bibtex and biblatex
 base_fields_docs = {

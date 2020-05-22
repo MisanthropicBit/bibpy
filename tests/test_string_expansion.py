@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
+
 """Test string variable expansion and unexpansion."""
 
 import bibpy
 import bibpy.entry
+from bibpy.parser import parse_string_expr
+from funcparserlib.lexer import Token
 import pytest
 
 
@@ -10,6 +14,12 @@ def test_entries():
     result = bibpy.read_file('tests/data/string_variables.bib', 'bibtex')
 
     return result.entries, result.strings
+
+
+def test_parse_string_expr_fail():
+    assert parse_string_expr('""') == [Token('string', '""')]
+    assert parse_string_expr('"no"pe"') == [Token('string', '"no"pe"')]
+    assert parse_string_expr('@@@') == [Token('string', '@@@')]
 
 
 def test_string_expand_start(test_entries):
@@ -48,7 +58,7 @@ def test_string_expand_end(test_entries):
     assert entry.author == original_author
 
     bibpy.expand_strings([entry], strings)
-    assert entry.author == "Andre Cook"
+    assert entry.author == 'Andre Cook'
 
     bibpy.unexpand_strings([entry], strings)
     assert entry.author == original_author
@@ -62,7 +72,7 @@ def test_string_expand_multiple(test_entries):
     assert entry.institution == original_institution
 
     bibpy.expand_strings([entry], strings)
-    assert entry.institution == "This should expand multiple variables"
+    assert entry.institution == 'This should expand multiple variables'
 
     bibpy.unexpand_strings([entry], strings)
     assert entry.institution == original_institution
@@ -99,14 +109,16 @@ def test_string_expand_empty(test_entries):
 
 def test_duplicate_string_variables(test_entries):
     entries, _ = test_entries
-    strings = [bibpy.entry.String('var', '20'),
-               bibpy.entry.String('var', '99')]
+    strings = [
+        bibpy.entry.String('var', '20'),
+        bibpy.entry.String('var', '99')
+    ]
 
     with pytest.raises(ValueError):
         bibpy.expand_strings(entries, strings, ignore_duplicates=False)
 
     bibpy.expand_strings(entries, strings, ignore_duplicates=True)
-    assert entries[1].title == "Merci99 Animals"
+    assert entries[1].title == 'Merci99 Animals'
 
     with pytest.raises(ValueError):
         bibpy.unexpand_strings(entries, strings, ignore_duplicates=False)
@@ -126,8 +138,8 @@ def test_real_world_example():
 
     assert result.entries[0].author ==\
         ' and  and '
-    assert result.entries[0].title == "The {{\LaTeX}} {C}ompanion"
-    assert result.entries[0].booktitle == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].title == 'The {{\\LaTeX}} {C}ompanion'
+    assert result.entries[0].booktitle == 'The {{\\LaTeX}} {C}ompanion'
     assert result.entries[0].year == '1993'
     assert result.entries[0].publisher == 'Addison-Wesley'
     assert result.entries[0].month == 'December'
@@ -149,8 +161,8 @@ def test_partial_real_world_example():
 
     assert result.entries[0].author ==\
         'Goossens, Michel and  and Samarin, Alexander'
-    assert result.entries[0].title == "The {{\LaTeX}} {C}ompanion"
-    assert result.entries[0].booktitle == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].title == 'The {{\\LaTeX}} {C}ompanion'
+    assert result.entries[0].booktitle == 'The {{\\LaTeX}} {C}ompanion'
     assert result.entries[0].year == '1993'
     assert result.entries[0].publisher == 'Addison-Wesley'
     assert result.entries[0].month == 'December'
@@ -173,8 +185,8 @@ def test_full_real_world_example():
 
     assert result.entries[0].author ==\
         'Goossens, Michel and Mittelbach, Franck and Samarin, Alexander'
-    assert result.entries[0].title == "The {{\LaTeX}} {C}ompanion"
-    assert result.entries[0].booktitle == "The {{\LaTeX}} {C}ompanion"
+    assert result.entries[0].title == 'The {{\\LaTeX}} {C}ompanion'
+    assert result.entries[0].booktitle == 'The {{\\LaTeX}} {C}ompanion'
     assert result.entries[0].year == '1993'
     assert result.entries[0].publisher == 'Addison-Wesley'
     assert result.entries[0].month == 'December'

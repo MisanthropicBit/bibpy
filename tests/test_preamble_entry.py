@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test the preamble entry."""
 
 import bibpy
@@ -34,6 +36,7 @@ def test_properties(test_entry):
     assert entry.bibtype == 'preamble'
     assert entry.bibkey is None
     assert entry.fields == []
+    assert entry.value == 'LaTeX $\\textbf{code} $1$'
     assert entry == entry
     assert 'LaTeX' in entry
     assert 'lol' not in entry
@@ -45,6 +48,9 @@ def test_properties(test_entry):
     assert len(entry) == 1
     assert repr(entry) == "Preamble(value=\"" + contents + "\")"
     assert list(iter(entry)) == [(None, 'LaTeX $\\textbf{code} $1$')]
+
+    entry.value = '\\vspace{2cm}'
+    assert entry.value == '\\vspace{2cm}'
 
     with pytest.raises(AttributeError):
         entry['a']

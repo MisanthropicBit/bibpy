@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Class representing single entries in a bib(la)tex file."""
+"""Class representing single entries in a bib file."""
 
 from bibpy.entry.base import BaseEntry
 from bibpy.preprocess import preprocess
@@ -9,16 +9,26 @@ import bibpy.error
 import bibpy.fields
 import bibpy.requirements
 import collections
+from collections.abc import Iterable
 import itertools
 
 
 class Entry(BaseEntry):
-    """Represents an entry in a bib(la)tex file."""
+    """Represents an entry in a bib file."""
 
     # List of predefined properties that cannot be set through setattr etc.
-    _locked_fields = frozenset(['bibkey', 'bibtype', 'fields',
-                                'extra_fields', 'aliases', 'valid', 'validate',
-                                'keys', 'values', 'clear'])
+    _locked_fields = frozenset([
+        'bibkey',
+        'bibtype',
+        'fields',
+        'extra_fields',
+        'aliases',
+        'valid',
+        'validate',
+        'keys',
+        'values',
+        'clear'
+    ])
 
     def __init__(self, bibtype='', bibkey='', fields=(), **kw_fields):
         """Create a bib entry with a type, key and fields.
@@ -42,39 +52,48 @@ class Entry(BaseEntry):
                **kwargs):
         """Format and return the entry as a string.
 
-        'align' aligns the equal signs of all fields.
-        'indent' controls the amount of indentation inside an entry.
-        'order' is a list of the order of a subset of fields.
+        If align is True, align the equal signs of all fields.
+
+        The indent is a string that controls the type of indentation before a
+        field.
+
+        The order is a either bool that sorts alphabetically if True, or a list
+        of the order of a subset of fields, e.g. ['author', 'title'] would
+        place those two fields in the given order before any other fields.
 
         Additional kwargs are formatting options passed on to the preprocessing
         function that converts Python types into bibliographic data for
         writing.
 
         """
-        entry_start = "@" + self.bibtype + "{" + self.bibkey + ",\n"
+        entry_start = '@' + self.bibtype + '{' + self.bibkey + ',\n'
 
         if not self.fields:
-            return entry_start + "}"
+            return entry_start + '}'
 
         fields = []
 
         if order:
-            if type(order) is bool:
+            if isinstance(order, bool):
                 # Sort alphabetically
                 fields = sorted(preprocess(self, self.fields, **kwargs))
-            elif type(order) is list:
+            elif isinstance(order, Iterable) and not isinstance(order, str):
                 # Sort according to the specified order
                 order = [o for o in order if getattr(self, o, None)]
-                ordered_fields = list(preprocess(self, order, **kwargs))
-                other_fields = list(preprocess(self, [f for f in self.fields
-                                                      if f not in order],
-                                               **kwargs))
+                ordered_fields = preprocess(self, order, **kwargs)
+                other_fields = preprocess(
+                    self,
+                    [f for f in self.fields if f not in order],
+                    **kwargs
+                )
 
-                fields = ordered_fields + other_fields
+                fields = list(ordered_fields) + list(other_fields)
 
             else:
-                raise ValueError("order must be either a bool or a list, not "
-                                 "'{0}'".format(type(order)))
+                raise ValueError(
+                    "order must be either a bool-like or non-string iterable, "
+                    "not '{0}'".format(type(order))
+                )
         else:
             # Otherwise, just preprocess all fields in their current order
             for field, value in preprocess(self, self.fields, **kwargs):
@@ -82,13 +101,16 @@ class Entry(BaseEntry):
 
         mx = max(len(field) for field in self.fields)
 
-        formatted_fields =\
-            ["{0}{1}{2} = {3}{4}{5}"
-             .format(indent, field, (' ' * (mx - len(field)) if align else ''),
-                     surround[0], value, surround[1])
-             for field, value in fields]
+        formatted_fields = [
+            '{0}{1}{2} = {3}{4}{5}'.format(
+                indent,
+                field,
+                (' ' * (mx - len(field)) if align else ''),
+                surround[0], value, surround[1]
+            ) for field, value in fields
+        ]
 
-        return entry_start + ",\n".join(formatted_fields) + "\n}"
+        return entry_start + ',\n'.join(formatted_fields) + '\n}'
 
     @property
     def bibtype(self):
@@ -110,7 +132,7 @@ class Entry(BaseEntry):
 
     @property
     def fields(self):
-        """Return a list of this entry's active bib(la)tex fields.
+        """Return a list of active bib(la)tex fields.
 
         Active fields are fields that are not None or empty strings.
 
@@ -183,8 +205,12 @@ class Entry(BaseEntry):
         return not self.__eq__(other)
 
     def __contains__(self, item):
-        """Check if a field is set for this entry."""
-        return item in self.fields
+        """Check if the active field is set for this entry.
+
+        Does not check general attributes, only active fields.
+
+        """
+        return item in self.fields or item in self.extra_fields
 
     def __setattr__(self, name, value):
         super().__setattr__(name, value)
@@ -229,9 +255,11 @@ def autoproperty(name, getter=True, setter=True, prefix='_', doc=''):
     if not ('\n' in doc or '\r\n' in doc) and not doc.endswith('.'):
         doc += '.'
 
-    return property(_getter if getter else None,
-                    _setter if setter else None,
-                    doc=doc)
+    return property(
+        _getter if getter else None,
+        _setter if setter else None,
+        doc=doc
+    )
 
 
 # Programmatically set all internal field attributes for the Entry class

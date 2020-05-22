@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test that strings or files are in the correct reference format."""
 
 import bibpy
@@ -113,12 +115,18 @@ A collection of bibtex entries
 
 
 def test_bibtex():
-    assert bibpy.string_is_format(open('tests/data/valid_bibtex.bib').read(),
-                                  'bibtex')
+    assert bibpy.string_is_format(
+        open('tests/data/valid_bibtex.bib').read(),
+        'bibtex'
+    )
     assert not bibpy.string_is_format(
-        open('tests/data/invalid_bibtex1.bib').read(), 'bibtex')
+        open('tests/data/invalid_bibtex1.bib').read(),
+        'bibtex'
+    )
     assert not bibpy.string_is_format(
-        open('tests/data/invalid_bibtex2.bib').read(), 'bibtex')
+        open('tests/data/invalid_bibtex2.bib').read(),
+        'bibtex'
+    )
 
     assert bibpy.file_is_format('tests/data/valid_bibtex.bib', 'bibtex')
     assert not bibpy.file_is_format('tests/data/invalid_bibtex1.bib', 'bibtex')
@@ -130,11 +138,14 @@ def test_bibtex():
 def test_biblatex():
     assert not bibpy.string_is_format(
         open('tests/data/invalid_bibtex2.bib').read(),
-        'biblatex')
+        'biblatex'
+    )
 
     assert bibpy.file_is_format('tests/data/valid_biblatex.bib', 'biblatex')
-    assert not bibpy.file_is_format('tests/data/invalid_bibtex2.bib',
-                                    'biblatex')
+    assert not bibpy.file_is_format(
+        'tests/data/invalid_bibtex2.bib',
+        'biblatex'
+    )
     assert not bibpy.file_is_format('tests/data/valid_mixed.bib', 'biblatex')
 
 

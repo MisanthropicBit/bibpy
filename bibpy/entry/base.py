@@ -9,6 +9,25 @@ class BaseEntry:
     def format(self, **options):
         raise NotImplementedError()
 
+    def format_auxiliary_entry(self, entry_type, contents, indent='    ',
+                               singleline=True, braces=True):
+        """Common formatting for @comment, @string and @preamble entries.
+
+        If singleline is True, put the entry on a single line. The contents of
+        the entry is indented by the indent argument if singleline is True.
+
+        If braces is True, surround the entry by braces, else parentheses.
+
+        """
+        return '@{0}{1}{2}{3}{4}{5}'.format(
+            entry_type,
+            '{' if braces else '(',
+            '' if singleline else '\n' + indent,
+            contents,
+            '' if singleline else '\n',
+            '}' if braces else ')'
+        )
+
     @property
     def bibtype(self):
         raise NotImplementedError()

@@ -9,70 +9,91 @@ AUTHOR_OR_EDITOR = frozenset(['author', 'editor'])
 # and a list of fields where only one needs to be present
 bibtex_requirements = {
     'article': (
-        frozenset(['author',
-                   'title',
-                   'journal',
-                   'year']),
+        frozenset([
+            'author',
+            'title',
+            'journal',
+            'year'
+        ]),
         []
     ), 'book': (
-        frozenset(['title',
-                   'publisher',
-                   'year']),
+        frozenset([
+            'title',
+            'publisher',
+            'year'
+        ]),
         [AUTHOR_OR_EDITOR]
     ), 'booklet': (
         frozenset(['title']),
         []
     ), 'inbook': (
-        frozenset(['title',
-                   'publisher',
-                   'year']),
-        [AUTHOR_OR_EDITOR,
-         frozenset(['chapter', 'pages'])]
+        frozenset([
+            'title',
+            'publisher',
+            'year'
+        ]), [
+            AUTHOR_OR_EDITOR,
+            frozenset(['chapter', 'pages'])
+        ]
     ), 'incollection': (
-        frozenset(['author',
-                   'title',
-                   'booktitle',
-                   'publisher',
-                   'year']),
+        frozenset([
+            'author',
+            'title',
+            'booktitle',
+            'publisher',
+            'year'
+        ]),
         []
     ), 'inproceedings': (
-        frozenset(['author',
-                   'title',
-                   'booktitle',
-                   'year']),
+        frozenset([
+            'author',
+            'title',
+            'booktitle',
+            'year'
+        ]),
         []
     ), 'manual': (
         frozenset(['title']),
         []
     ), 'masterthesis': (
-        frozenset(['author',
-                   'title',
-                   'school',
-                   'year']),
+        frozenset([
+            'author',
+            'title',
+            'school',
+            'year'
+        ]),
         []
     ), 'misc': (
         frozenset(),
         []
     ), 'phdthesis': (
-        frozenset(['author',
-                   'title',
-                   'school',
-                   'year']),
+        frozenset([
+            'author',
+            'title',
+            'school',
+            'year'
+        ]),
         []
     ), 'proceedings': (
-        frozenset(['title',
-                   'year']),
+        frozenset([
+            'title',
+            'year'
+        ]),
         []
     ), 'techreport': (
-        frozenset(['author',
-                   'title',
-                   'institution',
-                   'year']),
+        frozenset([
+            'author',
+            'title',
+            'institution',
+            'year'
+        ]),
         []
     ), 'unpublished': (
-        frozenset(['author',
-                   'title',
-                   'note']),
+        frozenset([
+            'author',
+            'title',
+            'note'
+        ]),
         []
     )
 }
@@ -81,17 +102,13 @@ bibtex_requirements['conference'] = bibtex_requirements['inproceedings']
 
 biblatex_requirements = {
     'article': (
-        frozenset(['author',
-                   'title',
-                   'journaltitle']),
+        frozenset(['author', 'title', 'journaltitle']),
         [YEAR_OR_DATE]
     ), 'book': (
-        frozenset(['author',
-                   'title']),
+        frozenset(['author', 'title']),
         [YEAR_OR_DATE]
     ), 'mvbook': (
-        frozenset(['author',
-                   'title']),
+        frozenset(['author', 'title']),
         [YEAR_OR_DATE]
     ), 'booklet': (
         frozenset(['title']),
@@ -103,9 +120,7 @@ biblatex_requirements = {
         frozenset(['editor', 'title']),
         [YEAR_OR_DATE]
     ), 'incollection': (
-        frozenset(['author',
-                   'title',
-                   'booktitle']),
+        frozenset(['author', 'title', 'booktitle']),
         [YEAR_OR_DATE]
     ), 'manual': (
         frozenset(['title']),
@@ -126,23 +141,16 @@ biblatex_requirements = {
         frozenset(['title']),
         [YEAR_OR_DATE]
     ), 'inproceedings': (
-        frozenset(['author',
-                   'title',
-                   'booktitle']),
+        frozenset(['author', 'title', 'booktitle']),
         [YEAR_OR_DATE]
     ), 'report': (
-        frozenset(['author',
-                   'title',
-                   'type',
-                   'institution']),
+        frozenset(['author', 'title', 'type', 'institution']),
         [YEAR_OR_DATE]
     ), 'set': (
-        # ???
+        frozenset(['entryset']),
+        []
     ), 'thesis': (
-        frozenset(['author',
-                   'title',
-                   'type',
-                   'institution']),
+        frozenset(['author', 'title', 'type', 'institution']),
         [YEAR_OR_DATE]
     ), 'unpublished': (
         frozenset(['author', 'title']),
@@ -150,7 +158,8 @@ biblatex_requirements = {
     ), 'xdata': (
         frozenset(),
         []
-    )}
+    )
+}
 
 mixed_requirements = {}  # Possible?
 
@@ -177,7 +186,7 @@ def check(entry, format):
         return (frozenset(), [])
 
     if format not in formats:
-        raise ValueError("Unknown reference format '" + format + "'")
+        raise ValueError("Unknown reference format '{0}'".format(format))
 
     requirements = formats[format]
     fields = frozenset(entry.fields)

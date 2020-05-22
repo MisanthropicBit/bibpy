@@ -42,7 +42,6 @@ def test_properties(test_entry):
 
     assert not test_entry.valid('bibtex')
     assert not test_entry.valid('biblatex')
-    # assert not test_entry.valid('mixed')
     assert test_entry.valid('relaxed')
 
     with pytest.raises(ValueError):

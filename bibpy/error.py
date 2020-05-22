@@ -37,6 +37,21 @@ class RequiredFieldError(Exception):
             s += "{0}".format(", ".join("/".join(e) for e in optional))
 
         super().__init__(s)
-        self.entry = entry
-        self.required = required
-        self.optional = optional
+        self._entry = entry
+        self._required = required
+        self._optional = optional
+
+    @property
+    def entry(self):
+        """The offending entry."""
+        return self._entry
+
+    @property
+    def required(self):
+        """Missing required fields."""
+        return self._required
+
+    @property
+    def optional(self):
+        """Missing fields where one of several fields are required."""
+        return self._optional

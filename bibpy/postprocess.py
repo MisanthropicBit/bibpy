@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""Conversion functions for pre- and postprocessing of bib(la)tex fields."""
+"""Conversion functions for postprocessing of bib(la)tex fields."""
 
 import bibpy
-import bibpy.date
+from bibpy.date import DateRange
 import bibpy.error
 import bibpy.lexers
 import bibpy.name
@@ -12,16 +12,39 @@ import calendar
 import re
 
 _MONTH_ABBREVIATIONS = [
-    'jan', 'feb', 'mar', 'apr', 'may', 'jun',
-    'jul', 'aug', 'sep', 'oct', 'nov', 'dec'
+    'jan',
+    'feb',
+    'mar',
+    'apr',
+    'may',
+    'jun',
+    'jul',
+    'aug',
+    'sep',
+    'oct',
+    'nov',
+    'dec',
 ]
 
 # TODO: Let users split on default names and custom ones
 _SPLIT_NAMES = frozenset([
-    'author', 'afterword', 'bookauthor', 'commentator',
-    'editor', 'editora', 'editorb', 'editorc', 'foreword',
-    'holder', 'introduction', 'language', 'origpublisher',
-    'publisher', 'shortauthor', 'shorteditor', 'translator'
+    'author',
+    'afterword',
+    'bookauthor',
+    'commentator',
+    'editor',
+    'editora',
+    'editorb',
+    'editorc',
+    'foreword',
+    'holder',
+    'introduction',
+    'language',
+    'origpublisher',
+    'publisher',
+    'shortauthor',
+    'shorteditor',
+    'translator',
 ])
 
 
@@ -35,12 +58,12 @@ def postprocess_braces(value, **options):
 
 
 def postprocess_namelist(field, names, **options):
-    """Convert a string of authors to a list."""
+    """Split a string of authors into a list."""
     if not names:
         return []
 
     # First, split on zero brace-level 'and'
-    names = bibpy.lexers.lex_namelist(names)
+    names = list(bibpy.lexers.lex_namelist(names))
 
     # Second, if requested, parse each name
     if field in options.get('split_names', []):
@@ -50,7 +73,7 @@ def postprocess_namelist(field, names, **options):
 
 
 def postprocess_name(field, author, **options):
-    """Attempts to split an author name into first, middle and last name."""
+    """Attempts to split an author name into its components."""
     if author and bibpy.is_string(author):
         return bibpy.name.Name.fromstring(author)
     else:
@@ -58,7 +81,7 @@ def postprocess_name(field, author, **options):
 
 
 def postprocess_keywords(field, keywords, **options):
-    """Convert a string of keywords to a list."""
+    """Split a string of keywords into a list."""
     if not keywords:
         return []
 
@@ -75,12 +98,11 @@ def postprocess_int(field, value, **options):
 
 
 def postprocess_date(field, datestring, **options):
-    """Convert a string to a bibpy.date.DateRange."""
+    """Convert a string to a :py:func:`bibpy.date.DateRange`."""
     if not datestring:
-        return bibpy.date.DateRange((None, None, None), (None, None, None),
-                                    False)
+        return DateRange.empty()
 
-    return bibpy.date.DateRange.fromstring(datestring)
+    return DateRange.fromstring(datestring)
 
 
 def get_month_name(i):
@@ -108,7 +130,7 @@ def postprocess_month(field, month, **options):
 
 
 def postprocess_keylist(field, keylist, **options):
-    """Convert a comma-separated string of keys to a list."""
+    """Split a comma-separated string of keys into a list."""
     if not keylist:
         return []
 
@@ -130,46 +152,48 @@ def postprocess_pages(field, pages, **options):
         return pages
 
 
-# A dictionary of fields as keys and the functions that postprocess them as
-# values, e.g. 'year' should be converted to an integer etc.
-postprocess_functions = {'address':       postprocess_namelist,
-                         'afterword':     postprocess_namelist,
-                         'annotator':     postprocess_namelist,
-                         'author':        postprocess_namelist,
-                         'bookauthor':    postprocess_namelist,
-                         'commentator':   postprocess_namelist,
-                         'date':          postprocess_date,
-                         'edition':       postprocess_int,
-                         'editor':        postprocess_namelist,
-                         'editora':       postprocess_namelist,
-                         'editorb':       postprocess_namelist,
-                         'editorc':       postprocess_namelist,
-                         'eventdate':     postprocess_date,
-                         'foreword':      postprocess_namelist,
-                         'holder':        postprocess_namelist,
-                         'institution':   postprocess_namelist,
-                         'introduction':  postprocess_namelist,
-                         'keywords':      postprocess_keywords,
-                         'language':      postprocess_namelist,
-                         'location':      postprocess_namelist,
-                         'month':         postprocess_month,
-                         'number':        postprocess_int,
-                         'organization':  postprocess_namelist,
-                         'origdate':      postprocess_date,
-                         'origlocation':  postprocess_namelist,
-                         'origpublisher': postprocess_namelist,
-                         'pages':         postprocess_pages,
-                         'pagetotal':     postprocess_int,
-                         'publisher':     postprocess_namelist,
-                         'related':       postprocess_keylist,
-                         'school':        postprocess_namelist,
-                         'shortauthor':   postprocess_namelist,
-                         'shorteditor':   postprocess_namelist,
-                         'translator':    postprocess_namelist,
-                         'urldate':       postprocess_date,
-                         'xdata':         postprocess_keylist,
-                         'volume':        postprocess_int,
-                         'year':          postprocess_int}
+# A dictionary of bib fields as keys and their postprocessing functions as
+# values
+postprocess_functions = {
+    'address':       postprocess_namelist,
+    'afterword':     postprocess_namelist,
+    'annotator':     postprocess_namelist,
+    'author':        postprocess_namelist,
+    'bookauthor':    postprocess_namelist,
+    'commentator':   postprocess_namelist,
+    'date':          postprocess_date,
+    'edition':       postprocess_int,
+    'editor':        postprocess_namelist,
+    'editora':       postprocess_namelist,
+    'editorb':       postprocess_namelist,
+    'editorc':       postprocess_namelist,
+    'eventdate':     postprocess_date,
+    'foreword':      postprocess_namelist,
+    'holder':        postprocess_namelist,
+    'institution':   postprocess_namelist,
+    'introduction':  postprocess_namelist,
+    'keywords':      postprocess_keywords,
+    'language':      postprocess_namelist,
+    'location':      postprocess_namelist,
+    'month':         postprocess_month,
+    'number':        postprocess_int,
+    'organization':  postprocess_namelist,
+    'origdate':      postprocess_date,
+    'origlocation':  postprocess_namelist,
+    'origpublisher': postprocess_namelist,
+    'pages':         postprocess_pages,
+    'pagetotal':     postprocess_int,
+    'publisher':     postprocess_namelist,
+    'related':       postprocess_keylist,
+    'school':        postprocess_namelist,
+    'shortauthor':   postprocess_namelist,
+    'shorteditor':   postprocess_namelist,
+    'translator':    postprocess_namelist,
+    'urldate':       postprocess_date,
+    'xdata':         postprocess_keylist,
+    'volume':        postprocess_int,
+    'year':          postprocess_int
+}
 
 
 def find_postprocess_fields(parameter, value):

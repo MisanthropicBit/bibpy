@@ -6,75 +6,77 @@ As of the Biblatex package documentation version 3.2 (27/12/2015)
 
 """
 
+__all__ = ('aliases', 'Entries')
 
-base_entry_types = frozenset(
-    ['article',
-     'book',
-     'booklet',
-     'inbook',
-     'incollection',
-     'inproceedings',
-     'manual',
-     'misc',
-     'proceedings',
-     'unpublished']
-)
+
+base_entry_types = frozenset([
+    'article',
+    'book',
+    'booklet',
+    'inbook',
+    'incollection',
+    'inproceedings',
+    'manual',
+    'misc',
+    'proceedings',
+    'unpublished'
+])
 
 ##################################################################
 # Bibtex
 ##################################################################
-bibtex_entry_types = frozenset(
-    ['conference',
-     'masterthesis',
-     'phdthesis',
-     'techreport']
-)
+bibtex_entry_types = frozenset([
+    'conference',
+    'masterthesis',
+    'phdthesis',
+    'techreport'
+])
 
 ##################################################################
 # Biblatex
 ##################################################################
 # The set of all valid Biblatex entry types
-biblatex_entry_types = frozenset(
-    ['bookinbook',
-     'booklet',
-     'collection',
-     'inference',
-     'mvbook',
-     'mvcollection',
-     'mvproceedings',
-     'mvreference',
-     'online',
-     'patent',
-     'periodical',
-     'reference',
-     'report',
-     'set',
-     'suppbook',
-     'suppcollection',
-     'suppperiodical',
-     'thesis',
-     'xdata']
-)
+biblatex_entry_types = frozenset([
+    'bookinbook',
+    'booklet',
+    'collection',
+    'inference',
+    'mvbook',
+    'mvcollection',
+    'mvproceedings',
+    'mvreference',
+    'online',
+    'patent',
+    'periodical',
+    'reference',
+    'report',
+    'set',
+    'suppbook',
+    'suppcollection',
+    'suppperiodical',
+    'thesis',
+    'xdata'
+])
 
 # Unsupported entry types
-biblatex_unsupported_entry_types = frozenset(
-    ['artwork',
-     'audio',
-     'bibnote',
-     'commentary',
-     'image',
-     'juristiction',
-     'legislation',
-     'legal',
-     'letter',
-     'movie',
-     'music',
-     'performance',
-     'review',
-     'software',
-     'standard',
-     'video']
-)
+biblatex_unsupported_entry_types = frozenset([
+    'artwork',
+    'audio',
+    'bibnote',
+    'commentary',
+    'image',
+    'juristiction',
+    'legislation',
+    'legal',
+    'letter',
+    'movie',
+    'music',
+    'performance',
+    'review',
+    'software',
+    'standard',
+    'video'
+])
 
 # Type aliases for all Biblatex entry types
 biblatex_entry_type_aliases = {
@@ -85,15 +87,19 @@ biblatex_entry_type_aliases = {
 }
 
 bibtex = base_entry_types | bibtex_entry_types
-biblatex = base_entry_types | biblatex_entry_types |\
-    biblatex_unsupported_entry_types |\
-    frozenset([v for l in biblatex_entry_type_aliases.values() for v in l])
+biblatex = base_entry_types\
+    | biblatex_entry_types\
+    | biblatex_unsupported_entry_types\
+    | frozenset(
+        [alias for value in biblatex_entry_type_aliases.values()
+         for alias in value]
+    )
 
 all = biblatex | bibtex
 
 
 def aliases(bibtype, format):
-    """Return the aliases of the given entry type and format."""
+    """Return the biblatex aliases of the given entry type and format."""
     # There are no aliases in bibtex
     if format != 'biblatex':
         return []
@@ -106,6 +112,7 @@ class Entries:
 
     def __init__(self, entries=[], strings=[], preambles=[],
                  comment_entries=[], comments=[]):
+        """Initialise with lists of bibliographic entries and comments."""
         self._entries = entries
         self._strings = strings
         self._preambles = preambles

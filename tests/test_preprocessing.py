@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test field preprocessing."""
 
 import bibpy
@@ -56,12 +58,6 @@ def test_preprocess_month():
         assert preprocess_month(m) == m
 
 
-@pytest.mark.skip
-# @pytest.mark.randomize(i=int, ncalls=100)
-def test_preproces_int(i):
-    assert preprocess_int(i) == str(i)
-
-
 def test_preproces_int():
     assert preprocess_int(20) == '20'
     assert preprocess_int('abc') == 'abc'
@@ -86,46 +82,47 @@ def test_preprocess():
     entry = bibpy.read_file('tests/data/preprocess.bib', 'relaxed').entries[0]
 
     expected = {
-        'address': 'Arthur Cunnings and Michelle Toulouse',
-        'afterword': 'Arthur Cunnings and Michelle Toulouse',
-        'author': 'Arthur Cunnings and Michelle Toulouse',
-        'bookauthor': 'Arthur Cunnings and Michelle Toulouse',
-        'chapter': '97',
-        'commentator': 'Arthur Cunnings and Michelle Toulouse',
-        'date': '1999-03-21',
-        'editor': 'Arthur Cunnings and Michelle Toulouse',
-        'editora': 'Arthur Cunnings and Michelle Toulouse',
-        'editorb': 'Arthur Cunnings and Michelle Toulouse',
-        'editorc': 'Arthur Cunnings and Michelle Toulouse',
-        'edition': '2',
-        'eventdate': '2008-12-7/',
-        'foreword': 'Arthur Cunnings and Michelle Toulouse',
-        'holder': 'Arthur Cunnings and Michelle Toulouse',
-        'institution': 'Arthur Cunnings and Michelle Toulouse',
-        'introduction': 'Arthur Cunnings and Michelle Toulouse',
-        'keywords': 'information;data;communications',
-        'location': 'Arthur Cunnings and Michelle Toulouse',
-        'language': 'Arthur Cunnings and Michelle Toulouse',
-        'month': '10',
-        'number': '28',
-        'organization': 'Arthur Cunnings and Michelle Toulouse',
-        'origdate': '2016-10-19',
-        'origlocation': 'Arthur Cunnings and Michelle Toulouse',
+        'address':       'Arthur Cunnings and Michelle Toulouse',
+        'afterword':     'Arthur Cunnings and Michelle Toulouse',
+        'author':        'Arthur Cunnings and Michelle Toulouse',
+        'bookauthor':    'Arthur Cunnings and Michelle Toulouse',
+        'chapter':       '97',
+        'commentator':   'Arthur Cunnings and Michelle Toulouse',
+        'date':          '1999-03-21',
+        'editor':        'Arthur Cunnings and Michelle Toulouse',
+        'editora':       'Arthur Cunnings and Michelle Toulouse',
+        'editorb':       'Arthur Cunnings and Michelle Toulouse',
+        'editorc':       'Arthur Cunnings and Michelle Toulouse',
+        'edition':       '2',
+        'eventdate':     '2008-12-07/',
+        'foreword':      'Arthur Cunnings and Michelle Toulouse',
+        'holder':        'Arthur Cunnings and Michelle Toulouse',
+        'institution':   'Arthur Cunnings and Michelle Toulouse',
+        'introduction':  'Arthur Cunnings and Michelle Toulouse',
+        'keywords':      'information;data;communications',
+        'location':      'Arthur Cunnings and Michelle Toulouse',
+        'language':      'Arthur Cunnings and Michelle Toulouse',
+        'month':         '10',
+        'number':        '28',
+        'organization':  'Arthur Cunnings and Michelle Toulouse',
+        'origdate':      '2016-10-19',
+        'origlocation':  'Arthur Cunnings and Michelle Toulouse',
         'origpublisher': 'Arthur Cunnings and Michelle Toulouse',
-        'pages': '11-20',
-        'part': '24',
-        'publisher': 'Arthur Cunnings and Michelle Toulouse',
-        'related': 'key1, key2, key3',
-        'school': 'Arthur Cunnings and Michelle Toulouse',
-        'series': '23',
-        'shortauthor': 'Arthur Cunnings and Michelle Toulouse',
-        'shorteditor': 'Arthur Cunnings and Michelle Toulouse',
-        'translator': 'Arthur Cunnings and Michelle Toulouse',
-        'organization': 'Arthur Cunnings and Michelle Toulouse',
-        'urldate': '2016-10-19/2016-10-27',
-        'xdata': ',    key1, key2, key3,   ',
-        'volume': '83',
-        'year': '2016'
+        'pages':         '11-20',
+        'pagetotal':     '205',
+        'part':          '24',
+        'publisher':     'Arthur Cunnings and Michelle Toulouse',
+        'related':       'key1, key2, key3',
+        'school':        'Arthur Cunnings and Michelle Toulouse',
+        'series':        '23',
+        'shortauthor':   'Arthur Cunnings and Michelle Toulouse',
+        'shorteditor':   'Arthur Cunnings and Michelle Toulouse',
+        'translator':    'Arthur Cunnings and Michelle Toulouse',
+        'organization':  'Arthur Cunnings and Michelle Toulouse',
+        'urldate':       '2016-10-19/2016-10-27',
+        'xdata':         ',    key1, key2, key3,   ',
+        'volume':        '83',
+        'year':          '2016',
     }
 
     # Ensure that there are no duplicates
@@ -133,17 +130,21 @@ def test_preprocess():
     assert len(preprocess_functions.keys()) ==\
         len(set(preprocess_functions.keys()))
 
-    assert set(expected.keys()) ==\
-        set(preprocess_functions.keys())
+    assert set(expected.keys()) == set(preprocess_functions.keys())
 
     for field, value in preprocess(entry, expected.keys()):
         assert value == expected.get(field, value)
 
 
 def test_no_postprocess():
-    entry = bibpy.entry.Entry('techreport', 'ula22',
-                              **{'random_field': 23,
-                                 'nopreprocess': "OK!, OK!, OK!"})
+    entry = bibpy.entry.Entry(
+        'techreport',
+        'ula22',
+        **{
+            'random_field': 23,
+            'nopreprocess': "OK!, OK!, OK!"
+        },
+    )
 
     preprocessed = preprocess(entry, ['random_field', 'nopreprocess'])
 
@@ -156,8 +157,11 @@ def test_no_preprocess_of_and_in_names():
 
 
 def test_preprocess_skip_none_values():
-    entry = bibpy.entry.Entry('techreport', 'ula22',
-                              **{'author': None})
+    entry = bibpy.entry.Entry(
+        'techreport',
+        'ula22',
+        **{'author': None},
+    )
 
     preprocessed = preprocess(entry, ['author'])
 

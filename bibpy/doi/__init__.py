@@ -9,11 +9,14 @@ from urllib.request import Request, urlopen
 def retrieve(doi, source='https://doi.org/{0}', raw=False, **options):
     """Download a bibtex file specified by a digital object identifier.
 
-    The source is a URL containing a single format specifier which is where the
-    requested doi should appear.
+    The source is a URL containing a single positional format specifier which
+    is where the requested doi should appear.
 
-    By default, the bibtex string from the doi is parsed by bibpy. Specify
-    raw=True to get the raw bibtex string instead.
+    By default, the data from the doi is parsed by bibpy. If raw is True, the
+    raw string is returned instead.
+
+    The options kwargs correspond to the arguments normally passed to
+    :py:func:`bibpy.read_string`.
 
     """
     req = Request(source.format(doi))
@@ -27,8 +30,10 @@ def retrieve(doi, source='https://doi.org/{0}', raw=False, **options):
         if raw:
             return contents
         else:
-            return bibpy.read_string(contents.decode('utf-8'),
-                                     **options).entries[0]
+            return bibpy.read_string(
+                contents.decode('utf-8'),
+                **options
+            ).entries[0]
     finally:
         if handle:
             handle.close()

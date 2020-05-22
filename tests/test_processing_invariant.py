@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test that we can read and write bib entries with postprocessing."""
 
 import bibpy
@@ -20,8 +22,11 @@ def test_string():
 
 
 def test_processing_invariant(test_string):
-    entry = bibpy.read_string(test_string, postprocess=True,
-                              remove_braces=True).entries[0]
+    entry = bibpy.read_string(
+        test_string,
+        postprocess=True,
+        remove_braces=True
+    ).entries[0]
 
     assert entry.author == ['James Conway', 'Archer Sterling']
     assert entry.xdata == ['key1', 'key2', 'key3', 'key4', 'key5']
@@ -33,8 +38,11 @@ def test_processing_invariant(test_string):
     assert entry.msg == '"Part of " # var # " string"'
     assert entry.foreword == ['Jan Leo and the Editors']
 
-    entry = bibpy.read_string(bibpy.write_string([entry]), postprocess=True,
-                              remove_braces=True).entries[0]
+    entry = bibpy.read_string(
+        bibpy.write_string([entry]),
+        postprocess=True,
+        remove_braces=True
+    ).entries[0]
 
     assert entry.author == ['James Conway', 'Archer Sterling']
     assert entry.xdata == ['key1', 'key2', 'key3', 'key4', 'key5']

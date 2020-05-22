@@ -19,6 +19,8 @@ __pycache__/
 backup/
 build/
 crossref_tests/
+dist/
+docs/_build/
 htmlcov/
 grammar.txt
 xml_tests/

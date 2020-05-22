@@ -9,6 +9,7 @@ class NamelistLexer(BaseLexer):
     """Lexer for splitting names on zero brace-level 'and'."""
 
     def __init__(self):
+        """Initialise the lexer."""
         super().__init__()
         self.reset('')
         self.mode = 'normal'
@@ -16,8 +17,10 @@ class NamelistLexer(BaseLexer):
             'normal': self.lex_namelist,
         }
 
-        self._compile_regexes([('braces',    (r'{|}', None)),
-                               ('delimiter', (r'\band\b', None))])
+        self._compile_regexes([
+            ('braces',    (r'{|}',     None)),
+            ('delimiter', (r'\band\b', None))
+        ])
 
     def reset(self, string):
         """Reset the internal state of the lexer."""
@@ -27,20 +30,32 @@ class NamelistLexer(BaseLexer):
         """Lex a list of names, preserving braces for later name parsing."""
         content = ''
 
-        for before, token in self.scan():
-            if token == '{':
-                self.brace_level += 1
-                content += before + token
-            elif token == '}':
-                self.brace_level -= 1
+        while True:
+            for before, token in self.scan():
+                value = token and token.value or None
 
-                if self.brace_level < 0:
-                    self.raise_unbalanced()
+                if value == '{':
+                    self.brace_level += 1
+                    content += before + value
+                elif value == '}':
+                    self.brace_level -= 1
 
-                content += before + token
-            elif token == 'and':
-                yield (content + before).strip()
-                content = ''
-            else:
-                assert token is None
-                yield (content + before).strip()
+                    if self.brace_level < 0:
+                        self.raise_unbalanced()
+
+                    content += before + value
+                elif value == 'and':
+                    content = (content + before).strip()
+
+                    if content:
+                        yield content
+
+                    content = ''
+                else:
+                    all_content = (content + before).strip()
+
+                    if all_content:
+                        yield all_content
+
+                    if token is None:
+                        return

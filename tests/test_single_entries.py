@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test parsing of single entries."""
 
 import bibpy
@@ -40,7 +42,7 @@ def test_single_preamble_entry():
 
 
 def test_single_entry():
-    s = "@article{example_key,author={McLovin'}," +\
+    s = "@article{example_key,author={McLovin'},"\
         "title={Hawaiian Organ Donation}}"
 
     entries = bibpy.read_string(s, 'bibtex').entries

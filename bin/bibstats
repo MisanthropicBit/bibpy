@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""bibstats is a tool for gathering and displaying statistics about bib files.
+"""bibstats is a tool for displaying statistics about bibliographic files.
 
 The default mode displays the count for each entry type in one or more files.
 The bibgrep tool can be used to filter out certain entries before passing them
@@ -18,9 +18,9 @@ import bibpy
 import bibpy.tools
 import collections
 
-__author__ = 'Alexander Asp Bock'
+__author__ = bibpy.__author__
 __version__ = '0.1.0'
-__license__ = 'MIT'
+__license__ = bibpy.__license__
 
 
 def process_file(path, args):
@@ -30,18 +30,23 @@ def process_file(path, args):
 
 def header(titles, spacing=20, underline='-'):
     """Return a title header as a string."""
-    header = ' '.join([('{0:<' + str(spacing) + '}').format(title, spacing)
-                       for title in titles])
+    header = ' '.join([
+        ('{0:<' + str(spacing) + '}').format(title, spacing)
+        for title in titles]
+    )
 
-    return header + "\n" + underline * len(header)
+    return header + '\n' + underline * len(header)
 
 
 def print_stats(stats, print_percentages):
     """Print statistics in a column-aligned format."""
     for bibtype, count in stats:
         if print_percentages:
-            print('{0:<20} {1} ({2:.2f}%)'
-                  .format(bibtype, count, count / float(total) * 100.))
+            print('{0:<20} {1} ({2:.2f}%)'.format(
+                bibtype,
+                count,
+                count / float(total) * 100.
+            ))
         else:
             print('{0:<20} {1}'.format(bibtype, count))
 
@@ -49,22 +54,43 @@ def print_stats(stats, print_percentages):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-v', '--version', action='version',
-                        version=bibpy.tools.format_version(__version__))
-    parser.add_argument('-c', '--count', action='store_true',
-                        help='Print only a total count of all entries')
-    parser.add_argument('--porcelain', action='store_true',
-                        help='Output results so they are easier to parse by '
-                             'other programs')
-    parser.add_argument('-p', '--percentages', action='store_true',
-                        help="Show percentages")
-    parser.add_argument('-s', '--sort-entries', action='store_true',
-                        help="Sort alphabetically on entry types instead "
-                             "of number of occurrences")
-    parser.add_argument('-t', '--top', type=int, default=None,
-                        help='Display only the top N occurrences.')
-    parser.add_argument('-r', '--recursive', action='store_true',
-                        help='Recursively search subdirectories listed')
+    parser.add_argument(
+        '-v', '--version',
+        action='version',
+        version=bibpy.tools.format_version(__version__)
+    )
+    parser.add_argument(
+        '-c', '--count',
+        action='store_true',
+        help='Print only a total count of all entries'
+    )
+    parser.add_argument(
+        '--porcelain',
+        action='store_true',
+        help='Output results so they are easier to parse by other programs'
+    )
+    parser.add_argument(
+        '-p', '--percentages',
+        action='store_true',
+        help='Show percentages in addition to counts'
+    )
+    parser.add_argument(
+        '-s', '--sort-entries',
+        action='store_true',
+        help='Alphabetically sort on entry types instead of number of '
+             'occurrences'
+    )
+    parser.add_argument(
+        '-t', '--top',
+        type=int,
+        default=None,
+        help='Display only the top n occurrences.'
+    )
+    parser.add_argument(
+        '-r', '--recursive',
+        action='store_true',
+        help='Recursively search listed subdirectories'
+    )
 
     args, rest = parser.parse_known_args()
     all_entries = bibpy.tools.read_files('bibstats', rest, process_file, args)

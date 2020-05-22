@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test aliases for all entry classes."""
 
 import bibpy
@@ -6,11 +8,11 @@ import pytest
 
 
 def test_aliases():
-    assert bibpy.entries.aliases('inproceedings', 'biblatex') ==\
-        ['conference']
+    assert bibpy.entries.aliases('inproceedings', 'biblatex') == ['conference']
     assert bibpy.entries.aliases('online', 'biblatex') == ['electronic', 'www']
-    assert bibpy.entries.aliases('thesis', 'biblatex') ==\
-        ['masterthesis', 'phdthesis']
+    assert bibpy.entries.aliases('thesis', 'biblatex') == [
+        'masterthesis', 'phdthesis'
+    ]
     assert bibpy.entries.aliases('report', 'biblatex') == ['techreport']
 
     no_aliases = bibpy.entries.all\

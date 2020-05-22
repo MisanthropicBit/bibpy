@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""A collection of functionality for the tools in bin/."""
+"""A collection of functionality for bibpy's accompanying tools."""
 
 import bibpy
 import fnmatch

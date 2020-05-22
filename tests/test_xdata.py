@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test inheritance of xdata fields."""
 
 import bibpy
@@ -7,19 +9,39 @@ import pytest
 
 @pytest.fixture
 def test_entries():
-    entry1 = bibpy.entry.Entry('xdata', 'macmillan:name',
-                               **{'publisher': 'Macmillan'})
-    entry2 = bibpy.entry.Entry('xdata', 'macmillan:place',
-                               **{'location':  'New York and London'})
-    entry3 = bibpy.entry.Entry('xdata', 'macmillan',
-                               **{'xdata':  'macmillan:name,macmillan:place'})
-    entry4 = bibpy.entry.Entry('book', 'key',
-                               **{'author': 'Author',
-                                  'title':  'Title',
-                                  'date':   '2016-11-29',
-                                  'xdata':  'macmillan'})
+    entry1 = bibpy.entry.Entry(
+        'xdata',
+        'macmillan:name',
+        **{
+            'publisher': 'Macmillan'
+        }
+    )
+    entry2 = bibpy.entry.Entry(
+        'xdata',
+        'macmillan:place',
+        **{
+            'location':  'New York and London'
+        }
+    )
+    entry3 = bibpy.entry.Entry(
+        'xdata',
+        'macmillan',
+        **{
+            'xdata':  'macmillan:name,macmillan:place'
+        }
+    )
+    entry4 = bibpy.entry.Entry(
+        'book',
+        'key',
+        **{
+            'author': 'Author',
+            'title':  'Title',
+            'date':   '2016-11-29',
+            'xdata':  'macmillan'
+        }
+    )
 
-    return [entry1, entry2, entry3, entry4]
+    return entry1, entry2, entry3, entry4
 
 
 def test_inheritance(test_entries):
@@ -46,8 +68,9 @@ def test_inheritance(test_entries):
     assert entry4.xdata == 'macmillan'
     assert entry4.publisher == 'Macmillan'
     assert entry4.location == 'New York and London'
-    assert set(entry4.fields) == set(['author', 'title', 'date', 'xdata',
-                                      'publisher', 'location'])
+    assert set(entry4.fields) == set([
+        'author', 'title', 'date', 'xdata', 'publisher', 'location'
+    ])
 
 
 def test_uninheritance(test_entries):

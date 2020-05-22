@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
-"""Custom bib(la)tex lexer for names."""
+"""Bib(la)tex lexer for names."""
 
 from bibpy.lexers.base_lexer import BaseLexer
 
 
 class NameLexer(BaseLexer):
-    """Lexer for generating name tokens from author names etc.
+    """Lexer that splits names into parts.
 
-    Leading, trailing and consecutive whitespace are stripped.
+    Any whitespace is stripped.
 
     """
 
     def __init__(self):
+        """Initialise the lexer."""
         super().__init__()
         self.reset('')
         self.mode = 'normal'
@@ -20,7 +21,9 @@ class NameLexer(BaseLexer):
             'normal': self.lex_name,
         }
 
-        self._compile_regexes([('ws_or_braces', (r'\s+|{|}|,', None))])
+        self._compile_regexes([
+            ('ws_or_braces', (r'\s+|{|}|,', None))
+        ])
 
     def reset(self, string):
         """Reset the internal state of the lexer."""
@@ -29,7 +32,7 @@ class NameLexer(BaseLexer):
 
     @property
     def commas(self):
-        """Return the indices of commas at brace-level zero."""
+        """Return the indices of commas found at brace-level zero."""
         return self._commas
 
     def lex_name(self):
@@ -83,9 +86,14 @@ class NameLexer(BaseLexer):
                         # Token is whitespace
                         if before.strip():
                             if content:
-                                part.append(self.make_token('content',
-                                            content + before.strip()))
+                                part.append(
+                                    self.make_token(
+                                        'content',
+                                        content + before.strip()
+                                    )
+                                )
                                 content = ''
                             else:
-                                part.append(self.make_token('content',
-                                                            before.strip()))
+                                part.append(
+                                    self.make_token('content', before.strip())
+                                )

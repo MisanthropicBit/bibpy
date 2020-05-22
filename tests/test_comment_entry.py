@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test the comment entry."""
 
 import bibpy
@@ -31,6 +33,7 @@ def test_properties(test_entries):
     assert entry.bibtype == 'comment'
     assert entry.bibkey is None
     assert entry.fields == []
+    assert entry.value == 'This is a comment'
     assert entry == entry
     assert entry != test_entries[1]
     assert 'is' in entry
@@ -43,6 +46,9 @@ def test_properties(test_entries):
     assert len(entry) == 1
     assert repr(entry) == "Comment(value=\"This is a comment\")"
     assert list(iter(entry)) == [(None, 'This is a comment')]
+
+    entry.value = 'New comment'
+    assert entry.value == 'New comment'
 
     with pytest.raises(AttributeError):
         entry['a']

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test getting entries from a doi."""
 
 import bibpy
@@ -7,11 +9,13 @@ import pytest
 import vcr
 
 
-not_on_travis = pytest.mark.skipif(os.environ.get('TRAVIS') is not None,
-                                   reason='Do not test web requests on Travis')
+skip_on_travis = pytest.mark.skipif(
+    os.environ.get('TRAVIS') is not None,
+    reason='Do not test web requests on Travis',
+)
 
 
-@not_on_travis
+@skip_on_travis
 def test_doi():
     with vcr.use_cassette('fixtures/vcr_cassettes/doi.yaml'):
         doi = '10.1145/1015530.1015557'
@@ -33,7 +37,7 @@ def test_doi():
         assert entry.doi == doi
 
 
-@not_on_travis
+@skip_on_travis
 def test_doi_postprocess():
     with vcr.use_cassette('fixtures/vcr_cassettes/doi.yaml'):
         doi = '10.1145/1015530.1015557'
@@ -51,12 +55,13 @@ def test_doi_postprocess():
         assert entry.year == 2004
         assert entry.pages == '57'
         assert entry.url == 'https://doi.org/10.1145%2F1015530.1015557'
-        assert entry.publisher ==\
-            ['Association for Computing Machinery ({ACM})']
+        assert entry.publisher == [
+            'Association for Computing Machinery ({ACM})'
+        ]
         assert entry.doi == doi
 
 
-@not_on_travis
+@skip_on_travis
 def test_doi_raw():
     with vcr.use_cassette('fixtures/vcr_cassettes/doi.yaml'):
         doi = '10.1145/1015530.1015557'

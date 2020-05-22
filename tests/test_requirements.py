@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Test requirements."""
 
 import bibpy
@@ -9,9 +11,10 @@ def test_non_supported_formats():
 
 
 def test_bibtex_requirements():
-    entries =\
-        bibpy.read_file('tests/data/bibtex_missing_requirements.bib',
-                        'bibtex').entries
+    entries = bibpy.read_file(
+        'tests/data/bibtex_missing_requirements.bib',
+        'bibtex'
+    ).entries
 
     expected_fields = [
         # article
@@ -38,9 +41,10 @@ def test_bibtex_requirements():
 
 
 def test_biblatex_requirements():
-    _, _, _, entries =\
-        bibpy.read_file('tests/data/biblatex_missing_requirements.bib',
-                        'biblatex').all_entries
+    entries = bibpy.read_file(
+        'tests/data/biblatex_missing_requirements.bib',
+        'biblatex'
+    ).entries
 
     expected_fields = [
         # article

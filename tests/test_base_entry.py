@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
+
 """Test bibpy.entry.base."""
 
-import bibpy
 import bibpy.entry
 import pytest
 

@@ -35,32 +35,30 @@ def read_string(string, format='relaxed', postprocess=False,
                 remove_braces=False, ignore_comments=True, split_names=False):
     """Read a string containing references in a given format.
 
-    The function returns a 5-tuple of parsed entries and comments.
+    The function returns an Entries object containing parsed entries and
+    comments.
 
     Valid formats are 'bibtex', 'biblatex', 'mixed' or 'relaxed':
-        bibtex  : Parse as bibtex, raise error on non-conformity
-        biblatex: Parse as biblatex, raise error on non-conformity
-        mixed   : Parse as a mix of bibtex and biblatex, raise error on non-
-                  conformity
-        relaxed : Allow any type of entries or fields
+        * bibtex  : Parse as bibtex, raise error on non-conformity
+        * biblatex: Parse as biblatex, raise error on non-conformity
+        * mixed   : Parse as a mix of bibtex and biblatex, raise error on non-
+                    conformity
+        * relaxed : Allow any type of entries or fields
 
-    'postprocess' can either be a list of fields to convert or a bool. If True,
-    then all viable entry fields are converted to appropriate types, more
-    specifically:
+    The postprocess kwarg can either be a list of fields to convert ('year' to
+    int for example) or a bool. If True, then all viable entry fields are
+    converted to appropriate types. Not all fields can be converted, e.g. the
+    'title' field remains unchanged.
 
-        Fields                                    Target type
-        =======================================================================
-        * year                                    int
-        * month                                   Month name ('January' etc.)
-        * date, eventdate, origdate, urldate      bibpy.date.DateRange
-        * afterword, author, bookauthor,
-          commentator, editor, editora, editorb,
-          editorc, foreword, holder, institution,
-          introduction, keywords, language,
-          location, organization, origlocation,
-          origpublisher, publisher, shortauthor,
-          shorteditor, translator                 List of names
-        * xdata                                   List of keys
+    If remove_braces is True, remove braces from field values e.g. 'A {and} B'
+    becomes 'A and B'.
+
+    If ignore_comments is True, do not include non-entry comments (comment
+    entries are still included).
+
+    If split_names is True, split names into four components: first, prefix,
+    last and suffix. This is only done for fields that are selected for
+    postprocessing.
 
     """
     return _read_common(bibpy.parser.parse(string, format, ignore_comments),
@@ -71,35 +69,31 @@ def read_file(source, format='relaxed', encoding='utf-8', postprocess=False,
               remove_braces=False, ignore_comments=True, split_names=False):
     """Read a file containing references in a given format.
 
-    The 'source' argument can either be a file handle or a filename. Files are
-    treated as utf-8 encoded by default. The function returns a 5-tuple of
-    parsed entries and comments.
+    The source kwarg can either be a file handle or a filename. Files are
+    treated as utf-8 encoded by default. The function returns an Entries object
+    containing parsed entries and comments.
 
     Valid formats are 'bibtex', 'biblatex', 'mixed' or 'relaxed':
-        bibtex  : Parse as bibtex, raise error on non-conformity
-        biblatex: Parse as biblatex, raise error on non-conformity
-        mixed   : Parse as a mix of bibtex and biblatex, raise error on non-
-                  conformity
-        relaxed : Allow any type of entries or fields
+        * bibtex: Parse as bibtex, raise error on non-conformity
+        * biblatex: Parse as biblatex, raise error on non-conformity
+        * mixed: Parse as a mix of bibtex and biblatex, raise error on non-
+                 conformity
+        * relaxed: Allow any type of entries or fields
 
-    'postprocess' can either be a list of fields to convert or a bool. If True,
-    then all viable entry fields are converted to appropriate types, more
-    specifically:
+    The postprocess kwarg can either be a list of fields to convert ('year' to
+    int for example) or a bool. If True, then all viable entry fields are
+    converted to appropriate types. Not all fields can be converted, e.g. the
+    'title' field remains unchanged.
 
-        Fields                                    Target type
-        =======================================================================
-        * year                                    int
-        * month                                   Month name ('January' etc.)
-        * date, eventdate, origdate, urldate      bibpy.date.DateRange
-        * afterword, author, bookauthor,
-          commentator, editor, editora, editorb,
-          editorc, foreword, holder, institution,
-          introduction, keywords, language,
-          location, organization, origlocation,
-          origpublisher, publisher, shortauthor,
-          shorteditor, translator                 List of names
-        * xdata                                   List of keys
+    If remove_braces is True, remove braces from field values e.g. 'A {and} B'
+    becomes 'A and B'.
 
+    If ignore_comments is True, do not include non-entry comments (comment
+    entries are still included).
+
+    If split_names is True, split names into four components: first, prefix,
+    last and suffix. This is only done for fields that are selected for
+    postprocessing.
     """
     fh = io.open(source, encoding=encoding) if is_string(source) else source
 
@@ -126,7 +120,8 @@ def write_string(entries, **format_options):
     """Write a list of entries as a string.
 
     Accepts either a bibpy.Entries object or a list of bibpy.Entry objects. The
-    list of formatting options are the same as those for Entry.format.
+    list of formatting options are the same as those for Entry's
+    :py:meth:`~bibpy.entry.entry.Entry.format`.
 
     """
     return (os.linesep * 2).join(entry.format(**format_options)
@@ -136,7 +131,10 @@ def write_string(entries, **format_options):
 def write_file(source, entries, encoding='utf-8', **format_options):
     """Write a list of entries to a file given by a filename or file descriptor.
 
-    The list of formatting options are the same as those for Entry.format.
+    The encoding refers to the file's encoding and defaults to utf-8.
+
+    The list of formatting options are the same as those for Entry's
+    :py:meth:`~bibpy.entry.entry.Entry.format`.
 
     """
     if is_string(source):
@@ -279,7 +277,7 @@ def _crossref_common(entries, ref_func, inherit=True, override=False,
 
     for entry in entries:
         # Only examine the entries that contain a crossref field
-        if entry.crossref:
+        if entry.crossref and is_string(entry.crossref):
             targets.append(entry)
 
         # All entries can be sources of a crossref field
@@ -301,13 +299,13 @@ def inherit_crossrefs(entries, inherit=True, override=False, exceptions={}):
     Inheritance modes are either True for inheriting or False for no
     inheritance. Likewise fields can either be overwritten or not. Note that
     overriding fields is a destructive process, they cannot be recreated by
-    unexpand_crossrefs.
+    :py:func:`~bibpy.uninherit_crossrefs`.
 
-    Expections to both rules can be defined using the exceptions option which
+    Exceptions to both rules can be defined using the exceptions option which
     is expected to be a tuple of (source, target, options), where the source is
-    the crossrefered entry and target is the entry containing the crossref, as
-    per biblatex nomenclature. The last field is a dict of the options (inherit
-    and override) for this pair of source and target.
+    the crossreferenced entry and target is the entry containing the crossref,
+    as per biblatex nomenclature. The last field is a dict of the options
+    (inherit and override) for this pair of source and target.
 
     """
     _crossref_common(entries, bibpy.references.inherit_crossrefs, inherit,
@@ -321,10 +319,11 @@ def uninherit_crossrefs(entries, inherit=True, override=False, exceptions={}):
     biblatex manual). The 'crossref' fields of the entries are used if they
     refer to a valid key.
 
-    The options correspond to those given by the a call to expand_crossrefs.
+    The options correspond to those given by the a call to
+    :py:func:`~bibpy.inherit_crossrefs`.
 
     Inheritance modes are either 'all' (True) or 'none' (False). Fields can
-    either be overwritten or not. Expections to both rules can be defined using
+    either be overwritten or not. Exceptions to both rules can be defined using
     the 'exceptions' option which is expected to be a dictionary mapping from
     one entry type to another and the value the 'inherit' and/or 'override'
     options. Both the source and the target can be '*' to denote all entry
@@ -370,8 +369,8 @@ def _xdata_common(entries, xdata_func):
 def inherit_xdata(entries):
     """Expand the xdata fields in the given entries.
 
-    The expansion is done according to biber (see section 3.11.6 of the
-    biblatex manual).
+    Inheritance is done according to biber (see section 3.11.6 of the biblatex
+    manual).
 
     """
     _xdata_common(entries, bibpy.references.inherit_xdata)
@@ -380,7 +379,7 @@ def inherit_xdata(entries):
 def uninherit_xdata(entries):
     """Unherit the xdata fields in the given entries.
 
-    The uninheritance is done according to biber (see section 3.11.6 of the
+    Uninheritance is done according to biber (see section 3.11.6 of the
     biblatex manual).
 
     """

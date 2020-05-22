@@ -1,21 +1,21 @@
+# -*- coding: utf-8 -*-
+
 """Test parsing of single entries."""
 
 import bibpy
 from bibpy.lexers.base_lexer import Token
 
-# TODO: Test both parsers
-
 
 def test_single_comment():
-    s = "This is a comment"
+    s = 'This is a comment'
     comments = bibpy.read_string(s, 'bibtex', ignore_comments=False).comments
 
     assert comments[0] == s
 
 
 def test_single_comment_entry():
-    contents = " I can write whatever I want here "
-    s = "@comment{ I can write whatever I want here }"
+    contents = ' I can write whatever I want here '
+    s = '@comment{ I can write whatever I want here }'
     comment_entries = bibpy.read_string(s, 'bibtex').comment_entries
 
     assert type(comment_entries[0]) is bibpy.entry.Comment
@@ -23,9 +23,9 @@ def test_single_comment_entry():
 
 
 def test_single_string_entry():
-    variable = "var"
-    value = "March"
-    s = "@string{ " + variable + " = " + value + " }"
+    variable = 'var'
+    value = 'March'
+    s = '@string{ ' + variable + ' = ' + value + ' }'
     strings = bibpy.read_string(s, 'bibtex').strings
 
     assert type(strings[0]) is bibpy.entry.String
@@ -34,8 +34,8 @@ def test_single_string_entry():
 
 
 def test_single_preamble_entry():
-    contents = "$1$ LaTeX code $\sqrt{2}"
-    s = "@preamble( " + contents + " )"
+    contents = '$1$ LaTeX code $\sqrt{2}'
+    s = '@preamble( ' + contents + ' )'
     preambles = bibpy.read_string(s, 'bibtex').preambles
 
     assert type(preambles[0]) is bibpy.entry.Preamble
@@ -43,8 +43,8 @@ def test_single_preamble_entry():
 
 
 def test_single_capitalized_preamble_entry():
-    contents = "$1$ LaTeX code $\sqrt{2}"
-    s = "@Preamble( " + contents + " )"
+    contents = '$1$ LaTeX code $\sqrt{2}'
+    s = '@Preamble( ' + contents + ' )'
     preambles = bibpy.read_string(s, 'bibtex').preambles
 
     assert type(preambles[0]) is bibpy.entry.Preamble
@@ -53,7 +53,7 @@ def test_single_capitalized_preamble_entry():
 
 def test_single_entry():
     s = "@article{example_key,author={McLovin'}," +\
-        "title={Hawaiian Organ Donation}}"
+        'title={Hawaiian Organ Donation}}'
 
     entries = bibpy.read_string(s, 'bibtex').entries
 

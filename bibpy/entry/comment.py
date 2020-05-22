@@ -1,26 +1,36 @@
 # -*- coding: utf-8 -*-
 
-"""Class representing a explicit comments (@comment) in a bibtex file."""
+"""Class representing a comment entry (@comment) in a bib file."""
 
-from bibpy.entry import base
+from bibpy.entry.base import BaseEntry
 
 
-class Comment(base.BaseEntry):
-    """Represents an explicit comment in a bibtex file."""
+class Comment(BaseEntry):
+    """A comment entry (@comment) in a bib file."""
 
     def __init__(self, value):
         """Create a comment entry with a single value."""
         self._value = value
 
-    def format(self, indent='    ', braces=True, **kwargs):
+    def format(self, indent='    ', singleline=True, braces=True, **kwargs):
         """Format an return the comment entry as a string.
 
-        If 'braces' is True, surround the entry by braces, else parentheses
+        If singleline is True, put the entry on a single line. The contents of
+        the preamble is indented by the indent argument if singleline is True.
+
+        If braces is True, surround the entry by braces else parentheses.
+
+        The kwargs are ignored for this entry type as there is no additional
+        formatting.
 
         """
-        return "@comment{0}{1}{2}".format('{' if braces else '(',
-                                          self.value,
-                                          '}' if braces else ')')
+        return self.format_auxiliary_entry(
+            'comment',
+            self.value,
+            indent,
+            singleline,
+            braces,
+        )
 
     @property
     def bibtype(self):
@@ -45,6 +55,10 @@ class Comment(base.BaseEntry):
     def value(self):
         """Return the value of the variable of the preamble."""
         return self._value
+
+    @value.setter
+    def value(self, new_value):
+        self._value = new_value
 
     def aliases(self, format):
         """Return any aliases of this entry."""
