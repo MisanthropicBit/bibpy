@@ -1,12 +1,12 @@
 # bibpy v0.1.0-alpha
 
 [![Build status](https://travis-ci.org/MisanthropicBit/bibpy.svg?branch=master)](https://travis-ci.org/github/MisanthropicBit/bibpy)
-![Read the Docs](https://img.shields.io/readthedocs/bibpy)
+[![Read the Docs](https://img.shields.io/readthedocs/bibpy)](https://readthedocs.org/projects/bibpy/)
 [![Coverage Status](https://coveralls.io/repos/github/MisanthropicBit/bibpy/badge.svg?branch=master)](https://coveralls.io/github/MisanthropicBit/bibpy?branch=master)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/MisanthropicBit/bibpy/blob/master/LICENSE)
-![PyPI](https://img.shields.io/pypi/v/bibpy)
-![PyPI wheel](https://img.shields.io/pypi/wheel/bibpy)
-![Python version](https://img.shields.io/pypi/pyversions/bibpy.svg)
+[![PyPI](https://img.shields.io/pypi/v/bibpy)](https://pypi.org/project/bibpy/)
+[![PyPI wheel](https://img.shields.io/pypi/wheel/bibpy)](https://pypi.org/project/bibpy/)
+[![Python version](https://img.shields.io/pypi/pyversions/bibpy.svg)](https://pypi.org/project/bibpy/)
 
 _`bibpy` is currently in alpha and will go up on PyPI after beta_.
 

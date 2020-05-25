@@ -27,6 +27,7 @@
 
 .. image:: https://img.shields.io/pypi/wheel/bibpy
    :alt: Wheel support
+   :target: https://pypi.org/project/bibpy/
 
 .. toctree::
    :maxdepth: 2
