@@ -38,7 +38,7 @@ def header(titles, spacing=20, underline='-'):
     return header + '\n' + underline * len(header)
 
 
-def print_stats(stats, print_percentages):
+def print_stats(stats, print_percentages, total):
     """Print statistics in a column-aligned format."""
     for bibtype, count in stats:
         if print_percentages:
@@ -106,12 +106,12 @@ if __name__ == '__main__':
         print(total)
     else:
         if args.porcelain:
-            print_stats(stats, args.percentages)
+            print_stats(stats, args.percentages, total)
         else:
             titles = ['Entry', 'Count']
             print(header(titles))
 
-            print_stats(stats, args.percentages)
+            print_stats(stats, args.percentages, total)
 
             print('\nTotal entries: {0}'.format(total))
 
