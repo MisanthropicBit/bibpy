@@ -33,10 +33,15 @@ setup(
     license='BSD 3-Clause License',
     keywords='bibpy, bibtex, biblatex, parser',
     url='https://bibpy.readthedocs.io/en/latest/',
-    packages=['bibpy', 'bibpy.entry', 'bibpy.lexers', 'bibpy.doi'],
+    packages=[
+        'bibpy',
+        'bibpy.doi',
+        'bibpy.entry',
+        'bibpy.lexers',
+        'bibpy.scripts'
+    ],
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    scripts=['bin/bibgrep', 'bin/bibformat', 'bin/bibstats'],
     project_urls={
         'Issue Tracker': 'https://github.com/MisanthropicBit/bibpy/issues',
         'Documentation': 'https://bibpy.readthedocs.io/en/latest/',
@@ -55,5 +60,12 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'bibformat = bibpy.scripts.bibformat:main',
+            'bibgrep = bibpy.scripts.bibgrep:main',
+            'bibstats = bibpy.scripts.bibstats:main',
+        ]
+    }
 )

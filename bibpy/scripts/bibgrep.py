@@ -310,7 +310,7 @@ def process_file(source, unique, predicates):
     return filter_entries(entries, predicates)
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(prog='bibgrep', description=_DESCRIPTION)
 
     parser.add_argument(
@@ -463,3 +463,7 @@ if __name__ == "__main__":
         print(bibpy.write_string(filtered_entries))
 
     bibpy.tools.close_output_handles()
+
+
+if __name__ == "__main__":
+    main()

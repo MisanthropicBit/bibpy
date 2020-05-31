@@ -43,7 +43,7 @@ def process_file(path, args):
     return results
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(
         prog='bibformat',
         description=_DESCRIPTION
@@ -132,3 +132,7 @@ if __name__ == '__main__':
     print(bibpy.write_string(entries, **format_options))
 
     bibpy.tools.close_output_handles()
+
+
+if __name__ == '__main__':
+    main()

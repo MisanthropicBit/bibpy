@@ -78,14 +78,21 @@ def test_predicate_composition():
 
 
 def test_iter_files():
-    assert set(bibpy.tools.iter_files(['bin'], 'bib*', True)) ==\
-        set(['bin/bibstats', 'bin/bibgrep', 'bin/bibformat'])
+    assert set(bibpy.tools.iter_files(['bibpy/scripts'], 'bib*.py', True)) ==\
+        set([
+            'bibpy/scripts/bibstats.py',
+            'bibpy/scripts/bibgrep.py',
+            'bibpy/scripts/bibformat.py'
+        ])
 
-    assert set(bibpy.tools.iter_files(['bin/bibstats'], 'bib*', False)) ==\
-        set(['bin/bibstats'])
+    assert set(bibpy.tools.iter_files(
+        ['bibpy/scripts/bibstats.py'],
+        'bib*',
+        False
+    )) == set(['bibpy/scripts/bibstats.py'])
 
     with pytest.raises(SystemExit):
-        list(bibpy.tools.iter_files(['bin'], 'bib*', False))
+        list(bibpy.tools.iter_files(['bibpy/scripts'], 'bib*', False))
 
 
 def test_close_output_handles():

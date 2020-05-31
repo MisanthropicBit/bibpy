@@ -52,7 +52,7 @@ def print_stats(stats, print_percentages, total):
             print('{0:<20} {1}'.format(bibtype, count))
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -128,3 +128,7 @@ if __name__ == '__main__':
             print('\nTotal entries: {0}'.format(total))
 
     bibpy.tools.close_output_handles()
+
+
+if __name__ == '__main__':
+    main()
