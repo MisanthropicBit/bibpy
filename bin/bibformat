@@ -7,6 +7,7 @@ import argparse
 import bibpy
 import bibpy.tools
 import collections
+import sys
 
 __author__ = bibpy.__author__
 __version__ = '0.1.0'
@@ -106,7 +107,12 @@ if __name__ == '__main__':
 
     args, rest = parser.parse_known_args()
 
-    entries = bibpy.tools.read_files('bibformat', rest, process_file, args)
+    try:
+        entries = bibpy.tools.read_files('bibformat', rest, process_file, args)
+    except (IOError, bibpy.error.ParseException) as ex:
+        sys.exit('bibformat: {0}'.format(ex))
+    except KeyboardInterrupt:
+        sys.exit(1)
 
     if args.group:
         groups = collections.defaultdict(list)

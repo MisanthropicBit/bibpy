@@ -17,6 +17,7 @@ import argparse
 import bibpy
 import bibpy.tools
 import collections
+import sys
 
 __author__ = bibpy.__author__
 __version__ = '0.1.0'
@@ -93,7 +94,18 @@ if __name__ == '__main__':
     )
 
     args, rest = parser.parse_known_args()
-    all_entries = bibpy.tools.read_files('bibstats', rest, process_file, args)
+
+    try:
+        all_entries = bibpy.tools.read_files(
+            'bibstats',
+            rest,
+            process_file,
+            args
+        )
+    except (IOError, bibpy.error.ParseException) as ex:
+        sys.exit('bibstats: {0}'.format(ex))
+    except KeyboardInterrupt:
+        sys.exit(1)
 
     types = collections.Counter([entry.bibtype for entry in all_entries])
     total = sum(types.values())
