@@ -17,9 +17,9 @@ script:
     - cram --version
     - python setup.py install
 
-    - cram tests/bin/test_bibformat.t
-    - cram tests/bin/test_bibgrep.t
-    - cram tests/bin/test_bibstats.t
+    - cram tests/scripts/test_bibformat.t
+    - cram tests/scripts/test_bibgrep.t
+    - cram tests/scripts/test_bibstats.t
 
     - python examples/crossref_expansion.py
     - python examples/field_conversion.py
