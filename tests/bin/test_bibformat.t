@@ -71,6 +71,27 @@ Test ordering with align
         year   = {2011}
     }
 
+Test crossreference inheritance
+
+    $ bibformat --inherit-crossreferences $TESTDIR/../data/crossreferences.bib
+    @inbook{key1,
+        crossref = {key2},
+        title = {Title},
+        author = {Author},
+        pages = {5--25},
+        booktitle = {Booktitle},
+        booksubtitle = {Booksubtitle}
+    }
+    
+    @book{key2,
+        subtitle = {Booksubtitle},
+        title = {Booktitle},
+        author = {Author2},
+        date = {1995},
+        publisher = {Publisher},
+        location = {Location}
+    }
+
 Test xdata inheritance
 
     $ bibformat --inherit-xdata $TESTDIR/../data/xdata_inheritance.bib
@@ -198,3 +219,15 @@ Test grouping
         author = {Author},
         pages = {5--25}
     }
+
+Test wrong option
+
+    $ bibformat --idonotexist=nope $TESTDIR/../data/small1.bib
+    bibformat: [Errno 2] No such file or directory: '--idonotexist=nope'
+    [1]
+
+Test recursive directory searching
+
+    $ bibformat --recursive --align $TESTDIR/../data
+    bibformat: Duplicate field(s) 'year' in entry 'key' with type 'article'
+    [1]

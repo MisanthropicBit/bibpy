@@ -218,8 +218,14 @@ Test field occurrence
         year    = {2000}
     }
 
-Test IO errors
+Test wrong option
 
     $ bibgrep --idonotexist=nope $TESTDIR/../data/small1.bib
     bibgrep: [Errno 2] No such file or directory: '--idonotexist=nope'
+    [1]
+
+Test recursive directory searching
+
+    $ bibgrep --recursive $TESTDIR/../data
+    bibgrep: Duplicate field(s) 'year' in entry 'key' with type 'article'
     [1]
