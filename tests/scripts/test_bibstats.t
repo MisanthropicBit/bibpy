@@ -71,4 +71,3 @@ Test wrong option
     $ bibstats --idonotexist=nope $TESTDIR/../data/small1.bib
     bibstats: [Errno 2] No such file or directory: '--idonotexist=nope'
     [1]
-

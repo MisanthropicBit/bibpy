@@ -225,9 +225,3 @@ Test wrong option
     $ bibformat --idonotexist=nope $TESTDIR/../data/small1.bib
     bibformat: [Errno 2] No such file or directory: '--idonotexist=nope'
     [1]
-
-Test recursive directory searching
-
-    $ bibformat --recursive --align $TESTDIR/../data
-    bibformat: Duplicate field(s) 'year' in entry 'key' with type 'article'
-    [1]
