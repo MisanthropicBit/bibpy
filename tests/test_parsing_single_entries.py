@@ -34,7 +34,7 @@ def test_single_string_entry():
 
 
 def test_single_preamble_entry():
-    contents = '$1$ LaTeX code $\sqrt{2}'
+    contents = '$1$ LaTeX code $\\sqrt{2}'
     s = '@preamble( ' + contents + ' )'
     preambles = bibpy.read_string(s, 'bibtex').preambles
 
@@ -43,7 +43,7 @@ def test_single_preamble_entry():
 
 
 def test_single_capitalized_preamble_entry():
-    contents = '$1$ LaTeX code $\sqrt{2}'
+    contents = '$1$ LaTeX code $\\sqrt{2}'
     s = '@Preamble( ' + contents + ' )'
     preambles = bibpy.read_string(s, 'bibtex').preambles
 
