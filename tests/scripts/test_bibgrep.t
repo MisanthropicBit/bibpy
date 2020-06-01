@@ -82,10 +82,10 @@ Test counting
 
 Test piping
 
-    $ bibgrep --entry="book" $TESTDIR/../data/small1.bib | $TESTDIR/../../bin/bibgrep --count --no-filenames
+    $ bibgrep --entry="book" $TESTDIR/../data/small1.bib | bibgrep --count --no-filenames
     1
 
-    $ bibgrep --entry="book,inproceedings" $TESTDIR/../data/small1.bib | $TESTDIR/../../bin/bibgrep --count --no-filenames
+    $ bibgrep --entry="book,inproceedings" $TESTDIR/../data/small1.bib | bibgrep --count --no-filenames
     2
 
 Test multiple files
