@@ -12,15 +12,13 @@ _`bibpy` is currently in alpha and will go up on PyPI after beta_.
 
 Python library for parsing bib(la)tex files and manipulating entries.
 
-* [Automatic conversion](/examples/field_conversion.py) of entry fields to and from appropriate Python types
-* [Requirements-checking for entry fields](/examples/requirements_check.py)
-* [String variable expansion and unexpansion](/examples/string_expansion.py)
-* [Crossreference and xdata inheritance](/examples/crossref_expansion.py)
+* [Automatic conversion](https://github.com/MisanthropicBit/bibpy/tree/master/examples/field_conversion.py) of entry fields to and from appropriate Python types
+* [Requirements-checking for entry fields](https://github.com/MisanthropicBit/bibpy/tree/master/examples/requirements_check.py)
+* [String variable expansion and unexpansion](https://github.com/MisanthropicBit/bibpy/tree/master/examples/string_expansion.py)
+* [Crossreference and xdata inheritance](https://github.com/MisanthropicBit/bibpy/tree/master/examples/crossref_expansion.py)
 * Accompanying [tools](#tools)
 
 # Installation
-
-Use pip:
 
 ```bash
 pip install bibpy
@@ -52,7 +50,8 @@ False  # But is not a valid biblatex entry (missing field 'date' or 'year')
 >>> bibpy.write_file('references.bib', entries)
 ```
 
-See the [`examples`](/examples) folder for more usage examples or read the
+See the [`examples`](https://github.com/MisanthropicBit/bibpy/tree/master/examples)
+folder for more usage examples or read the
 [tutorial](https://bibpy.readthedocs.io/en/latest/tutorial.html).
 
 ## Tools
