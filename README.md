@@ -16,7 +16,7 @@ Python library for parsing bib(la)tex files and manipulating entries.
 * [Requirements-checking for entry fields](https://github.com/MisanthropicBit/bibpy/tree/master/examples/requirements_check.py)
 * [String variable expansion and unexpansion](https://github.com/MisanthropicBit/bibpy/tree/master/examples/string_expansion.py)
 * [Crossreference and xdata inheritance](https://github.com/MisanthropicBit/bibpy/tree/master/examples/crossref_expansion.py)
-* Accompanying [tools](#tools)
+* Accompanying [tools](https://bibpy.readthedocs.io/en/latest/tutorial.html#bibpy-tools)
 
 # Installation
 
