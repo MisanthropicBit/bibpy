@@ -13,7 +13,6 @@ from bibpy.preprocess import preprocess,\
     preprocess_pages,\
     preprocess_functions
 import calendar
-import pytest
 
 
 def test_preprocess_namelist():
