@@ -1,13 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """Example of postprocessing fields."""
 
-from __future__ import print_function
-
 import bibpy
-import os
-
-
-def get_path_for(path):
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
+from bibpy.tools import get_abspath_for
 
 
 def print_entry_fields(entries):
@@ -17,25 +14,33 @@ def print_entry_fields(entries):
 
         print()
 
+
 if __name__ == '__main__':
-    entries =\
-        bibpy.read_file(get_path_for('../tests/data/field_processing.bib'),
-                        format='relaxed').entries
+    testfile_path = get_abspath_for(
+        __file__,
+        '../tests/data/field_processing.bib'
+    )
+
+    entries = bibpy.read_file(testfile_path, format='relaxed').entries
 
     print("Before postprocessing:")
     print_entry_fields(entries)
 
-    entries =\
-        bibpy.read_file(get_path_for('../tests/data/field_processing.bib'),
-                        format='relaxed', postprocess=True).entries
+    entries = bibpy.read_file(
+        testfile_path,
+        format='relaxed',
+        postprocess=True
+    ).entries
 
     print("After postprocessing:")
     print_entry_fields(entries)
 
     # We can also choose to postprocess only a subset of fields
     print("Postprocess a subset of fields ('xdata' and 'month'):")
-    entries =\
-        bibpy.read_file(get_path_for('../tests/data/field_processing.bib'),
-                        format='relaxed',
-                        postprocess=['xdata', 'month']).entries
+    entries = bibpy.read_file(
+        testfile_path,
+        format='relaxed',
+        postprocess=['xdata', 'month']
+    ).entries
+
     print_entry_fields(entries)

@@ -72,3 +72,8 @@ def close_output_handles():
     """Ensure we close stdout and stderr when piping."""
     sys.stdout.close()
     sys.stderr.close()
+
+
+def get_abspath_for(curpath, path):
+    """Return the absolute path for a path relative to a current path."""
+    return os.path.join(os.path.dirname(os.path.abspath(curpath)), path)

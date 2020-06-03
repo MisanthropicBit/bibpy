@@ -3,17 +3,12 @@
 
 """Example of formatting bibliographic entries."""
 
-
 import bibpy
-import os
-
-
-def get_path_for(path):
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
+from bibpy.tools import get_abspath_for
 
 
 if __name__ == '__main__':
-    bibdata = get_path_for('../tests/data/small1.bib')
+    bibdata = get_abspath_for(__file__, '../tests/data/small1.bib')
     entries = bibpy.read_file(bibdata, format='relaxed').entries
     entry = entries[0]
 

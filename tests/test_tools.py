@@ -8,6 +8,7 @@ import bibpy.tools
 from io import StringIO
 import pytest
 from contextlib import redirect_stdout, redirect_stderr
+import os
 
 
 def test_version_format():
@@ -107,3 +108,11 @@ def test_close_output_handles():
 
         assert stdout.closed
         assert stderr.closed
+
+
+def test_get_abspath_for():
+    path = bibpy.tools.get_abspath_for(__file__, 'test_tools.py')
+    dir_path, file_path = os.path.split(path)
+
+    assert os.path.dirname(__file__) == dir_path
+    assert file_path == 'test_tools.py'

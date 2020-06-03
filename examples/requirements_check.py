@@ -1,9 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """Example of checking the requirements of bibtext and biblatex."""
 
-from __future__ import print_function
-
 import bibpy
-import os
+from bibpy.tools import get_abspath_for
 
 
 def format_requirements_check(required, optional):
@@ -22,12 +23,12 @@ def format_requirements_check(required, optional):
     return s
 
 
-def get_path_for(path):
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
-
-
 if __name__ == '__main__':
-    filename = get_path_for('../tests/data/biblatex_missing_requirements.bib')
+    filename = get_abspath_for(
+        __file__,
+        '../tests/data/biblatex_missing_requirements.bib'
+    )
+
     entries = bibpy.read_file(filename, format='biblatex').entries
 
     # Collect all results for which a requirements check failed into a list of

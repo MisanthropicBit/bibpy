@@ -1,17 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """Example of formatting entries for output in different ways."""
 
-from __future__ import print_function
-
 import bibpy
-import os
-
-
-def get_path_for(path):
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
+from bibpy.tools import get_abspath_for
 
 
 if __name__ == '__main__':
-    filename = get_path_for('../tests/data/small1.bib')
+    filename = get_abspath_for(__file__, '../tests/data/small1.bib')
     entries = [bibpy.read_file(filename, format='relaxed').entries[0]]
 
     print("* Default formatting")
