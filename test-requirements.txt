@@ -1,6 +1,8 @@
 coverage>=5.1
 coveralls>=2.0.0
 cram>=0.7
+flake8
 pydocstyle
 pytest>4.6
+tox
 vcrpy>=4.0.2
