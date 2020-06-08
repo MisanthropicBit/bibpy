@@ -1,4 +1,4 @@
-# bibpy v0.1.0-alpha
+# bibpy v1.0.0
 
 [![Build status](https://travis-ci.org/MisanthropicBit/bibpy.svg?branch=master)](https://travis-ci.org/github/MisanthropicBit/bibpy)
 [![Read the Docs](https://img.shields.io/readthedocs/bibpy)](https://readthedocs.org/projects/bibpy/)
@@ -7,8 +7,6 @@
 [![PyPI](https://img.shields.io/pypi/v/bibpy)](https://pypi.org/project/bibpy/)
 [![PyPI wheel](https://img.shields.io/pypi/wheel/bibpy)](https://pypi.org/project/bibpy/)
 [![Python version](https://img.shields.io/pypi/pyversions/bibpy.svg)](https://pypi.org/project/bibpy/)
-
-_`bibpy` is currently in alpha and will go up on PyPI after beta_.
 
 Python library for parsing bib(la)tex files and manipulating entries.
 

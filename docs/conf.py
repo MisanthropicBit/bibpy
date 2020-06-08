@@ -13,7 +13,7 @@ author = 'Alexander Asp Bock'
 master_doc = 'index'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.0-alpha'
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 

@@ -9,7 +9,7 @@ import io
 import os
 import re
 
-__version__ = '0.1.0-alpha'
+__version__ = '1.0.0'
 __license__ = 'BSD 3-Clause'
 __author__ = 'Alexander Asp Bock'
 __all__ = ('read_string',

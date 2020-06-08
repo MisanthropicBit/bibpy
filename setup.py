@@ -48,7 +48,7 @@ setup(
         'Source': 'https://github.com/MisanthropicBit/bibpy',
     },
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Utilities',
         'Topic :: Software Development',
