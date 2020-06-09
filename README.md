@@ -54,8 +54,7 @@ folder for more usage examples or read the
 
 ## Tools
 
-`bibpy` also comes with three tools in the `bin` folder that are installed as
-runnable scripts.
+`bibpy` also comes with three tools that are installed as runnable scripts.
 
 * `bibformat`: Clean up, format and align references
 * `bibgrep`  : Find and filter references using a simple query language

@@ -46,7 +46,7 @@ def iter_files(names, pattern, recursive):
             yield name
 
 
-# NOTE: Function is tested via tests/bin tests
+# NOTE: Function is tested via script tests
 def read_files(program_name, paths, processor, args):  # pragma: no cover
     """Read files from some paths and apply a processor function to each."""
     results = []
