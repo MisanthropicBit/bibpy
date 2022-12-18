@@ -1,0 +1,2 @@
+tox>=2.0
+Sphinx

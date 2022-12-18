@@ -129,7 +129,7 @@ def write_string(entries, **format_options):
 
 
 def write_file(source, entries, encoding='utf-8', **format_options):
-    """Write a list of entries to a file given by a filename or file descriptor.
+    """Write a list of entries to a file given by filename or file descriptor.
 
     The encoding refers to the file's encoding and defaults to utf-8.
 
