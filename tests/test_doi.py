@@ -26,12 +26,12 @@ def test_doi():
         assert entry.bibkey == 'Hancock_2004'
         assert entry.author == 'Jeffrey T. Hancock'
         assert entry.title == '{LOL}'
-        assert entry.journal == 'interactions'
+        assert entry.journal == 'Interactions'
         assert entry.volume == '11'
         assert entry.number == '5'
         assert entry.month == 'sep'
         assert entry.year == '2004'
-        assert entry.pages == '57'
+        assert entry.pages == '57--58'
         assert entry.url == 'https://doi.org/10.1145%2F1015530.1015557'
         assert entry.publisher == 'Association for Computing Machinery ({ACM})'
         assert entry.doi == doi
@@ -48,12 +48,12 @@ def test_doi_postprocess():
         assert entry.bibkey == 'Hancock_2004'
         assert entry.author == ['Jeffrey T. Hancock']
         assert entry.title == '{LOL}'
-        assert entry.journal == 'interactions'
+        assert entry.journal == 'Interactions'
         assert entry.volume == 11
         assert entry.number == 5
         assert entry.month == 'September'
         assert entry.year == 2004
-        assert entry.pages == '57'
+        assert entry.pages == (57, 58)
         assert entry.url == 'https://doi.org/10.1145%2F1015530.1015557'
         assert entry.publisher == [
             'Association for Computing Machinery ({ACM})'
@@ -75,8 +75,8 @@ def test_doi_raw():
 \tpublisher = {Association for Computing Machinery ({ACM})},
 \tvolume = {11},
 \tnumber = {5},
-\tpages = {57},
+\tpages = {57--58},
 \tauthor = {Jeffrey T. Hancock},
 \ttitle = {{LOL}},
-\tjournal = {interactions}
+\tjournal = {Interactions}
 }"""

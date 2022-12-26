@@ -23,9 +23,12 @@ def test_properties(test_entry):
 
     test_entry.author = 'Author'
     test_entry.title = 'Title'
+    test_entry.none_prop = None
 
     assert test_entry.get('author') == 'Author'
     assert test_entry.get('uobdrg', None) is None
+    assert test_entry.get('missing', 'default') == 'default'
+    assert test_entry.get('noneprop', 'default') == 'default'
     assert set(test_entry.keys()) == set(['author', 'title'])
     assert set(test_entry.values()) == set(['Author', 'Title'])
 
