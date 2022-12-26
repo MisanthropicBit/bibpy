@@ -1,4 +1,4 @@
-# bibpy v1.0.0
+# bibpy v1.0.1
 
 [![Build status](https://travis-ci.org/MisanthropicBit/bibpy.svg?branch=master)](https://travis-ci.org/github/MisanthropicBit/bibpy)
 [![Read the Docs](https://img.shields.io/readthedocs/bibpy)](https://readthedocs.org/projects/bibpy/)

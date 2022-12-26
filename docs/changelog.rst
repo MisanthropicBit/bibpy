@@ -29,6 +29,13 @@ Changelog
 
 Version numbers follow `Semantic Versioning <https://semver.org/>`__ (i.e. <major>.<minor>.<patch>).
 
+`1.0.1 <https://github.com/MisanthropicBit/bibpy/releases/tag/v1.0.1>`_
+-----------------------------------------------------------------------
+
+- :fix:`[fix]` Fixed returning the default value of a field on an entry when
+  that field is set to `None` (unset) (https://github.com/MisanthropicBit/bibpy/issues/8).
+- :tests:`[tests]` Fixed some suddenly failing tests (issue with vcrpy cache?)
+
 `1.0.0 <https://github.com/MisanthropicBit/bibpy/releases/tag/v1.0.0>`_
 -----------------------------------------------------------------------
 
