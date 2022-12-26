@@ -150,8 +150,15 @@ class Entry(BaseEntry):
         return [ef for ef in self.fields if ef not in bibpy.fields.all]
 
     def get(self, name, default=None):
-        """Return the value for name or default if the name does not exist."""
-        return getattr(self, name, default)
+        """Return the value for name or default if the name does not exist.
+
+        This will also return the default if the name exists (is a valid field)
+        but is set to None.
+
+        """
+        value = getattr(self, name, None)
+
+        return value if value is not None else default
 
     def aliases(self, format):
         """Return any aliases of this entry."""
