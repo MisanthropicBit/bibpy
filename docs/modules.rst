@@ -1,5 +1,5 @@
-bibpy
-=====
+Modules
+=======
 
 .. toctree::
    :maxdepth: 4
