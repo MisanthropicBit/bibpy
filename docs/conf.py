@@ -17,8 +17,6 @@ release = '1.0.1'
 
 # -- General configuration ---------------------------------------------------
 
-html_static_path = ['images']
-
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',

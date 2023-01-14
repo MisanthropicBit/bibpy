@@ -36,6 +36,7 @@
    tutorial
    faq
    changelog
+   modules
 
 bibpy allows you to parse bib(la)tex files and easily manipulate bibliographic
 entries.
