@@ -33,7 +33,7 @@ Version numbers follow `Semantic Versioning <https://semver.org/>`__ (i.e. <majo
 -----------------------------------------------------------------------
 
 - :fix:`[fix]` Fixed returning the default value of a field on an entry when
-  that field is set to `None` (unset) (https://github.com/MisanthropicBit/bibpy/issues/8).
+  that field is set to `None` (unset) `#8 <https://github.com/MisanthropicBit/bibpy/issues/8>`__.
 - :tests:`[tests]` Fixed some suddenly failing tests (issue with vcrpy cache?)
 
 `1.0.0 <https://github.com/MisanthropicBit/bibpy/releases/tag/v1.0.0>`_
